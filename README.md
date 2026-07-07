@@ -6,7 +6,7 @@ Built with Astro, Tailwind, self-hosted Plus Jakarta Sans. Zero client JavaScrip
 
 ## Quick Access
 
-- Site: [pinkflow.ai](http://pinkflow.ai/)
+- Site: [pinkflow.ai](https://pinkflow.ai/)
 - Repo: [Pinkflow-ai/pinkflow](https://github.com/Pinkflow-ai/pinkflow)
 - Deploys: [GitHub Actions](https://github.com/Pinkflow-ai/pinkflow/actions)
 - Pages settings: [GitHub Pages](https://github.com/Pinkflow-ai/pinkflow/settings/pages)
@@ -14,17 +14,17 @@ Built with Astro, Tailwind, self-hosted Plus Jakarta Sans. Zero client JavaScrip
 
 Public pages:
 
-- [Pricing](http://pinkflow.ai/pricing)
-- [Terms](http://pinkflow.ai/terms)
-- [Privacy](http://pinkflow.ai/privacy)
-- [Refunds](http://pinkflow.ai/refunds)
-- [Contact](http://pinkflow.ai/contact)
+- [Pricing](https://pinkflow.ai/pricing)
+- [Terms](https://pinkflow.ai/terms)
+- [Privacy](https://pinkflow.ai/privacy)
+- [Refunds](https://pinkflow.ai/refunds)
+- [Contact](https://pinkflow.ai/contact)
 
 Ops:
 
 - GitHub Pages source: [workflow deploy](https://github.com/Pinkflow-ai/pinkflow/blob/main/.github/workflows/deploy.yml)
-- DNS records: `pinkflow.ai` apex points to the GitHub Pages `A` and `AAAA` records listed below.
-- HTTPS status: enable HTTPS in [Pages settings](https://github.com/Pinkflow-ai/pinkflow/settings/pages) once GitHub finishes certificate provisioning.
+- DNS records: `pinkflow.ai` apex points to the GitHub Pages `A` and `AAAA` records listed below; `www.pinkflow.ai` points to `pinkflow-ai.github.io`.
+- HTTPS status: enabled in [Pages settings](https://github.com/Pinkflow-ai/pinkflow/settings/pages) for `pinkflow.ai`.
 
 ## Develop
 
@@ -71,6 +71,7 @@ One-time setup:
 3. Configure DNS at your registrar:
    - `A` records on `pinkflow.ai` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`.
    - `AAAA` records on `pinkflow.ai` → `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`.
+   - `CNAME` record on `www.pinkflow.ai` → `pinkflow-ai.github.io`.
 4. After first deploy, enable HTTPS in GitHub Pages settings.
 5. Verify both `pinkflow.ai` and `namescape.pink` in the Paddle dashboard.
 

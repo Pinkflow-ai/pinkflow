@@ -1,0 +1,47 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import PackCard from '../components/PackCard.astro';
+import { namescapePacks } from '../data/products';
+import { site } from '../data/site';
+
+const description = 'Pricing for Pinkflow products. One-time purchases, no subscriptions.';
+const ds = site.products.find((p) => p.slug === 'namescape')!;
+---
+<LegalLayout title="Pricing" description={description}>
+  <section class="prose-legal mb-12">
+    <p>
+      Pricing for Pinkflow products. One-time purchases, no subscriptions, no auto-renewal.
+    </p>
+  </section>
+
+  <section class="mb-12">
+    <h2 class="mb-6 text-2xl font-extrabold text-white">{ds.name}</h2>
+    <div class="grid gap-4 md:grid-cols-3">
+      {namescapePacks.map((pack) => (
+        <PackCard pack={pack} ctaHref={ds.url!} />
+      ))}
+    </div>
+    <p class="mt-6 text-sm text-white/55">
+      All prices in USD. Payment processed by Paddle ({site.paddle.role.toLowerCase()}).
+      <strong class="text-white/80">Final tax and currency total shown at checkout.</strong>
+      Checkout happens inside Namescape after sign-in &mdash; one-time purchase, no auto-renewal.
+    </p>
+    <p class="mt-3 text-sm">
+      <a href="/terms">Terms of Service</a> · <a href="/refunds">Refund Policy</a>
+    </p>
+  </section>
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: 'Namescape Search Pack',
+    description: 'One-time search packs for Namescape.',
+    brand: { '@type': 'Brand', name: 'Pinkflow' },
+    offers: namescapePacks.map((p) => ({
+      '@type': 'Offer',
+      price: p.priceUsd,
+      priceCurrency: 'USD',
+      description: `${p.searches} Namescape searches`,
+    })),
+  })} />
+</LegalLayout>

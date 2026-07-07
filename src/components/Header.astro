@@ -1,0 +1,37 @@
+---
+const navLinks = [
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/terms', label: 'Terms' },
+  { href: '/privacy', label: 'Privacy' },
+  { href: '/refunds', label: 'Refunds' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+<header class="no-print sticky top-0 z-40 border-b border-primary/10 bg-bg-dark/85 backdrop-blur-md">
+  <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
+    <a href="/" class="flex items-center gap-2 text-lg font-extrabold tracking-tight text-white">
+      <span class="inline-block h-3 w-3 rounded-full bg-primary shadow-neon-glow"></span>
+      Pinkflow
+    </a>
+    <nav class="hidden md:flex md:items-center md:gap-6 text-sm">
+      {navLinks.map((l) => <a href={l.href} class="text-white/70 hover:text-white">{l.label}</a>)}
+    </nav>
+    <button id="nav-toggle" aria-label="Toggle menu" aria-expanded="false" class="md:hidden text-white/70 hover:text-white">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </button>
+  </div>
+  <nav id="mobile-nav" class="hidden flex-col gap-2 px-4 pb-4 md:hidden text-sm">
+    {navLinks.map((l) => <a href={l.href} class="text-white/70 hover:text-white">{l.label}</a>)}
+  </nav>
+</header>
+<script is:inline>
+  const t = document.getElementById('nav-toggle');
+  const m = document.getElementById('mobile-nav');
+  if (t && m) {
+    t.addEventListener('click', () => {
+      const open = m.classList.toggle('hidden') === false;
+      m.classList.toggle('flex', open);
+      t.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  }
+</script>

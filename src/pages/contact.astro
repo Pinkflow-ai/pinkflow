@@ -1,0 +1,34 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import Prose from '../components/Prose.astro';
+import { site } from '../data/site';
+---
+<LegalLayout
+  title="Contact"
+  description={`Reach ${site.brand}.`}
+>
+  <Prose>
+    <h2>Email</h2>
+    <p>
+      <a href={`mailto:${site.email}`} class="text-xl font-bold">{site.email}</a>
+    </p>
+
+    <h2>Where we are</h2>
+    <p>{site.city}, {site.country}.</p>
+
+    <h2>Response time</h2>
+    <p>
+      We respond within <strong>{site.responseWindow}</strong>, usually faster. We aim to resolve
+      billing and delivery issues within <strong>{site.resolutionWindow}</strong> of your first
+      message.
+    </p>
+
+    <h2>What to include</h2>
+    <ul>
+      <li><strong>Support:</strong> your account email and a short description of what you expected vs. what happened.</li>
+      <li><strong>Billing:</strong> your account email, the transaction ID, and the date of the charge. See our <a href="/refunds">Refund Policy</a>.</li>
+      <li><strong>Privacy request:</strong> your account email and the specific right you want to exercise (access, correct, delete, port, object). See our <a href="/privacy">Privacy Policy</a>.</li>
+      <li><strong>Security report:</strong> a clear description of the issue and any proof-of-concept. We take responsible disclosure seriously.</li>
+    </ul>
+  </Prose>
+</LegalLayout>

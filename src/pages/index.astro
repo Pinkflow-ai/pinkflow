@@ -1,0 +1,72 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import { site } from '../data/site';
+
+const liveProducts = site.products.filter((p) => p.live);
+const comingSoon = site.products.filter((p) => !p.live);
+
+const description = `${site.brand} builds small tools for everyday problems. Our first product is Namescape.`;
+---
+<LegalLayout title="Pinkflow" description={description}>
+  <section class="mb-16 text-center">
+    <h2 class="mx-auto max-w-3xl text-3xl md:text-5xl font-extrabold leading-tight text-white">
+      Tools for the everyday problems too small for anyone to care about &mdash; and too big to take on alone.
+    </h2>
+    <p class="mx-auto mt-6 max-w-2xl text-lg text-white/65">
+      We are three people. We build small, ship lean, and run the whole thing ourselves.
+    </p>
+  </section>
+
+  <section class="mb-16">
+    <h3 class="mb-6 text-xl font-extrabold text-white">What we make</h3>
+    <div class="grid gap-4 md:grid-cols-3">
+      {liveProducts.map((p) => (
+        <article class="card flex flex-col">
+          <h4 class="text-lg font-extrabold text-white">{p.name}</h4>
+          <p class="mt-2 flex-1 text-sm text-white/65">{p.tagline}</p>
+          <a href={p.url!} class="btn-primary mt-4 self-start">Open {p.name}</a>
+        </article>
+      ))}
+      {comingSoon.map((p) => (
+        <article class="card flex flex-col opacity-60">
+          <span class="mb-2 inline-flex w-fit rounded-md bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/70">Coming soon · Not for sale</span>
+          <h4 class="text-lg font-extrabold text-white">{p.name}</h4>
+          <p class="mt-2 flex-1 text-sm text-white/65">{p.tagline}</p>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="prose-legal">
+    <h3>About</h3>
+    <p>
+      We are three people building tools for problems that live in an awkward middle ground:
+      too small to get any real attention, too big to ignore. We pick the ones we hit ourselves,
+      build small, ship lean, and run the whole thing end to end.
+    </p>
+    <p>
+      Our first product is <a href="https://namescape.pink">Namescape</a> &mdash;
+      a tool that takes a short description of your idea and returns a shortlist of domains with
+      price guidance, likely availability, and checkout paths, so you can move from idea to name
+      without the usual guesswork.
+    </p>
+    <p>
+      We are based in {site.city}, {site.country}. Reach us any time at
+      <a href={`mailto:${site.email}`}>{site.email}</a>.
+    </p>
+  </section>
+
+  <script type="application/ld+json" is:inline set:html={JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: site.brand,
+    url: 'https://pinkflow.ai',
+    email: site.email,
+    foundingDate: site.founded,
+    address: {
+      '@type': 'PostalAddress',
+      addressLocality: site.city,
+      addressCountry: site.country,
+    },
+  })} />
+</LegalLayout>

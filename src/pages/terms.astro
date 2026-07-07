@@ -1,0 +1,129 @@
+---
+import LegalLayout from '../layouts/LegalLayout.astro';
+import Prose from '../components/Prose.astro';
+import { site } from '../data/site';
+---
+<LegalLayout
+  title="Terms of Service"
+  description="The terms that govern your use of Pinkflow services, including Namescape."
+  lastUpdated={site.lastUpdated.terms}
+>
+  <Prose>
+    <p>These Terms were last updated on {site.lastUpdated.terms}.</p>
+
+    <h2>1. Agreement to these Terms</h2>
+    <p>
+      By creating an account or using any Pinkflow service, you agree to these Terms.
+      If you do not agree, do not use the service.
+    </p>
+
+    <h2>2. About Pinkflow</h2>
+    <p>
+      {site.operatorLine}. These Terms apply to all Pinkflow services,
+      currently including <a href={site.products[0].url!}>Namescape</a>. Future services we
+      release are also covered automatically.
+    </p>
+
+    <h2>3. What Namescape does</h2>
+    <p>
+      Namescape takes a short description of an idea and returns a shortlist of domain names
+      with price guidance, likely-availability clues, and registrar checkout paths. Suggestions
+      are guidance to help you shortlist names before checkout &mdash; not a final answer.
+    </p>
+
+    <h2>4. Your account</h2>
+    <ul>
+      <li>You must be at least 16 years old to create an account.</li>
+      <li>Provide accurate information and keep it current.</li>
+      <li>One account per person.</li>
+      <li>You are responsible for keeping your credentials safe.</li>
+    </ul>
+
+    <h2>5. Search packs and billing</h2>
+    <ul>
+      <li>Namescape is paid for with one-time search packs, priced in USD. See <a href="/pricing">Pricing</a>.</li>
+      <li>Payment is processed by Paddle, the {site.paddle.role.toLowerCase()}. Your card statement will show <strong>{site.paddle.statementLabel}</strong>.</li>
+      <li>Search packs are <strong>consumed when a search is run</strong>.</li>
+      <li>Packs are <strong>non-transferable</strong>, have <strong>no cash value</strong>, and cannot be resold.</li>
+      <li>Packs are a <strong>one-time purchase</strong>. No subscription, no auto-renewal.</li>
+      <li>Purchases are generally final once delivered or used. See <a href="/refunds">Refund Policy</a>.</li>
+    </ul>
+
+    <h2>6. Using the service responsibly</h2>
+    <p>You will not:</p>
+    <ul>
+      <li>Scrape or bulk-harvest suggestions for redistribution.</li>
+      <li>Resell suggestions or access to the service in bulk.</li>
+      <li>Reverse-engineer, decompile, or attempt to extract internal models or sources.</li>
+      <li>Use the service for trademark infringement, cybersquatting, or other illegal activity.</li>
+      <li>Run high-volume automated queries that bypass normal use.</li>
+      <li>Share account credentials or access tokens with third parties.</li>
+    </ul>
+
+    <h2>7. Your inputs</h2>
+    <p>
+      You own the prompts and inputs you submit. You grant Pinkflow a limited permission to
+      process those inputs solely to deliver the service to you.
+    </p>
+
+    <h2>8. Our outputs</h2>
+    <p>
+      Suggestions and availability data are <strong>guidance, not guarantees</strong>. You must
+      independently verify domain availability, registrar pricing, and trademark or other legal
+      clearance with the relevant registrar and authorities before buying or using any name.
+    </p>
+
+    <h2>9. Service changes and availability</h2>
+    <p>
+      We do not guarantee uninterrupted access. Features may change, be added, or be removed.
+      We may also restrict or suspend access for maintenance, security, or policy violations.
+    </p>
+
+    <h2>10. Disclaimers</h2>
+    <p>
+      The service is provided "as is" and "as available". We do not guarantee that suggestions,
+      availability clues, or price guidance are accurate, complete, or current.
+    </p>
+
+    <h2>11. Limitation of liability</h2>
+    <p>
+      To the maximum extent permitted by law, Pinkflow and its operator are not liable for any
+      indirect, incidental, or consequential damages arising from your use of the service.
+      Our total aggregate liability for any claim is limited to the amount you paid us in the
+      12 months preceding the claim. This does not affect any non-waivable consumer rights you
+      may have under applicable law.
+    </p>
+
+    <h2>12. Indemnification</h2>
+    <p>
+      To the maximum extent permitted by law, you agree to indemnify Pinkflow and its operator
+      against claims arising from your misuse of the service or your violation of these Terms
+      or applicable law.
+    </p>
+
+    <h2>13. Termination</h2>
+    <p>
+      You can delete your account at any time. We may suspend or terminate access for violations
+      of these Terms, with notice where reasonable.
+    </p>
+
+    <h2>14. Changes to these Terms</h2>
+    <p>
+      We may update these Terms from time to time. We will revise the "Last updated" date above
+      and, for material changes, notify you by email or in-app. Continued use after a change
+      means you accept the updated Terms.
+    </p>
+
+    <h2>15. Governing law</h2>
+    <p>
+      These Terms are governed by the laws of {site.jurisdiction}, without regard to conflict
+      of law principles.
+    </p>
+
+    <h2>16. Contact</h2>
+    <p>
+      Questions about these Terms? Reach us at <a href={`mailto:${site.email}`}>{site.email}</a>
+      or via the <a href="/contact">contact page</a>.
+    </p>
+  </Prose>
+</LegalLayout>

@@ -1,0 +1,52 @@
+@import '@fontsource-variable/plus-jakarta-sans';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    @apply bg-bg-dark text-white;
+    font-family: 'Plus Jakarta Sans Variable', system-ui, sans-serif;
+  }
+  body {
+    @apply min-h-screen antialiased;
+    background: radial-gradient(circle at 50% 30%, rgba(255, 77, 166, 0.08) 0%, transparent 60%), #120d1a;
+  }
+  h1, h2, h3, h4 { @apply font-extrabold tracking-tight; }
+  a { @apply text-primary transition-colors hover:text-primary-dark; }
+  ::selection { background: rgba(255, 77, 166, 0.3); color: #fff; }
+}
+
+@layer components {
+  .prose-legal {
+    @apply mx-auto max-w-[720px] text-base leading-[1.7] text-white/85;
+  }
+  .prose-legal h2 { @apply mt-12 mb-4 text-2xl font-extrabold text-white; }
+  .prose-legal h3 { @apply mt-8 mb-3 text-lg font-bold text-white; }
+  .prose-legal p { @apply mb-4; }
+  .prose-legal ul { @apply mb-4 ml-6 list-disc space-y-1; }
+  .prose-legal a { @apply underline decoration-primary/40 hover:decoration-primary; }
+  .card {
+    @apply rounded-xl border bg-bg-card p-4;
+    border-color: rgb(255 77 166 / 0.16);
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-extrabold text-white shadow-neon-glow transition-colors hover:bg-primary-dark disabled:opacity-60;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media print {
+  body { background: #fff !important; color: #000 !important; }
+  .no-print { display: none !important; }
+  .prose-legal { color: #000 !important; }
+  .prose-legal h2, .prose-legal h3 { color: #000 !important; }
+}

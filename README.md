@@ -4,6 +4,28 @@ Static company site for Pinkflow (`pinkflow.ai`). Hosts the Terms, Privacy, Refu
 
 Built with Astro, Tailwind, self-hosted Plus Jakarta Sans. Zero client JavaScript except a tiny inline mobile-nav toggle. Deployed via GitHub Pages.
 
+## Quick Access
+
+- Site: [pinkflow.ai](http://pinkflow.ai/)
+- Repo: [Pinkflow-ai/pinkflow](https://github.com/Pinkflow-ai/pinkflow)
+- Deploys: [GitHub Actions](https://github.com/Pinkflow-ai/pinkflow/actions)
+- Pages settings: [GitHub Pages](https://github.com/Pinkflow-ai/pinkflow/settings/pages)
+- Namescape app: [namescape.pink](https://namescape.pink)
+
+Public pages:
+
+- [Pricing](http://pinkflow.ai/pricing)
+- [Terms](http://pinkflow.ai/terms)
+- [Privacy](http://pinkflow.ai/privacy)
+- [Refunds](http://pinkflow.ai/refunds)
+- [Contact](http://pinkflow.ai/contact)
+
+Ops:
+
+- GitHub Pages source: [workflow deploy](https://github.com/Pinkflow-ai/pinkflow/blob/main/.github/workflows/deploy.yml)
+- DNS records: `pinkflow.ai` apex points to the GitHub Pages `A` and `AAAA` records listed below.
+- HTTPS status: enable HTTPS in [Pages settings](https://github.com/Pinkflow-ai/pinkflow/settings/pages) once GitHub finishes certificate provisioning.
+
 ## Develop
 
 ```bash

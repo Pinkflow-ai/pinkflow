@@ -31,6 +31,25 @@ const ds = site.products.find((p) => p.slug === 'namescape')!;
     </p>
   </section>
 
+  <section class="prose-legal mb-12">
+    <h2>How search usage works</h2>
+    <p>
+      Each generated shortlist uses one search from your pack. Basic price guidance,
+      likely-availability clues, saved shortlist access, and opening checkout links are
+      included with that search.
+    </p>
+    <p>
+      Planned deeper checks, such as exact domain availability, bulk re-checks, or richer
+      registrar comparisons, may use additional searches because they run more expensive
+      final-check workflows. Namescape will show the search cost before you run one.
+    </p>
+    <p>
+      Saving a name, revisiting your history, copying a result, or opening a registrar
+      checkout path does not use another search. Final availability, taxes, and registrar
+      pricing are always confirmed at checkout before you buy a domain.
+    </p>
+  </section>
+
   <script type="application/ld+json" is:inline set:html={JSON.stringify({
     '@context': 'https://schema.org',
     '@type': 'Product',

@@ -36,6 +36,14 @@ test('pricing mentions final tax total at checkout', async ({ page }) => {
   await expect(page.getByText('Final tax and currency total shown at checkout')).toBeVisible();
 });
 
+test('pricing explains planned extra search usage', async ({ page }) => {
+  await page.goto('/pricing');
+  await expect(page.getByRole('heading', { name: 'How search usage works' })).toBeVisible();
+  await expect(page.getByText('Each generated shortlist uses one search from your pack')).toBeVisible();
+  await expect(page.getByText('exact domain availability')).toBeVisible();
+  await expect(page.getByText('Namescape will show the search cost before you run one')).toBeVisible();
+});
+
 test('no page contains the word "credits"', async ({ page }) => {
   for (const p of pages) {
     await page.goto(p.path);

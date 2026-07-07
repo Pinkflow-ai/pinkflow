@@ -1,0 +1,49 @@
+---
+interface Props {
+  compact?: boolean;
+  showWordmark?: boolean;
+  class?: string;
+}
+
+const {
+  compact = true,
+  showWordmark = false,
+  class: className = '',
+} = Astro.props;
+---
+<span
+  class={`inline-flex items-center gap-2 rounded-lg border border-primary/40 bg-primary/10 px-2.5 py-1 shadow-pink-glow ${className}`}
+  data-testid="pinkflow-flow-mark"
+>
+  <svg
+    width={compact ? '28' : '34'}
+    height={compact ? '12' : '15'}
+    viewBox="0 0 32 14"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+  >
+    <path
+      class="pinkflow-track"
+      d="M1 11.5C4.3 4.2 8.1 4.2 11.6 8.4C14.9 12.4 18.1 12.3 21.7 5.4C24 1 26.6 1 31 7"
+      pathLength="100"
+      stroke="#ff4da6"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+    <path
+      class="pinkflow-stream"
+      d="M1 11.5C4.3 4.2 8.1 4.2 11.6 8.4C14.9 12.4 18.1 12.3 21.7 5.4C24 1 26.6 1 31 7"
+      pathLength="100"
+      stroke="#ff4da6"
+      stroke-width="2"
+      stroke-linecap="round"
+    />
+  </svg>
+
+  {showWordmark && (
+    <span class="text-[11px] font-semibold uppercase tracking-[0.08em] text-[#ffd3eb]">
+      Pinkflow&trade;
+    </span>
+  )}
+</span>

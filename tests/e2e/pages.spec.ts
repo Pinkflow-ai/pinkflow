@@ -67,6 +67,12 @@ test('header nav links resolve on all pages', async ({ page }) => {
   }
 });
 
+test('header uses the animated Pinkflow flow mark', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByTestId('pinkflow-flow-mark')).toBeVisible();
+  await expect(page.locator('.pinkflow-stream')).toHaveCSS('animation-name', 'pinkflowStream');
+});
+
 test('404 page renders for unknown route', async ({ page }) => {
   await page.goto('/this-does-not-exist');
   await expect(page.getByText('404')).toBeVisible();

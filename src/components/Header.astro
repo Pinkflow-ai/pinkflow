@@ -1,4 +1,6 @@
 ---
+import PinkflowMark from './PinkflowMark.astro';
+
 const navLinks = [
   { href: '/pricing', label: 'Pricing' },
   { href: '/terms', label: 'Terms' },
@@ -10,7 +12,7 @@ const navLinks = [
 <header class="no-print sticky top-0 z-40 border-b border-primary/10 bg-bg-dark/85 backdrop-blur-md">
   <div class="mx-auto flex max-w-5xl items-center justify-between px-4 py-3">
     <a href="/" class="flex items-center gap-2 text-lg font-extrabold tracking-tight text-white">
-      <span class="inline-block h-3 w-3 rounded-full bg-primary shadow-neon-glow"></span>
+      <PinkflowMark compact />
       Pinkflow
     </a>
     <nav class="hidden md:flex md:items-center md:gap-6 text-sm">

@@ -34,6 +34,23 @@
   .btn-primary {
     @apply inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-extrabold text-white shadow-neon-glow transition-colors hover:bg-primary-dark disabled:opacity-60;
   }
+  .pinkflow-track {
+    opacity: 0.3;
+  }
+  .pinkflow-stream {
+    stroke-dasharray: 24 76;
+    stroke-dashoffset: 0;
+    animation: pinkflowStream 1.85s linear infinite;
+  }
+}
+
+@keyframes pinkflowStream {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

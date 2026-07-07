@@ -11,6 +11,7 @@ Built with Astro, Tailwind, self-hosted Plus Jakarta Sans. Zero client JavaScrip
 - Deploys: [GitHub Actions](https://github.com/Pinkflow-ai/pinkflow/actions)
 - Pages settings: [GitHub Pages](https://github.com/Pinkflow-ai/pinkflow/settings/pages)
 - Namescape app: [namescape.pink](https://namescape.pink)
+- Paddle catalog IDs: [docs/paddle-catalog.md](docs/paddle-catalog.md)
 
 Public pages:
 
@@ -58,7 +59,7 @@ All company-specific values live in **`src/data/site.ts`**. Before submitting to
 - `operatorLine` — keep the format `Pinkflow, operated by <name>, an individual based in Israel`.
 - `email` — your real support email.
 - `city` — your real city.
-- `paddlePriceId` fields in **`src/data/products.ts`** — the live price IDs from your Paddle dashboard (one per pack).
+- `paddlePriceId` fields in **`src/data/products.ts`** — keep synchronized with [docs/paddle-catalog.md](docs/paddle-catalog.md) and the live Paddle dashboard.
 - `lastUpdated.*` — bump dates when you revise each page.
 
 ## Deploy

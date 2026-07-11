@@ -34,8 +34,13 @@ export const site = {
       tagline: 'Find shortlist-ready domains with price guidance and checkout paths.',
       url: 'https://namescape.pink',
     },
-    { slug: 'project-2', live: false, name: 'Project 2', tagline: 'Coming soon.', url: null },
-    { slug: 'project-3', live: false, name: 'Project 3', tagline: 'Coming soon.', url: null },
+    {
+      slug: 'gateway',
+      live: true,
+      name: 'Gateway',
+      tagline: 'A single key for a growing collection of small, useful APIs.',
+      url: 'https://gateway.pink',
+    },
   ] satisfies ProductEntry[],
 };
 

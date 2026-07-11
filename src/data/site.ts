@@ -8,8 +8,8 @@ export interface ProductEntry {
 
 export const site = {
   brand: 'Pinkflow',
-  legalName: '[Your Full Legal Name]',
-  operatorLine: 'Pinkflow, operated by [Your Full Legal Name], an individual based in Israel',
+  legalName: 'Pinkflow.ai',
+  operatorLine: 'Pinkflow (pinkflow.ai), based in Israel',
   jurisdiction: 'Israel',
   city: 'Tel Aviv',
   country: 'Israel',

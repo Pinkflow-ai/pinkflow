@@ -55,7 +55,7 @@ test('no page contains the word "credits"', async ({ page }) => {
 test('footer shows operator line on every page', async ({ page }) => {
   for (const p of pages) {
     await page.goto(p.path);
-    await expect(page.getByText(/Pinkflow, operated by/).first()).toBeVisible();
+    await expect(page.getByText(/Pinkflow \(pinkflow\.ai\), based in Israel/).first()).toBeVisible();
   }
 });
 

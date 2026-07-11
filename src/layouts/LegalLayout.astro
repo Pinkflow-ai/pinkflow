@@ -12,7 +12,7 @@ interface Props {
 }
 const { title, description, lastUpdated, path = Astro.url.pathname } = Astro.props;
 const canonical = new URL(path, Astro.site).toString();
-const ogTitle = `${title} — ${site.brand}`;
+const ogTitle = title === site.brand ? title : `${title} — ${site.brand}`;
 ---
 <!doctype html>
 <html lang="en">

@@ -53,10 +53,9 @@ npm run test:unit                               # vitest data-file tests
 
 ## Swap entity details
 
-All company-specific values live in **`src/data/site.ts`**. Before submitting to Paddle, replace:
+All company-specific values live in **`src/data/site.ts`**. Before submitting to Paddle, review:
 
-- `legalName` — your real full legal name.
-- `operatorLine` — keep the format `Pinkflow, operated by <name>, an individual based in Israel`.
+- `legalName` / `operatorLine` — the public pages identify the operator by brand (`Pinkflow (pinkflow.ai), based in Israel`), not a personal name. If you change this, keep `operatorLine` readable in all three places it renders: the footer, Terms §2, and Privacy §1 (where a trailing comma is added so it reads as the sentence subject). Note: presenting the brand publicly does **not** replace the real legal identity Paddle collects during seller verification, nor the controller identity GDPR expects — make sure your Paddle account and, if applicable, your Privacy Policy still name the responsible person or entity.
 - `email` — your real support email.
 - `city` — your real city.
 - `paddlePriceId` fields in **`src/data/products.ts`** — keep synchronized with [docs/paddle-catalog.md](docs/paddle-catalog.md) and the live Paddle dashboard.

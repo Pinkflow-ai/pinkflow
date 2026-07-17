@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-17T21:00:00.000Z",
+  "title": "Design System: Pinkflow Company Site",
+  "extensions": {
+    "colorMeta": {
+      "flow-pink": { "role": "primary", "displayName": "Flow Pink", "canonical": "#ff4da6", "tonalRamp": ["#fff0f7", "#ffd3e8", "#ff9dcc", "#ff70b8", "#ff4da6", "#d63d85", "#9b2a60", "#5a1738"] },
+      "night": { "role": "neutral", "displayName": "Night", "canonical": "#120d1a", "tonalRamp": ["#f5f2f7", "#ded8e3", "#b9b3c1", "#7e7689", "#4a4255", "#2c2337", "#1a1226", "#120d1a"] },
+      "night-raised": { "role": "neutral", "displayName": "Night Raised", "canonical": "#1a1226", "tonalRamp": ["#f8f5fa", "#e7e1eb", "#c8c0d0", "#938a9f", "#5d5369", "#392e45", "#251b31", "#1a1226"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Company and product headlines." },
+      "body": { "displayName": "Body", "purpose": "Product explanation and legal copy." }
+    },
+    "shadows": [
+      { "name": "flow-glow", "value": "0 0 16px rgb(255 77 166 / 0.2)", "purpose": "Animated mark and primary-focus emphasis only." }
+    ],
+    "motion": [
+      { "name": "flow-stream", "value": "1.85s linear infinite", "purpose": "The Pinkflow mark's path animation; disabled for reduced motion." },
+      { "name": "state", "value": "160ms ease", "purpose": "Hover and focus state transitions." }
+    ],
+    "breakpoints": [
+      { "name": "sm", "value": "640px" },
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The main action on a product or pricing surface.",
+      "html": "<a class=\"ds-btn-primary\" href=\"#\">Open product</a>",
+      "css": ".ds-btn-primary { display:inline-flex; min-height:44px; align-items:center; justify-content:center; padding:12px 18px; border-radius:8px; background:#ff4da6; color:#120d1a; font:800 14px 'Plus Jakarta Sans',system-ui,sans-serif; text-decoration:none; transition:background 160ms ease; } .ds-btn-primary:hover { background:#ff70b8; } .ds-btn-primary:focus-visible { outline:2px solid #fff; outline-offset:3px; }"
+    },
+    {
+      "name": "Product Status",
+      "kind": "chip",
+      "description": "Text-first lifecycle status for a Pinkflow product.",
+      "html": "<span class=\"ds-status\">Developer preview</span>",
+      "css": ".ds-status { display:inline-flex; align-items:center; padding:5px 9px; border-radius:999px; background:rgba(255,77,166,.12); color:#ff9dcc; font:700 12px 'Plus Jakarta Sans',system-ui,sans-serif; }"
+    },
+    {
+      "name": "Product Panel",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "A product-shaped surface containing status, outcome, price unit, and destination.",
+      "html": "<article class=\"ds-product\"><h3>Gateway.pink</h3><p>One key for useful APIs.</p></article>",
+      "css": ".ds-product { max-width:420px; padding:24px; border:1px solid rgba(255,77,166,.18); border-radius:12px; background:#1a1226; color:#fff; font-family:'Plus Jakarta Sans',system-ui,sans-serif; } .ds-product h3 { margin:0 0 8px; font-size:24px; } .ds-product p { margin:0; color:#b9b3c1; line-height:1.6; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Working Company Board",
+    "overview": "A product-led company site where current products, real price tags, and support ownership are immediately visible.",
+    "keyCharacteristics": ["Product-led", "Transparent pricing", "Specific lifecycle language", "Dark plum and flow-pink identity"],
+    "rules": [
+      { "name": "Price Beside Product", "body": "Keep the unit and dollar meaning beside every commercial offer.", "section": "components" },
+      { "name": "Tonal Depth", "body": "Use layered surfaces before reaching for shadows.", "section": "elevation" }
+    ],
+    "dos": ["Show real product contracts.", "Use sentence-case labels.", "Keep legal links stable."],
+    "donts": ["Do not fabricate scale or customer proof.", "Do not blur product-specific data contracts.", "Do not use gradient text or decorative terminal cosplay."]
+  }
+}

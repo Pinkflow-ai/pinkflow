@@ -6,7 +6,7 @@ export default {
       colors: {
         primary: {
           DEFAULT: '#ff4da6',
-          dark: '#d63d85',
+          dark: '#ff70b8',
         },
         'bg-dark': '#120d1a',
         'bg-card': '#1a1226',

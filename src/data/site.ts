@@ -1,15 +1,28 @@
 export interface ProductEntry {
   slug: string;
   live: boolean;
+  status: 'available' | 'developer-preview';
+  statusLabel: string;
+  checkoutAvailable: boolean;
+  documentationAvailable: boolean;
   name: string;
   tagline: string;
   url: string | null;
 }
 
+export type ProductAction = 'checkout' | 'documentation';
+
+export function productActionHref(product: ProductEntry, action: ProductAction): string | null {
+  const available = action === 'checkout'
+    ? product.checkoutAvailable
+    : product.documentationAvailable;
+  return available ? product.url : null;
+}
+
 export const site = {
   brand: 'Pinkflow',
-  legalName: 'Pinkflow.ai',
-  operatorLine: 'Pinkflow (pinkflow.ai), based in Israel',
+  legalName: 'Miro Mal',
+  operatorLine: 'Pinkflow is operated by Miro Mal, an individual based in Tel Aviv, Israel',
   jurisdiction: 'Israel',
   city: 'Tel Aviv',
   country: 'Israel',
@@ -18,9 +31,9 @@ export const site = {
   resolutionWindow: '10 business days',
   founded: '2025',
   lastUpdated: {
-    terms: '2026-07-07',
-    privacy: '2026-07-07',
-    refunds: '2026-07-07',
+    terms: '2026-07-17',
+    privacy: '2026-07-17',
+    refunds: '2026-07-17',
   },
   paddle: {
     role: 'Merchant of Record / authorized reseller',
@@ -30,6 +43,10 @@ export const site = {
     {
       slug: 'namescape',
       live: true,
+      status: 'available',
+      statusLabel: 'Available',
+      checkoutAvailable: true,
+      documentationAvailable: true,
       name: 'Namescape',
       tagline: 'Find shortlist-ready domains with price guidance and checkout paths.',
       url: 'https://namescape.pink',
@@ -37,8 +54,12 @@ export const site = {
     {
       slug: 'gateway',
       live: true,
-      name: 'Gateway',
-      tagline: 'A single key for a growing collection of small, useful APIs.',
+      status: 'developer-preview',
+      statusLabel: 'Developer preview',
+      checkoutAvailable: false,
+      documentationAvailable: true,
+      name: 'Gateway.pink',
+      tagline: 'One key for a growing collection of small, useful APIs.',
       url: 'https://gateway.pink',
     },
   ] satisfies ProductEntry[],

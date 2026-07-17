@@ -21,10 +21,15 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22.12
           cache: npm
       - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:unit
+      - run: npm run check
       - run: npm run build
+      - run: npx playwright test --project=desktop
+      - run: npx playwright test --project=mobile
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

@@ -3,32 +3,31 @@ import LegalLayout from '../layouts/LegalLayout.astro';
 import Prose from '../components/Prose.astro';
 import { site } from '../data/site';
 ---
-<LegalLayout
-  title="Contact"
-  description={`Reach ${site.brand}.`}
->
+<LegalLayout title="Contact" description={`Reach ${site.brand} for product, billing, privacy, or security support.`}>
   <Prose>
-    <h2>Email</h2>
+    <h2>One inbox, routed by a person</h2>
     <p>
-      <a href={`mailto:${site.email}`} class="text-xl font-bold">{site.email}</a>
-    </p>
-
-    <h2>Where we are</h2>
-    <p>{site.city}, {site.country}.</p>
-
-    <h2>Response time</h2>
-    <p>
-      We respond within <strong>{site.responseWindow}</strong>, usually faster. We aim to resolve
-      billing and delivery issues within <strong>{site.resolutionWindow}</strong> of your first
-      message.
+      Email <a href={`mailto:${site.email}`} class="text-xl font-bold">{site.email}</a>.
+      We respond within <strong>{site.responseWindow}</strong>, usually faster.
     </p>
 
     <h2>What to include</h2>
     <ul>
-      <li><strong>Support:</strong> your account email and a short description of what you expected vs. what happened.</li>
-      <li><strong>Billing:</strong> your account email, the transaction ID, and the date of the charge. See our <a href="/refunds">Refund Policy</a>.</li>
-      <li><strong>Privacy request:</strong> your account email and the specific right you want to exercise (access, correct, delete, port, object). See our <a href="/privacy">Privacy Policy</a>.</li>
-      <li><strong>Security report:</strong> a clear description of the issue and any proof-of-concept. We take responsible disclosure seriously.</li>
+      <li><strong>Namescape support:</strong> your account email, the action you ran, and what you expected compared with what happened.</li>
+      <li><strong>Gateway.pink preview:</strong> the route, request identifier, status code, and timestamp. Do not email secrets, API keys, or sensitive payloads.</li>
+      <li><strong>Billing:</strong> your account email, transaction identifier, charge date, and a description of the issue. See the <a href="/refunds">Refund Policy</a>.</li>
+      <li><strong>Privacy request:</strong> your account email, product, and the right you want to exercise. See the <a href="/privacy">Privacy Policy</a>.</li>
+      <li><strong>Security report:</strong> the affected product, impact, reproduction steps, and a minimal proof of concept. Do not access data that is not yours.</li>
     </ul>
+
+    <h2>Where we are</h2>
+    <p>{site.operatorLine}. Correspondence: <a href={`mailto:${site.email}`}>{site.email}</a>.</p>
+
+    <h2>Resolution target</h2>
+    <p>
+      We aim to resolve billing and delivery issues within <strong>{site.resolutionWindow}</strong>
+      of the first message. Complex security, provider, or privacy investigations may take longer;
+      if so, we will explain what is still being checked.
+    </p>
   </Prose>
 </LegalLayout>

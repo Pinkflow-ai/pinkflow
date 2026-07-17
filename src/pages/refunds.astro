@@ -5,62 +5,70 @@ import { site } from '../data/site';
 ---
 <LegalLayout
   title="Refund Policy"
-  description="How Pinkflow handles refunds and billing issues."
+  description="Refund and billing-issue policy for Pinkflow products."
   lastUpdated={site.lastUpdated.refunds}
 >
   <Prose>
     <p>This Policy was last updated on {site.lastUpdated.refunds}.</p>
 
-    <h2>1. Generally final once delivered or used</h2>
+    <h2>1. Current purchase availability</h2>
     <p>
-      Namescape search packs are <strong>digital consumables</strong>. A pack is consumed
-      when a search is run. Because we cannot reliably verify partial use, purchases are
-      <strong>generally final once delivered or used</strong>, except where required by law
-      or where there is a billing or delivery issue we can fix (see Section 4).
+      Namescape search packs are currently the purchasable Pinkflow digital product described
+      by this Policy. <strong>Gateway.pink credit checkout is not currently available.</strong>
+      Before Gateway credit sales open, this Policy and the checkout terms will be updated with
+      any product-specific treatment.
     </p>
 
-    <h2>2. Why</h2>
+    <h2>2. Generally final once delivered or used</h2>
     <p>
-      Once you run a search, the value of the pack has been delivered. We have no way to
-      "un-deliver" the suggestions, availability clues, or price guidance you received. This
-      is the standard model for digital consumable products.
+      Namescape search packs are digital consumables. Paid searches are deducted when an eligible
+      action returns a usable result. Purchases are <strong>generally final once delivered or used</strong>,
+      except where applicable law requires otherwise or where there is a billing, delivery, or
+      service issue we can correct.
     </p>
 
-    <h2>3. Statutory rights preserved</h2>
+    <h2>3. Why used digital value is different</h2>
     <p>
-      Nothing in this Policy waives any non-waivable consumer rights you may have under
-      {site.jurisdiction} law, EU/UK consumer protection, or the law of your country of residence.
-      If a local right entitles you to a refund in your specific circumstances, that right
-      always applies.
+      Once a paid search returns suggestions, verification, or availability results, that value
+      cannot be returned in the same way as a physical item. We will still investigate failures,
+      duplicates, unauthorized transactions, and any case where the purchased balance or result
+      was not delivered as described.
     </p>
 
-    <h2>4. Issues we will always fix</h2>
-    <p>Contact us and we will make it right if any of these happen:</p>
+    <h2>4. Statutory rights are preserved</h2>
+    <p>
+      Nothing in this Policy waives a non-waivable consumer right under {site.jurisdiction} law,
+      EU or UK consumer law where applicable, or the law of your country of residence. If local
+      law entitles you to cancellation, a refund, repair, replacement, or another remedy in your
+      circumstances, that right applies.
+    </p>
+
+    <h2>5. Issues we will investigate and correct</h2>
     <ul>
-      <li>You were <strong>charged twice</strong> for the same purchase due to a technical failure.</li>
-      <li>You were charged but <strong>searches were not added</strong> to your account.</li>
-      <li>An <strong>unauthorized transaction</strong> appears on your account &mdash; report it immediately.</li>
-      <li>The service was <strong>materially unavailable</strong> at the time of purchase and you received no value.</li>
+      <li>You were charged more than once for the same purchase because of a technical failure.</li>
+      <li>You were charged but the purchased searches were not added to your account.</li>
+      <li>A paid action deducted searches but returned no usable result because the provider or service failed.</li>
+      <li>An unauthorized transaction appears on your account.</li>
+      <li>The service was materially unavailable at purchase time and you received no value.</li>
     </ul>
 
-    <h2>5. Timing</h2>
+    <h2>6. Timing and information to send</h2>
+    <p>
+      Email <a href={`mailto:${site.email}`}>{site.email}</a> with your account email, transaction
+      identifier, purchase date, and a short description of the issue. Please report billing
+      issues within 60 days so records are readily available.
+    </p>
     <ul>
-      <li>We respond to billing reports within <strong>{site.responseWindow}</strong>.</li>
-      <li>We aim to resolve billing and delivery issues within <strong>{site.resolutionWindow}</strong> of your first report.</li>
+      <li>We respond within <strong>{site.responseWindow}</strong>.</li>
+      <li>We aim to resolve billing and delivery issues within <strong>{site.resolutionWindow}</strong> of the first report.</li>
     </ul>
 
-    <h2>6. How to report</h2>
+    <h2>7. Payment processor</h2>
     <p>
-      Email <a href={`mailto:${site.email}`}>{site.email}</a> with your account email and the
-      transaction ID if you have it. Please report billing issues within <strong>60 days</strong>
-      of the transaction so we can investigate promptly.
-    </p>
-
-    <h2>7. About Paddle</h2>
-    <p>
-      Payment is processed by Paddle, the {site.paddle.role.toLowerCase()}. Your card statement
-      will show <strong>{site.paddle.statementLabel}</strong>. For billing disputes, contact us
-      first &mdash; we will resolve what we can directly and loop in Paddle when needed.
+      Paddle processes eligible purchases as the {site.paddle.role.toLowerCase()}. Your statement
+      will show <strong>{site.paddle.statementLabel}</strong>. Contact Pinkflow first so we can
+      investigate the product and delivery record; we will involve Paddle when payment processing
+      or a refund requires it.
     </p>
   </Prose>
 </LegalLayout>

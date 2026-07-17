@@ -1,52 +1,142 @@
 ---
-import LegalLayout from '../layouts/LegalLayout.astro';
+import SiteLayout from '../layouts/SiteLayout.astro';
 import PackCard from '../components/PackCard.astro';
-import { namescapePacks } from '../data/products';
-import { site } from '../data/site';
+import {
+  gatewayCreditPacks,
+  gatewayAiBudgetPolicy,
+  gatewayCatalogCounts,
+  gatewayEndpointPrices,
+  namescapeAnonymousAttempts,
+  namescapePacks,
+  namescapeUsagePrices,
+} from '../data/products';
+import { productActionHref, site } from '../data/site';
 
-const description = 'Pricing for Pinkflow products. One-time purchases, no subscriptions.';
-const ds = site.products.find((p) => p.slug === 'namescape')!;
+const description = 'Current Namescape search-pack pricing and published Gateway.pink developer-preview credit pricing.';
+const namescape = site.products.find((product) => product.slug === 'namescape')!;
+const gateway = site.products.find((product) => product.slug === 'gateway')!;
+const namescapeCheckoutUrl = productActionHref(namescape, 'checkout');
+const gatewayDocsUrl = productActionHref(gateway, 'documentation');
+const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const integer = new Intl.NumberFormat('en-US');
 ---
-<LegalLayout title="Pricing" description={description}>
-  <section class="prose-legal mb-12">
-    <p>
-      Pricing for Pinkflow products. One-time purchases, no subscriptions, no auto-renewal.
+<SiteLayout title="Pricing" description={description}>
+  <section class="site-container pb-14 pt-16 sm:pb-20 sm:pt-24">
+    <p class="mb-3 font-bold text-primary">Pinkflow pricing</p>
+    <h1 class="max-w-4xl text-[clamp(1.75rem,7vw,5.8rem)] font-extrabold leading-[0.98] tracking-[-0.045em] text-white">
+      Two products, two honest units.
+    </h1>
+    <p class="muted-copy mt-6 max-w-2xl text-lg leading-relaxed sm:text-xl">
+      Namescape charges for completed search workflows. Gateway.pink uses fixed-value credits for APIs with real upstream cost. Neither product uses a subscription or auto-renewal.
     </p>
   </section>
 
-  <section class="mb-12">
-    <h2 class="mb-6 text-2xl font-extrabold text-white">{ds.name}</h2>
-    <div class="grid gap-4 md:grid-cols-3">
-      {namescapePacks.map((pack) => (
-        <PackCard pack={pack} ctaHref={ds.url!} />
-      ))}
+  <section id="namescape" class="scroll-mt-24 border-y border-white/10 py-16 sm:py-20">
+    <div class="site-container">
+      <div class="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
+        <div class="min-w-0">
+          <span class="status-chip">{namescape.statusLabel}</span>
+          <h2 class="mt-4 text-[clamp(1.125rem,6vw,2.25rem)] font-extrabold text-white">Namescape search packs</h2>
+          <p class="muted-copy mt-4 max-w-lg leading-relaxed">
+            One-time balances for domain-name generation and verification workflows. Searches do not expire or auto-renew.
+          </p>
+        </div>
+        <div class="min-w-0 grid gap-4 md:grid-cols-3">
+          {namescapePacks.map((pack) => <PackCard pack={pack} ctaHref={namescapeCheckoutUrl} />)}
+        </div>
+      </div>
+
+      <div class="mt-12 grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
+        <div class="min-w-0">
+          <h3 class="text-2xl font-extrabold text-white">How search usage works</h3>
+          <p class="muted-copy mt-3 leading-relaxed">
+            Signed-out visitors receive one rate-limited generation attempt. That is not a paid search balance and does not repeat after the anonymous allowance is used.
+          </p>
+          <p class="mt-3 text-sm text-white/55">
+            Current anonymous allowance: {namescapeAnonymousAttempts} attempt.
+          </p>
+        </div>
+        <div class="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-bg-card">
+          <div class="hidden grid-cols-[1fr_auto] gap-4 border-b border-white/10 px-5 py-3 text-sm font-bold text-white/55 sm:grid">
+            <span>Action</span><span>Searches</span>
+          </div>
+          {namescapeUsagePrices.map((item) => (
+            <div class="grid min-w-0 grid-cols-1 gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_auto] sm:gap-4">
+              <span class="font-semibold text-white">{item.name}</span>
+              <span class="font-bold text-primary">{item.searches} {item.searches === 1 ? 'search' : 'searches'}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <p class="mt-8 max-w-4xl text-sm leading-relaxed text-white/60">
+        All prices are USD. Paddle processes Namescape purchases as merchant of record. Final tax and currency total shown at checkout. Saving, revisiting, or copying an existing result does not consume another search. Domain availability, registrar pricing, taxes, and legal clearance must be confirmed independently.
+      </p>
     </div>
-    <p class="mt-6 text-sm text-white/55">
-      All prices in USD. Payment processed by Paddle ({site.paddle.role.toLowerCase()}).
-      <strong class="text-white/80">Final tax and currency total shown at checkout.</strong>
-      Checkout happens inside Namescape after sign-in &mdash; one-time purchase, no auto-renewal.
-    </p>
-    <p class="mt-3 text-sm">
-      <a href="/terms">Terms of Service</a> · <a href="/refunds">Refund Policy</a>
-    </p>
   </section>
 
-  <section class="prose-legal mb-12">
-    <h2>How search usage works</h2>
+  <section id="gateway" class="scroll-mt-24 py-16 sm:py-20">
+    <div class="site-container">
+      <div class="grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
+        <div class="min-w-0">
+          <span class="status-chip">{gateway.statusLabel}</span>
+          <h2 class="mt-4 text-[clamp(1.125rem,6vw,2.25rem)] font-extrabold text-white"><span>Gateway.</span><wbr /><span>pink credits</span></h2>
+          <p class="muted-copy mt-4 max-w-lg leading-relaxed">
+            Published developer-preview pricing for {gatewayCatalogCounts.freeAvailable} currently available free routes and {gatewayCatalogCounts.paidAvailable} paid routes. The credit denomination does not change between packs.
+          </p>
+          <div class="mt-6 max-w-full rounded-lg bg-primary/10 px-4 py-3 text-lg font-extrabold text-[#ff9dcc]">
+            1 credit = $0.001
+          </div>
+        </div>
+
+        <div class="min-w-0">
+          <div class="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-bg-card">
+            <div class="hidden grid-cols-[1fr_auto_auto] gap-4 border-b border-white/10 px-5 py-3 text-sm font-bold text-white/55 sm:grid">
+              <span>Pack</span><span class="text-right">Credits</span><span class="text-right">Price</span>
+            </div>
+            {gatewayCreditPacks.map((pack) => (
+              <div class="grid min-w-0 grid-cols-1 items-center gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_auto_auto] sm:gap-4">
+                <span class="font-semibold text-white">{pack.name}{pack.mcpAccess && <span class="ml-2 hidden text-xs font-bold text-primary sm:inline">MCP access</span>}</span>
+                <span class="text-sm text-white/70 sm:text-right">{integer.format(pack.credits)} credits</span>
+                <span class="font-extrabold text-white sm:min-w-14 sm:text-right">{usd.format(pack.priceUsd)}</span>
+              </div>
+            ))}
+          </div>
+          <p class="mt-4 rounded-lg border border-primary/20 bg-primary/[0.06] px-4 py-3 text-sm leading-relaxed text-[#d8cfdf]">
+            <strong class="text-white">Gateway.pink credit checkout is not currently available.</strong>
+            These are published launch prices for budgeting during the developer preview, not an invitation to purchase today.
+          </p>
+        </div>
+      </div>
+
+      <div class="mt-12 grid gap-8 lg:grid-cols-[0.7fr_1.3fr]">
+        <div class="min-w-0">
+          <h3 class="text-2xl font-extrabold text-white">What paid calls cost</h3>
+          <p class="muted-copy mt-3 leading-relaxed">
+            Free routes consume zero credits. Fixed-price routes settle only after a successful provider response. AI is metered from actual provider-reported cost and <code>{gatewayAiBudgetPolicy.field}</code> is the caller's hard credit ceiling ({gatewayAiBudgetPolicy.minimum}–{gatewayAiBudgetPolicy.maximum} credits).
+          </p>
+        </div>
+        <div class="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-bg-card">
+          {gatewayEndpointPrices.map((item) => (
+            <div class="grid min-w-0 grid-cols-1 gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_auto] sm:gap-4">
+              <span class="font-semibold text-white">{item.name}</span>
+              <span class="font-bold text-primary sm:text-right">{item.metered ? 'From ' : ''}{item.credits} {item.credits === 1 ? 'credit' : 'credits'}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="mt-8 flex flex-wrap items-center gap-3">
+        {gatewayDocsUrl && <a href={gatewayDocsUrl} class="btn-primary">Explore Gateway.pink docs</a>}
+        <a href="/terms" class="btn-secondary">Read the service terms</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="site-container border-t border-white/10 py-12 text-sm text-white/55">
     <p>
-      Each generated shortlist uses one search from your pack. Basic price guidance,
-      likely-availability clues, saved shortlist access, and opening checkout links are
-      included with that search.
-    </p>
-    <p>
-      Planned deeper checks, such as exact domain availability, bulk re-checks, or richer
-      registrar comparisons, may use additional searches because they run more expensive
-      final-check workflows. Namescape will show the search cost before you run one.
-    </p>
-    <p>
-      Saving a name, revisiting your history, copying a result, or opening a registrar
-      checkout path does not use another search. Final availability, taxes, and registrar
-      pricing are always confirmed at checkout before you buy a domain.
+      Questions about pricing or a billing issue? Contact <a href={`mailto:${site.email}`} class="inline-link">{site.email}</a>.
+      See our <a href="/terms" class="inline-link">Terms of Service</a> and <a href="/refunds" class="inline-link">Refund Policy</a>.
     </p>
   </section>
 
@@ -56,11 +146,12 @@ const ds = site.products.find((p) => p.slug === 'namescape')!;
     name: 'Namescape Search Pack',
     description: 'One-time search packs for Namescape.',
     brand: { '@type': 'Brand', name: 'Pinkflow' },
-    offers: namescapePacks.map((p) => ({
+    offers: namescapePacks.map((pack) => ({
       '@type': 'Offer',
-      price: p.priceUsd,
+      price: pack.priceUsd,
       priceCurrency: 'USD',
-      description: `${p.searches} Namescape searches`,
+      description: `${pack.searches} Namescape searches`,
+      url: namescape.url,
     })),
   })} />
-</LegalLayout>
+</SiteLayout>

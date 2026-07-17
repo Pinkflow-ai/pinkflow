@@ -2,10 +2,13 @@
 import LegalLayout from '../layouts/LegalLayout.astro';
 import Prose from '../components/Prose.astro';
 import { site } from '../data/site';
+
+const namescape = site.products.find((product) => product.slug === 'namescape')!;
+const gateway = site.products.find((product) => product.slug === 'gateway')!;
 ---
 <LegalLayout
   title="Terms of Service"
-  description="The terms that govern your use of Pinkflow services, including Namescape."
+  description="Terms governing Namescape, Gateway.pink, and other Pinkflow services."
   lastUpdated={site.lastUpdated.terms}
 >
   <Prose>
@@ -13,117 +16,138 @@ import { site } from '../data/site';
 
     <h2>1. Agreement to these Terms</h2>
     <p>
-      By creating an account or using any Pinkflow service, you agree to these Terms.
-      If you do not agree, do not use the service.
+      By creating an account, using an API key, or using any Pinkflow service, you agree to
+      these Terms. If you do not agree, do not use the service.
     </p>
 
-    <h2>2. About Pinkflow</h2>
+    <h2>2. About Pinkflow and these services</h2>
     <p>
-      {site.operatorLine}. These Terms apply to all Pinkflow services,
-      currently including <a href={site.products[0].url!}>Namescape</a>. Future services we
-      release are also covered automatically.
+      {site.operatorLine}. These Terms currently cover <a href={namescape.url!}>{namescape.name}</a>
+      and <a href={gateway.url!}>{gateway.name}</a>, as well as company pages at pinkflow.ai.
+    </p>
+    <p>
+      Namescape is available. Gateway.pink is a developer preview: documentation and
+      published pricing are available, but production credit checkout is not currently live.
     </p>
 
     <h2>3. What Namescape does</h2>
     <p>
-      Namescape takes a short description of an idea and returns a shortlist of domain names
-      with price guidance, likely-availability clues, and registrar checkout paths. Suggestions
-      are guidance to help you shortlist names before checkout &mdash; not a final answer.
+      Namescape takes a description of an idea and produces domain-name suggestions with
+      price guidance, likely-availability clues, and registrar checkout paths. Suggestions
+      help you shortlist names; they do not guarantee availability, price, or legal clearance.
     </p>
 
-    <h2>4. Your account</h2>
+    <h2>4. What Gateway.pink does</h2>
+    <p>
+      Gateway.pink documents and exposes utility, public-data, validation, rendering, lookup,
+      and model-backed APIs behind one key. Some routes are free; routes with a real upstream
+      provider cost use fixed or metered credits. Route availability, price, data source, and
+      storage policy are published in the Gateway.pink catalog.
+    </p>
+
+    <h2>5. Accounts and API keys</h2>
     <ul>
-      <li>You must be at least 16 years old to create an account.</li>
+      <li>You must be at least 16 years old to create an account or hold a production API key.</li>
       <li>Provide accurate information and keep it current.</li>
-      <li>One account per person.</li>
-      <li>You are responsible for keeping your credentials safe.</li>
+      <li>You are responsible for your account sessions, credentials, and API keys.</li>
+      <li>Do not share a personal account or publish a secret API key.</li>
+      <li>Contact us promptly if you believe a credential has been compromised.</li>
     </ul>
 
-    <h2>5. Search packs and billing</h2>
+    <h2>6. Namescape searches and Gateway credits</h2>
     <ul>
-      <li>Namescape is paid for with one-time search packs, priced in USD. See <a href="/pricing">Pricing</a>.</li>
-      <li>Payment is processed by Paddle, the {site.paddle.role.toLowerCase()}. Your card statement will show <strong>{site.paddle.statementLabel}</strong>.</li>
-      <li>Search packs are <strong>consumed when a search is run</strong>.</li>
-      <li>Packs are <strong>non-transferable</strong>, have <strong>no cash value</strong>, and cannot be resold.</li>
-      <li>Packs are a <strong>one-time purchase</strong>. No subscription, no auto-renewal.</li>
-      <li>Purchases are generally final once delivered or used. See <a href="/refunds">Refund Policy</a>.</li>
+      <li>Namescape sells one-time search packs in USD. See <a href="/pricing#namescape">Namescape pricing</a>.</li>
+      <li>A paid Namescape action deducts its published search amount only after the paid work returns a usable result. Signed-out trial attempts are rate-limited and are not a paid balance.</li>
+      <li>Gateway.pink defines one credit as $0.001. Fixed routes have a published per-call price; metered AI calls settle from provider-reported cost subject to the caller's budget.</li>
+      <li>Gateway.pink credit checkout is not currently available. Published packs are preview prices, not purchasable offers today.</li>
+      <li>Balances are non-transferable, have no cash value, and cannot be resold.</li>
+      <li>Neither product has a subscription or auto-renewal.</li>
+      <li>Purchases are generally final once delivered or used. See the <a href="/refunds">Refund Policy</a>.</li>
     </ul>
 
-    <h2>6. Using the service responsibly</h2>
+    <h2>7. Payments</h2>
+    <p>
+      Eligible purchases are processed by Paddle, the {site.paddle.role.toLowerCase()}.
+      Your card statement will show <strong>{site.paddle.statementLabel}</strong>. Paddle may
+      calculate tax and display a localized total before checkout. We do not receive your full
+      card number.
+    </p>
+
+    <h2>8. Responsible use</h2>
     <p>You will not:</p>
     <ul>
-      <li>Scrape or bulk-harvest suggestions for redistribution.</li>
-      <li>Resell suggestions or access to the service in bulk.</li>
-      <li>Reverse-engineer, decompile, or attempt to extract internal models or sources.</li>
-      <li>Use the service for trademark infringement, cybersquatting, or other illegal activity.</li>
-      <li>Run high-volume automated queries that bypass normal use.</li>
-      <li>Share account credentials or access tokens with third parties.</li>
+      <li>Use a service for unlawful activity, trademark infringement, cybersquatting, abuse, or attacks.</li>
+      <li>Bypass rate limits, billing controls, authentication, or published usage limits.</li>
+      <li>Scrape, bulk-harvest, or resell outputs or service access contrary to the product contract.</li>
+      <li>Use Gateway.pink to target private networks, exfiltrate secrets, distribute malware, or interfere with another system.</li>
+      <li>Misrepresent Pinkflow output as a guarantee or professional legal, financial, or security advice.</li>
     </ul>
 
-    <h2>7. Your inputs</h2>
+    <h2>9. Your inputs and provider processing</h2>
     <p>
-      You own the prompts and inputs you submit. You grant Pinkflow a limited permission to
-      process those inputs solely to deliver the service to you.
+      You retain your rights in the inputs you submit. You grant Pinkflow the limited right to
+      process them to provide, secure, and support the requested service. A provider-backed
+      feature may transmit the input required for that call to the named upstream provider;
+      product documentation and our <a href="/privacy">Privacy Policy</a> explain those boundaries.
+    </p>
+    <p>Do not submit data you are not authorized to process or disclose.</p>
+
+    <h2>10. Outputs and third-party information</h2>
+    <p>
+      Generated names, availability signals, public records, provider validations, screenshots,
+      model output, and other results can be incomplete, delayed, or incorrect. Verify important
+      information with the relevant registrar, registry, provider, authority, or source before
+      relying on it.
     </p>
 
-    <h2>8. Our outputs</h2>
+    <h2>11. Service changes and availability</h2>
     <p>
-      Suggestions and availability data are <strong>guidance, not guarantees</strong>. You must
-      independently verify domain availability, registrar pricing, and trademark or other legal
-      clearance with the relevant registrar and authorities before buying or using any name.
+      We do not guarantee uninterrupted access. Preview routes, sources, models, prices, and
+      features may change or be withdrawn. We may restrict access for maintenance, security,
+      abuse, legal requirements, or violations of these Terms.
     </p>
 
-    <h2>9. Service changes and availability</h2>
+    <h2>12. Intellectual property</h2>
     <p>
-      We do not guarantee uninterrupted access. Features may change, be added, or be removed.
-      We may also restrict or suspend access for maintenance, security, or policy violations.
+      Pinkflow owns its brands, site content, and proprietary service components. Open-source
+      components and public standards remain subject to their own licenses. These Terms do not
+      override rights granted by an applicable open-source license.
     </p>
 
-    <h2>10. Disclaimers</h2>
+    <h2>13. Disclaimers</h2>
     <p>
-      The service is provided "as is" and "as available." We do not guarantee that suggestions,
-      availability clues, or price guidance are accurate, complete, or current.
+      Services are provided "as is" and "as available." To the maximum extent permitted by
+      law, we disclaim implied warranties of merchantability, fitness for a particular purpose,
+      non-infringement, and uninterrupted or error-free operation.
     </p>
 
-    <h2>11. Limitation of liability</h2>
+    <h2>14. Limitation of liability</h2>
     <p>
-      To the maximum extent permitted by law, Pinkflow and its operator are not liable for any
-      indirect, incidental, or consequential damages arising from your use of the service.
-      Our total aggregate liability for any claim is limited to the amount you paid us in the
-      12 months preceding the claim. This does not affect any non-waivable consumer rights you
-      may have under applicable law.
+      To the maximum extent permitted by law, Pinkflow and its operator are not liable for
+      indirect, incidental, special, or consequential damages arising from a service. Our total
+      aggregate liability for a claim is limited to the amount you paid Pinkflow in the 12 months
+      before the claim. This does not limit non-waivable consumer rights or liability that cannot
+      legally be excluded.
     </p>
 
-    <h2>12. Indemnification</h2>
+    <h2>15. Suspension and termination</h2>
     <p>
-      To the maximum extent permitted by law, you agree to indemnify Pinkflow and its operator
-      against claims arising from your misuse of the service or your violation of these Terms
-      or applicable law.
+      You may stop using a service or request account deletion. We may suspend or terminate
+      access for material violations, abuse, security risk, non-payment, or legal requirements,
+      with notice where reasonable.
     </p>
 
-    <h2>13. Termination</h2>
+    <h2>16. Changes and governing law</h2>
     <p>
-      You can delete your account at any time. We may suspend or terminate access for violations
-      of these Terms, with notice where reasonable.
+      We may update these Terms and will revise the date above. For material changes, we will
+      provide reasonable notice through the relevant service or account email. These Terms are
+      governed by the laws of {site.jurisdiction}, without regard to conflict-of-law principles.
     </p>
 
-    <h2>14. Changes to these Terms</h2>
+    <h2>17. Contact</h2>
     <p>
-      We may update these Terms from time to time. We will revise the "Last updated" date above
-      and, for material changes, notify you by email or in-app. Continued use after a change
-      means you accept the updated Terms.
-    </p>
-
-    <h2>15. Governing law</h2>
-    <p>
-      These Terms are governed by the laws of {site.jurisdiction}, without regard to conflict
-      of law principles.
-    </p>
-
-    <h2>16. Contact</h2>
-    <p>
-      Questions about these Terms? Reach us at <a href={`mailto:${site.email}`}>{site.email}</a>
-      or via the <a href="/contact">contact page</a>.
+      Questions about these Terms? Email <a href={`mailto:${site.email}`}>{site.email}</a> or use
+      the <a href="/contact">contact page</a>.
     </p>
   </Prose>
 </LegalLayout>

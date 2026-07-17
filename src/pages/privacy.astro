@@ -5,7 +5,7 @@ import { site } from '../data/site';
 ---
 <LegalLayout
   title="Privacy Policy"
-  description="How Pinkflow handles your data."
+  description="How Pinkflow handles data across pinkflow.ai, Namescape, and Gateway.pink."
   lastUpdated={site.lastUpdated.privacy}
 >
   <Prose>
@@ -13,111 +13,128 @@ import { site } from '../data/site';
 
     <h2>1. Who we are and how to reach us</h2>
     <p>
-      {site.operatorLine}, is the controller responsible for your personal data under
-      applicable data protection law, including the Israeli Privacy Protection Law and the
-      EU General Data Protection Regulation (GDPR) where it applies to you.
+      {site.operatorLine}. {site.legalName} is the controller responsible for personal data
+      under applicable data protection law, including the Israeli Privacy Protection Law and
+      the EU General Data Protection Regulation (GDPR) where it applies.
     </p>
+    <p>Email: <a href={`mailto:${site.email}`}>{site.email}</a>. Location: {site.city}, {site.country}.</p>
+
+    <h2>2. Scope and the important product difference</h2>
     <p>
-      Email: <a href={`mailto:${site.email}`}>{site.email}</a>. Location: {site.city}, {site.country}.
+      This Policy covers pinkflow.ai, Namescape, and Gateway.pink. Their data contracts are not
+      identical: Namescape can store the work you save to your account; Gateway is designed not
+      to persist caller payloads.
     </p>
 
-    <h2>2. What we collect</h2>
+    <h2>3. Data collected by Namescape</h2>
     <ul>
-      <li><strong>Account data:</strong> your email address and a hashed password. We never see or store your password in plain text.</li>
-      <li><strong>Service usage:</strong> the prompts you submit, the names you save, and your generation history.</li>
-      <li><strong>Payment data:</strong> handled entirely by Paddle, our {site.paddle.role.toLowerCase()}. We receive confirmation of a successful purchase, but we <strong>never</strong> receive or store your card number or full payment details.</li>
-      <li><strong>Security logs:</strong> IP address and browser user-agent, used only for abuse prevention and security investigations.</li>
+      <li><strong>Account data:</strong> email address, authentication-provider identifiers, profile settings, and account role. Pinkflow does not receive your Google or Microsoft password.</li>
+      <li><strong>Service data:</strong> prompts, generated domain suggestions, saved names, search history, balances, and usage-ledger entries needed to provide the signed-in workflow.</li>
+      <li><strong>Anonymous generation:</strong> a privacy-preserving network/browser fingerprint and usage counter used to enforce the one-attempt allowance.</li>
+      <li><strong>Domain checks:</strong> candidate domain names sent to public registry, RDAP, registrar, or verification sources. Your account identity is not included in those lookups.</li>
     </ul>
 
-    <h2>3. Why we use your data (legal bases)</h2>
+    <h2>4. Data collected by Gateway.pink</h2>
+    <p>
+      <strong>Gateway does not log or persistently store request or response bodies.</strong>
+      It records billing and operations metadata such as organization or API-key identifier,
+      endpoint, time, status, latency, request identifier, settled credits, token counts, provider
+      cost, and a non-payload failure code.
+    </p>
+    <p>
+      Routes marked <code>cached-ttl</code> may briefly cache a public upstream result to respect
+      source limits and improve reliability. Caller inputs are never cached, and the temporary
+      result is not retained as account history. The route's published storage policy is the
+      source of truth for whether short-lived public-result caching applies.
+    </p>
+    <p>
+      <strong>Provider-backed Gateway routes</strong> transmit the input required to perform the
+      requested operation to the provider named on that route's documentation page. Local compute
+      routes do not send input to an upstream provider. AI requests ask OpenRouter to deny provider
+      data collection, but OpenRouter's own processing terms still apply.
+    </p>
+
+    <h2>5. Payments and support</h2>
     <ul>
-      <li>To provide and improve the service &mdash; <em>performance of a contract</em> with you.</li>
-      <li>To process payments &mdash; <em>performance of a contract</em>, via Paddle.</li>
-      <li>To prevent fraud and abuse &mdash; our <em>legitimate interests</em> in protecting the service and other users.</li>
-      <li>To send essential account and billing emails &mdash; <em>performance of a contract</em> or our legitimate interests.</li>
+      <li><strong>Payment data:</strong> Paddle receives the payment and contact details needed for an eligible purchase. Pinkflow receives transaction status, product, amount, tax, and identifiers, but not your full card number.</li>
+      <li><strong>Support data:</strong> the email and information you send us, used to investigate and answer your request.</li>
+      <li><strong>Security data:</strong> IP address, user-agent, authentication events, and rate-limit counters needed to prevent abuse and investigate security incidents.</li>
     </ul>
 
-    <h2>4. Providing data is required</h2>
-    <p>
-      An email address is required to create an account, and you cannot use Namescape without
-      one. Some features (such as saved names and history) require usage data; if you do not
-      want us to hold that data, do not use those features or request deletion (see Section 10).
-    </p>
-
-    <h2>5. Third parties we share with</h2>
-    <p>We share data with these categories of subprocessors:</p>
+    <h2>6. Why we use data</h2>
     <ul>
-      <li><strong>Paddle</strong> &mdash; {site.paddle.role.toLowerCase()} for payments. Paddle receives your payment and contact details necessary to complete a purchase.</li>
-      <li><strong>Hosting provider</strong> &mdash; where the service runs and your account data is stored.</li>
-      <li><strong>Authentication provider</strong> &mdash; for sign-in and session management (where you use OAuth, e.g., Google, Microsoft, or GitHub).</li>
-      <li><strong>Email delivery</strong> &mdash; to send account and billing emails.</li>
-      <li><strong>Domain availability and pricing sources</strong> &mdash; public registries and registrar directories we query to produce suggestions and price guidance. We send only the domain names being looked up, not your account data.</li>
-      <li><strong>Generation provider</strong> &mdash; the service we use to draft name suggestions from your prompt. We send only your prompt text, not your account data.</li>
-    </ul>
-    <p><strong>We do not use advertising trackers, advertising networks, or third-party analytics on your browsing.</strong></p>
-
-    <h2>6. International transfers</h2>
-    <p>
-      Your data is processed in {site.country}. The European Commission has recognized
-      {site.country} as providing an adequate level of data protection, which permits personal
-      data to flow from the EU to {site.country} without additional transfer safeguards.
-      Where data is processed by a subprocessor outside {site.country} or the EU, we rely on
-      standard contractual clauses or equivalent safeguards required by applicable law.
-      Note: even with an adequacy decision, GDPR notice obligations still apply to EU users,
-      which is why this Policy discloses the information above.
-    </p>
-
-    <h2>7. Cookies and local storage</h2>
-    <p>
-      We use only a session identifier (cookie or local storage) to keep you signed in. We do
-      not use tracking cookies, advertising cookies, or analytics cookies. We do not run
-      third-party analytics or tag managers on this site or inside Namescape.
-    </p>
-
-    <h2>8. How long we keep your data</h2>
-    <ul>
-      <li><strong>Account data:</strong> while your account is active, plus 30 days after you delete it (to allow recovery and to finalize pending billing).</li>
-      <li><strong>Usage data:</strong> same as account data, unless you delete specific items earlier.</li>
-      <li><strong>Transaction records:</strong> retained as required by applicable tax and accounting law (typically several years).</li>
-      <li><strong>Security logs:</strong> up to 90 days.</li>
+      <li>Provide accounts, saved work, API access, usage balances, and support &mdash; performance of a contract.</li>
+      <li>Process eligible purchases and maintain required transaction records &mdash; performance of a contract and legal obligations.</li>
+      <li>Prevent abuse, secure services, and diagnose reliability &mdash; our legitimate interests in operating safe services.</li>
+      <li>Send essential account, policy, security, and billing messages &mdash; contract, legal obligation, or legitimate interests.</li>
     </ul>
 
-    <h2>9. Automated decision-making</h2>
+    <h2>7. When an account is required</h2>
     <p>
-      We do not use automated decision-making that produces legal or similarly significant
-      effects about you. We do not profile you. Name suggestions are generated based on the
-      prompt you submit, not on personal characteristics.
+      Namescape offers a limited signed-out generation attempt. An account is required to buy
+      packs, hold a balance, save names, view account history, or use authenticated features.
+      Gateway documentation is public; production API requests require a key once that access is enabled.
     </p>
 
-    <h2>10. Your rights</h2>
-    <p>Subject to applicable law, you have the right to:</p>
+    <h2>8. Service providers and recipients</h2>
+    <p>Depending on the product and route, data is processed by:</p>
     <ul>
-      <li><strong>Access</strong> the personal data we hold about you.</li>
-      <li><strong>Correct</strong> inaccurate data.</li>
-      <li><strong>Delete</strong> your data and your account.</li>
-      <li><strong>Port</strong> your data to another service.</li>
-      <li><strong>Object to</strong> or <strong>restrict</strong> certain processing.</li>
-      <li><strong>Withdraw consent</strong> where we rely on it.</li>
+      <li><strong>GitHub Pages</strong> for the public pinkflow.ai company site.</li>
+      <li><strong>Supabase</strong> for Namescape authentication and account data.</li>
+      <li><strong>Paddle</strong> as {site.paddle.role.toLowerCase()} for eligible payments.</li>
+      <li><strong>OpenRouter and its selected model providers</strong> for Namescape generation and Gateway AI routes.</li>
+      <li><strong>Public registry and domain-data sources</strong> for Namescape availability and price signals.</li>
+      <li><strong>Abstract, Twilio, and ScreenshotOne</strong> for the corresponding Gateway validation, lookup, and screenshot routes when configured.</li>
+      <li><strong>Hosting and email providers</strong> needed to run services and deliver essential messages.</li>
     </ul>
+    <p>We do not sell personal data or use advertising networks or advertising trackers.</p>
+
+    <h2>9. International transfers</h2>
     <p>
-      To exercise any of these rights, email <a href={`mailto:${site.email}`}>{site.email}</a>.
-      If you are in the EU/EEA, UK, or another jurisdiction with a data protection authority,
-      you also have the right to lodge a complaint with your local supervisory authority.
+      Pinkflow is based in {site.country}. Providers may process data in other countries. Where
+      applicable law requires safeguards for a transfer, we rely on adequacy decisions, standard
+      contractual clauses, or another lawful transfer mechanism offered by the provider.
     </p>
 
-    <h2>11. Children</h2>
-    <p>The service is not intended for children under 16. We do not knowingly collect data from anyone under 16.</p>
-
-    <h2>12. Changes to this Policy</h2>
+    <h2>10. Cookies and local storage</h2>
     <p>
-      We may update this Policy from time to time. We will revise the "Last updated" date above
-      and notify you of material changes.
+      The company site uses no advertising or analytics cookies. Product applications use the
+      session cookie or local-storage value needed to keep you signed in and secure the session.
+      We do not use third-party advertising tags or a marketing tag manager.
     </p>
 
-    <h2>13. Contact</h2>
+    <h2>11. Retention</h2>
+    <ul>
+      <li><strong>Account and saved Namescape data:</strong> retained while the account is active and deleted or de-identified after a valid deletion request, subject to backups, fraud prevention, disputes, and legal obligations.</li>
+      <li><strong>Gateway operations metadata:</strong> retained only as needed for billing, reliability, abuse prevention, disputes, and legal records; caller payloads are not part of this record.</li>
+      <li><strong>Transaction records:</strong> retained for the period required by tax, accounting, anti-fraud, and payment rules.</li>
+      <li><strong>Support and security records:</strong> retained as long as reasonably needed to resolve the issue and protect the services.</li>
+    </ul>
+
+    <h2>12. Automated decisions</h2>
     <p>
-      Questions about your data? Email <a href={`mailto:${site.email}`}>{site.email}</a> or use
-      the <a href="/contact">contact page</a>.
+      Pinkflow does not make automated decisions that produce legal or similarly significant
+      effects about you. Generated names, summaries, and classifications are service outputs,
+      not decisions about eligibility, employment, credit, insurance, or legal rights.
+    </p>
+
+    <h2>13. Your rights</h2>
+    <p>Subject to applicable law, you may have the right to access, correct, delete, port, object to, or restrict processing of your personal data, and to withdraw consent where processing relies on consent.</p>
+    <p>
+      Email <a href={`mailto:${site.email}`}>{site.email}</a> to exercise a right. If you are in
+      a jurisdiction with a data-protection regulator, you may also lodge a complaint with your
+      local supervisory authority.
+    </p>
+
+    <h2>14. Children</h2>
+    <p>Pinkflow services are not intended for children under 16, and we do not knowingly collect their personal data.</p>
+
+    <h2>15. Changes and contact</h2>
+    <p>
+      We may update this Policy and will revise the date above. For a material change, we will
+      provide reasonable notice through the relevant service or account email. Questions or
+      requests can be sent to <a href={`mailto:${site.email}`}>{site.email}</a> or through the
+      <a href="/contact">contact page</a>.
     </p>
   </Prose>
 </LegalLayout>

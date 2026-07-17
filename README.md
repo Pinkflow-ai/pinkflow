@@ -1,82 +1,138 @@
-# Pinkflow
+# Pinkflow.ai company site
 
-Static company site for Pinkflow (`pinkflow.ai`). Hosts the Terms, Privacy, Refunds, Pricing, and Contact pages required for Paddle approval of Namescape. Also serves as the company homepage.
+Static company, pricing, support, and policy site for
+[pinkflow.ai](https://pinkflow.ai). It is the shared public trust surface for
+Pinkflow products and is deployed through GitHub Pages.
 
-Built with Astro, Tailwind, self-hosted Plus Jakarta Sans. Zero client JavaScript except a tiny inline mobile-nav toggle. Deployed via GitHub Pages.
+## Current products
 
-## Quick Access
+### Namescape — available
 
-- Site: [pinkflow.ai](https://pinkflow.ai/)
-- Repo: [Pinkflow-ai/pinkflow](https://github.com/Pinkflow-ai/pinkflow)
-- Deploys: [GitHub Actions](https://github.com/Pinkflow-ai/pinkflow/actions)
-- Pages settings: [GitHub Pages](https://github.com/Pinkflow-ai/pinkflow/settings/pages)
-- Namescape app: [namescape.pink](https://namescape.pink)
-- Paddle catalog IDs: [docs/paddle-catalog.md](docs/paddle-catalog.md)
+[Namescape](https://namescape.pink) turns a product brief into domain-name
+shortlists with price and availability signals.
 
-Public pages:
+- One-time packs: 50 searches / $5, 200 / $15, 500 / $30.
+- Current signed-in usage: standard generation 1, bulk generation 5, bulk
+  availability 3, exact availability 1.
+- Signed-out visitors receive one rate-limited generation attempt. This is not
+  a paid balance.
+- Checkout is available through Paddle; no subscription or auto-renewal.
 
-- [Pricing](https://pinkflow.ai/pricing)
-- [Terms](https://pinkflow.ai/terms)
-- [Privacy](https://pinkflow.ai/privacy)
-- [Refunds](https://pinkflow.ai/refunds)
-- [Contact](https://pinkflow.ai/contact)
+Authoritative pricing and IDs:
 
-Ops:
+- `../namescape/backend/Services/PaddleService.cs`
+- `../namescape/backend/appsettings.json`
+- Snapshot for this site: `src/data/products.ts`
 
-- GitHub Pages source: [workflow deploy](https://github.com/Pinkflow-ai/pinkflow/blob/main/.github/workflows/deploy.yml)
-- DNS records: `pinkflow.ai` apex points to the GitHub Pages `A` and `AAAA` records listed below; `www.pinkflow.ai` points to `pinkflow-ai.github.io`.
-- HTTPS status: enabled in [Pages settings](https://github.com/Pinkflow-ai/pinkflow/settings/pages) for `pinkflow.ai`.
+### Gateway.pink — developer preview
+
+[Gateway.pink](https://gateway.pink) places a growing API catalog behind one
+key with explicit storage and per-call pricing policies.
+
+- 17 currently available free routes and four paid routes.
+- One credit is always $0.001.
+- Paid preview prices: email validation 6 credits, phone lookup 12, screenshot
+  6, AI summarization metered from 1 credit with caller-controlled
+  `max_credits` from 1 to 100.
+- Published packs: 10,000/$10, 50,000/$50, 100,000/$100, 500,000/$500.
+- Production credit checkout is not currently available. The prices are
+  published for preview budgeting, not as purchasable offers today.
+
+Authoritative pricing/catalog sources:
+
+- `../gateway-pink/packages/shared/src/pricing.ts`
+- `../gateway-pink/packages/shared/src/creditPacks.ts`
+- `../gateway-pink/packages/shared/src/catalog.ts`
+- Snapshot for this site: `src/data/products.ts`
+
+Update the snapshot and `checkedAt` values whenever one of those product
+contracts changes. Contract tests lock the mapped values inside this repository.
+
+## Public routes
+
+- [Company homepage](https://pinkflow.ai/)
+- [Pricing](https://pinkflow.ai/pricing/)
+- [Terms](https://pinkflow.ai/terms/)
+- [Privacy](https://pinkflow.ai/privacy/)
+- [Refunds](https://pinkflow.ai/refunds/)
+- [Contact](https://pinkflow.ai/contact/)
+
+The policies intentionally distinguish Namescape data and searches from Gateway
+metadata and credits. Do not reuse one product's storage or billing promise for
+the other.
+
+## Stack
+
+- Astro 7 static output
+- Tailwind CSS 4 through `@tailwindcss/vite`
+- Self-hosted Plus Jakarta Sans
+- Vitest contract/deployment tests
+- Playwright desktop/mobile, canonical, reduced-motion, scale, and WCAG checks
+- GitHub Actions and GitHub Pages
+
+Node 22.12 or newer is required.
 
 ## Develop
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
-Visit http://localhost:4321.
+Open `http://localhost:4321`.
 
-## Build
+## Verify
 
 ```bash
+npm run test:unit
+npm run check
 npm run build
-npm run preview
+npx playwright test --project=desktop
+npx playwright test --project=mobile
+npm audit
 ```
 
-## Test
+The Pages workflow runs the same contract, Astro, build, desktop, and mobile
+gates before uploading `dist`. A failing check cannot publish the site.
 
-```bash
-npx playwright install --with-deps chromium   # one-time browser install
-npm run test                                    # Playwright E2E
-npm run test:unit                               # vitest data-file tests
-```
+## Company and policy data
 
-## Swap entity details
+Shared operator/support values and policy revision dates live in
+`src/data/site.ts`. Before changing them, check every page that consumes:
 
-All company-specific values live in **`src/data/site.ts`**. Before submitting to Paddle, review:
+- `legalName`, `operatorLine`, `city`, `country`, and `email`;
+- Paddle role and statement label;
+- product lifecycle, documentation, and checkout availability;
+- Terms, Privacy, and Refund revision dates.
 
-- `legalName` / `operatorLine` — the public pages identify the operator by brand (`Pinkflow (pinkflow.ai), based in Israel`), not a personal name. If you change this, keep `operatorLine` readable in all three places it renders: the footer, Terms §2, and Privacy §1 (where a trailing comma is added so it reads as the sentence subject). Note: presenting the brand publicly does **not** replace the real legal identity Paddle collects during seller verification, nor the controller identity GDPR expects — make sure your Paddle account and, if applicable, your Privacy Policy still name the responsible person or entity.
-- `email` — your real support email.
-- `city` — your real city.
-- `paddlePriceId` fields in **`src/data/products.ts`** — keep synchronized with [docs/paddle-catalog.md](docs/paddle-catalog.md) and the live Paddle dashboard.
-- `lastUpdated.*` — bump dates when you revise each page.
+The public operator identity must match the verified individual or entity that
+operates Pinkflow and the controller identity published in the Privacy Policy.
+Do not replace it with the brand name alone.
 
-## Deploy
+## Deployment
 
-Pushing to `main` triggers the GitHub Actions workflow at `.github/workflows/deploy.yml`, which builds and deploys to GitHub Pages.
+Pushing `main` starts `.github/workflows/deploy.yml`:
 
-One-time setup:
-1. Register `pinkflow.ai`.
-2. In GitHub repo settings: **Settings → Pages → Source: GitHub Actions**.
-3. Configure DNS at your registrar:
-   - `A` records on `pinkflow.ai` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`.
-   - `AAAA` records on `pinkflow.ai` → `2606:50c0:8000::153`, `2606:50c0:8001::153`, `2606:50c0:8002::153`, `2606:50c0:8003::153`.
-   - `CNAME` record on `www.pinkflow.ai` → `pinkflow-ai.github.io`.
-4. After first deploy, enable HTTPS in GitHub Pages settings.
-5. Verify both `pinkflow.ai` and `namescape.pink` in the Paddle dashboard.
+1. Check out the repository.
+2. Install Node 22.12 and locked dependencies.
+3. Install Chromium.
+4. Run product/workflow contract tests.
+5. Run Astro diagnostics and the production build.
+6. Run desktop and mobile Playwright projects.
+7. Upload `dist` and deploy it to GitHub Pages.
 
-## Related
+Repository and Pages operations:
 
-- Spec: `docs/superpowers/specs/2026-07-07-paddle-approval-pages-design.md` (in the Namescape repo).
-- Companion spec: `docs/superpowers/specs/2026-07-06-paddle-migration-design.md` (Paddle integration in Namescape).
-- Companion change (out of scope here): the Namescape app at `namescape.pink` carries footer legal links to `pinkflow.ai` and a copy of the Pricing page.
+- [Repository](https://github.com/Pinkflow-ai/pinkflow)
+- [Actions](https://github.com/Pinkflow-ai/pinkflow/actions)
+- [Pages settings](https://github.com/Pinkflow-ai/pinkflow/settings/pages)
+
+The apex `pinkflow.ai` domain uses the standard GitHub Pages A/AAAA records and
+`www.pinkflow.ai` points to `pinkflow-ai.github.io`. Both `CNAME` files must
+remain `pinkflow.ai`.
+
+## Paddle catalog
+
+Namescape Paddle identifiers are recorded in `docs/paddle-catalog.md`. Gateway
+does not have a live checkout/catalog yet and must not be added there as if it
+were purchasable.

@@ -1,59 +1,147 @@
 ---
-import LegalLayout from '../layouts/LegalLayout.astro';
-import { site } from '../data/site';
+import SiteLayout from '../layouts/SiteLayout.astro';
+import PinkflowMark from '../components/PinkflowMark.astro';
+import { productActionHref, site } from '../data/site';
+import { gatewayCatalogCounts } from '../data/products';
 
-const liveProducts = site.products.filter((p) => p.live);
-const comingSoon = site.products.filter((p) => !p.live);
-
-const description = `${site.brand} builds small tools for everyday problems. Our first product is Namescape.`;
+const namescape = site.products.find((product) => product.slug === 'namescape')!;
+const gateway = site.products.find((product) => product.slug === 'gateway')!;
+const namescapeCheckoutUrl = productActionHref(namescape, 'checkout');
+const gatewayDocsUrl = productActionHref(gateway, 'documentation');
+const description = 'Pinkflow.ai builds and operates Namescape and Gateway.pink: practical software with clear pricing and direct support.';
 ---
-<LegalLayout title="Pinkflow" description={description}>
-  <section class="mb-16 text-center">
-    <h2 class="mx-auto max-w-3xl text-3xl md:text-5xl font-extrabold leading-tight text-white">
-      Tools for the everyday problems too small for anyone to care about &mdash; and too big to take on alone.
-    </h2>
-    <p class="mx-auto mt-6 max-w-2xl text-lg text-white/65">
-      We build small, ship lean, and run the whole thing ourselves.
-    </p>
+<SiteLayout title="Pinkflow" description={description}>
+  <section class="site-container grid min-h-[76vh] items-center gap-12 py-16 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">
+    <div>
+      <PinkflowMark compact={false} showWordmark class="mb-8" />
+      <h1 class="max-w-4xl text-[clamp(1.75rem,8vw,6.5rem)] font-extrabold leading-[0.95] tracking-[-0.045em] text-white">
+        Practical software, built and operated by <span class="text-primary">Pinkflow.</span>
+      </h1>
+      <p class="muted-copy mt-8 max-w-2xl text-lg leading-relaxed sm:text-xl">
+        We turn stubborn, everyday problems into focused products with clear prices,
+        honest limits, and a direct line to the people running them.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#products" class="btn-primary">See our products</a>
+        <a href="/pricing" class="btn-secondary">Compare pricing</a>
+      </div>
+    </div>
+
+    <aside class="relative mx-auto w-full max-w-lg" aria-label="How Pinkflow works">
+      <div class="absolute inset-0 rounded-[24px] bg-primary/5 blur-2xl"></div>
+      <div class="relative overflow-hidden rounded-xl border border-primary/20 bg-bg-card">
+        <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
+          <span class="font-bold text-white">Pinkflow operating model</span>
+          <span class="h-2.5 w-2.5 rounded-full bg-primary"></span>
+        </div>
+        <ol class="divide-y divide-white/10">
+          <li class="grid grid-cols-[2.5rem_1fr] gap-3 px-5 py-5">
+            <span class="font-extrabold text-primary">01</span>
+            <div><strong class="text-white">Find the recurring problem.</strong><p class="muted-copy mt-1 text-sm">Start with work people already struggle through.</p></div>
+          </li>
+          <li class="grid grid-cols-[2.5rem_1fr] gap-3 px-5 py-5">
+            <span class="font-extrabold text-primary">02</span>
+            <div><strong class="text-white">Ship the smallest useful product.</strong><p class="muted-copy mt-1 text-sm">Keep the workflow focused and the contract readable.</p></div>
+          </li>
+          <li class="grid grid-cols-[2.5rem_1fr] gap-3 px-5 py-5">
+            <span class="font-extrabold text-primary">03</span>
+            <div><strong class="text-white">Operate it in the open.</strong><p class="muted-copy mt-1 text-sm">Publish pricing, policies, limitations, and support ownership.</p></div>
+          </li>
+        </ol>
+      </div>
+    </aside>
   </section>
 
-  <section class="mb-16">
-    <h3 class="mb-6 text-xl font-extrabold text-white">What we make</h3>
-    <div class="grid gap-4 md:grid-cols-3">
-      {liveProducts.map((p) => (
-        <article class="card flex flex-col">
-          <h4 class="text-lg font-extrabold text-white">{p.name}</h4>
-          <p class="mt-2 flex-1 text-sm text-white/65">{p.tagline}</p>
-          <a href={p.url!} class="btn-primary mt-4 self-start">Open {p.name}</a>
+  <section id="products" class="scroll-mt-24 border-y border-white/10 py-20 sm:py-24">
+    <div class="site-container">
+      <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p class="mb-3 font-bold text-primary">Current products</p>
+          <h2 class="section-title">Two products. Two specific jobs.</h2>
+        </div>
+        <p class="muted-copy max-w-md text-sm leading-relaxed sm:text-right">
+          Product lifecycle and purchase availability are stated explicitly. Preview means preview.
+        </p>
+      </div>
+
+      <div class="grid gap-6 lg:grid-cols-2">
+        <article class="product-panel flex flex-col">
+          <div class="flex flex-wrap items-start justify-between gap-4 p-6 sm:p-8">
+            <div class="min-w-0">
+              <span class="status-chip">{namescape.statusLabel}</span>
+              <h3 class="mt-4 text-[clamp(1.125rem,6vw,1.875rem)] font-extrabold text-white">{namescape.name}</h3>
+              <p class="muted-copy mt-3 max-w-md leading-relaxed">{namescape.tagline}</p>
+            </div>
+            <span class="rounded-lg bg-white/5 px-3 py-2 text-sm font-bold text-white">From $5</span>
+          </div>
+
+          <div class="mx-6 rounded-lg bg-[#120d1a] p-5 sm:mx-8" aria-label="Namescape product flow">
+            <div class="flex flex-wrap items-center gap-2 text-sm">
+              <span class="rounded-md bg-white/5 px-3 py-2 text-white/75">Your idea</span>
+              <span aria-hidden="true" class="text-primary">→</span>
+              <span class="rounded-md bg-primary/15 px-3 py-2 font-bold text-[#ff9dcc]">Name shortlist</span>
+              <span aria-hidden="true" class="text-primary">→</span>
+              <span class="rounded-md bg-white/5 px-3 py-2 text-white/75">Price + checkout path</span>
+            </div>
+          </div>
+
+          <div class="mt-auto flex flex-wrap gap-3 p-6 sm:p-8">
+            {namescapeCheckoutUrl && <a href={namescapeCheckoutUrl} class="btn-primary">Open Namescape</a>}
+            <a href="/pricing#namescape" class="btn-secondary">See search packs</a>
+          </div>
         </article>
-      ))}
-      {comingSoon.map((p) => (
-        <article class="card flex flex-col opacity-60">
-          <span class="mb-2 inline-flex w-fit rounded-md bg-white/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-white/70">Coming soon · Not for sale</span>
-          <h4 class="text-lg font-extrabold text-white">{p.name}</h4>
-          <p class="mt-2 flex-1 text-sm text-white/65">{p.tagline}</p>
+
+        <article class="product-panel flex flex-col">
+          <div class="flex flex-wrap items-start justify-between gap-4 p-6 sm:p-8">
+            <div class="min-w-0">
+              <span class="status-chip">{gateway.statusLabel}</span>
+              <h3 class="mt-4 text-[clamp(1.125rem,6vw,1.875rem)] font-extrabold text-white"><span>Gateway.</span><wbr /><span>pink</span></h3>
+              <p class="muted-copy mt-3 max-w-md leading-relaxed">{gateway.tagline}</p>
+            </div>
+            <span class="rounded-lg bg-white/5 px-3 py-2 text-right text-sm font-bold text-white">{gatewayCatalogCounts.freeAvailable} free APIs<br /><span class="text-xs font-medium text-white/55">{gatewayCatalogCounts.paidAvailable} paid in preview</span></span>
+          </div>
+
+          <div class="mx-6 overflow-hidden rounded-lg bg-[#120d1a] font-mono text-xs sm:mx-8" aria-label="Gateway API request flow">
+            <div class="border-b border-white/10 px-4 py-3 text-white/50">POST /v1/ai/summarize</div>
+            <div class="grid gap-2 p-4 sm:grid-cols-[auto_1fr]">
+              <span class="text-primary">Authorization</span><span class="break-all text-white/75">Bearer gp_••••••••</span>
+              <span class="text-primary">Price</span><span class="text-white/75">from 1 credit · caller budget enforced</span>
+            </div>
+          </div>
+
+          <div class="mt-auto flex flex-wrap gap-3 p-6 sm:p-8">
+            {gatewayDocsUrl && <a href={gatewayDocsUrl} class="btn-primary">Explore Gateway.pink</a>}
+            <a href="/pricing#gateway" class="btn-secondary">See preview pricing</a>
+          </div>
         </article>
-      ))}
+      </div>
     </div>
   </section>
 
-  <section class="prose-legal">
-    <h3>About</h3>
-    <p>
-      We build tools for problems that live in an awkward middle ground:
-      too small to get any real attention, too big to ignore. We pick the ones we hit ourselves,
-      build small, ship lean, and run the whole thing end to end.
-    </p>
-    <p>
-      Our first product is <a href="https://namescape.pink">Namescape</a> &mdash;
-      a tool that takes a short description of your idea and returns a shortlist of domains with
-      price guidance, likely availability, and checkout paths, so you can move from idea to name
-      without the usual guesswork.
-    </p>
-    <p>
-      We're based in {site.city}, {site.country}. Reach us any time at
-      <a href={`mailto:${site.email}`}>{site.email}</a>.
-    </p>
+  <section id="company" class="site-container scroll-mt-24 py-20 sm:py-24">
+    <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+      <div class="min-w-0">
+        <p class="mb-3 font-bold text-primary">The company</p>
+        <h2 class="section-title">Small enough to be accountable.</h2>
+      </div>
+      <div class="muted-copy min-w-0 max-w-2xl space-y-5 text-lg leading-relaxed">
+        <p>
+          Pinkflow.ai is based in {site.city}, {site.country}. We design, build, and operate
+          focused products without hiding behind a portfolio of placeholders.
+        </p>
+        <p>
+          This site is the stable home for product pricing, company policies, and support.
+          If something is unclear, email <a href={`mailto:${site.email}`} class="inline-link breakable-token">{site.email}</a> —
+          we respond within {site.responseWindow}.
+        </p>
+        <div class="flex flex-wrap gap-x-6 gap-y-3 pt-2 text-sm font-bold">
+          <a href="/terms">Terms</a>
+          <a href="/privacy">Privacy</a>
+          <a href="/refunds">Refunds</a>
+          <a href="/contact">Contact</a>
+        </div>
+      </div>
+    </div>
   </section>
 
   <script type="application/ld+json" is:inline set:html={JSON.stringify({
@@ -68,5 +156,11 @@ const description = `${site.brand} builds small tools for everyday problems. Our
       addressLocality: site.city,
       addressCountry: site.country,
     },
+    owns: site.products.map((product) => ({
+      '@type': 'SoftwareApplication',
+      name: product.name,
+      url: product.url,
+      applicationCategory: 'WebApplication',
+    })),
   })} />
-</LegalLayout>
+</SiteLayout>

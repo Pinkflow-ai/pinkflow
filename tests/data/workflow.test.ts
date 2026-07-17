@@ -9,7 +9,7 @@ test('Pages verifies contracts, Astro, build, and both browser projects before u
     'npm run build',
     'npx playwright test --project=desktop',
     'npx playwright test --project=mobile',
-    'actions/upload-pages-artifact@v3',
+    'actions/upload-pages-artifact@v5',
   ];
   const positions = gates.map((gate) => workflow.indexOf(gate));
 
@@ -20,4 +20,12 @@ test('Pages verifies contracts, Astro, build, and both browser projects before u
 test('Pages uses a Node release supported by Astro 7', () => {
   const workflow = readFileSync('.github/workflows/deploy.yml', 'utf8');
   expect(workflow).toContain('node-version: 22.12');
+});
+
+test('Pages uses current Node 24 action runtimes', () => {
+  const workflow = readFileSync('.github/workflows/deploy.yml', 'utf8');
+  expect(workflow).toContain('actions/checkout@v7');
+  expect(workflow).toContain('actions/setup-node@v7');
+  expect(workflow).toContain('actions/upload-pages-artifact@v5');
+  expect(workflow).toContain('actions/deploy-pages@v5');
 });

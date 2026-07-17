@@ -218,7 +218,7 @@ test('Pages verifies contracts, Astro, build, and both browser projects before u
     'npm run build',
     'npx playwright test --project=desktop',
     'npx playwright test --project=mobile',
-    'actions/upload-pages-artifact@v3',
+    'actions/upload-pages-artifact@v5',
   ];
   const positions = gates.map((gate) => workflow.indexOf(gate));
   expect(positions.every((position) => position >= 0)).toBe(true);

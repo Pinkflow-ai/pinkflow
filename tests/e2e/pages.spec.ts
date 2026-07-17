@@ -51,9 +51,14 @@ test('pricing publishes the Gateway credit contract without implying checkout is
   await expect(page.getByText('10,000 credits')).toBeVisible();
   await expect(page.getByText('$10', { exact: true }).first()).toBeVisible();
   await expect(page.getByText('Email validation')).toBeVisible();
-  await expect(page.getByText('6 credits', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('17 credits', { exact: true })).toBeVisible();
+  await expect(page.getByText('$0.017 / call', { exact: true })).toBeVisible();
   await expect(page.getByText('Phone line-type lookup')).toBeVisible();
-  await expect(page.getByText('12 credits', { exact: true })).toBeVisible();
+  await expect(page.getByText('40 credits', { exact: true })).toBeVisible();
+  await expect(page.getByText('$0.040 / call', { exact: true })).toBeVisible();
+  await expect(page.getByText('20 credits', { exact: true })).toBeVisible();
+  await expect(page.getByText('$0.020 / call', { exact: true })).toBeVisible();
+  await expect(page.getByText('Direct or high-volume provider plans may have lower unit prices.')).toBeVisible();
   await expect(page.getByText('17 currently available free routes')).toBeVisible();
   await expect(page.getByText('4 paid routes')).toBeVisible();
   await expect(page.getByText("is the caller's hard credit ceiling")).toBeVisible();

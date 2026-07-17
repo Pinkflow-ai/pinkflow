@@ -31,8 +31,8 @@ key with explicit storage and per-call pricing policies.
 
 - 17 currently available free routes and four paid routes.
 - One credit is always $0.001.
-- Paid preview prices: email validation 6 credits, phone lookup 12, screenshot
-  6, AI summarization metered from 1 credit with caller-controlled
+- Paid preview prices: email validation 17 credits, phone lookup 40, screenshot
+  20, AI summarization metered from 1 credit with caller-controlled
   `max_credits` from 1 to 100.
 - Published packs: 10,000/$10, 50,000/$50, 100,000/$100, 500,000/$500.
 - Production credit checkout is not currently available. The prices are

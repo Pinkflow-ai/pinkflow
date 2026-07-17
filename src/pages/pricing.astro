@@ -5,6 +5,7 @@ import {
   gatewayCreditPacks,
   gatewayAiBudgetPolicy,
   gatewayCatalogCounts,
+  gatewayCreditUsdMicros,
   gatewayEndpointPrices,
   namescapeAnonymousAttempts,
   namescapePacks,
@@ -18,7 +19,14 @@ const gateway = site.products.find((product) => product.slug === 'gateway')!;
 const namescapeCheckoutUrl = productActionHref(namescape, 'checkout');
 const gatewayDocsUrl = productActionHref(gateway, 'documentation');
 const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const usdPerCall = new Intl.NumberFormat('en-US', {
+  style: 'currency',
+  currency: 'USD',
+  minimumFractionDigits: 3,
+  maximumFractionDigits: 3,
+});
 const integer = new Intl.NumberFormat('en-US');
+const creditUsd = gatewayCreditUsdMicros / 1_000_000;
 ---
 <SiteLayout title="Pricing" description={description}>
   <section class="site-container pb-14 pt-16 sm:pb-20 sm:pt-24">
@@ -116,13 +124,24 @@ const integer = new Intl.NumberFormat('en-US');
             Free routes consume zero credits. Fixed-price routes settle only after a successful provider response. AI is metered from actual provider-reported cost and <code>{gatewayAiBudgetPolicy.field}</code> is the caller's hard credit ceiling ({gatewayAiBudgetPolicy.minimum}–{gatewayAiBudgetPolicy.maximum} credits).
           </p>
         </div>
-        <div class="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-bg-card">
-          {gatewayEndpointPrices.map((item) => (
-            <div class="grid min-w-0 grid-cols-1 gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_auto] sm:gap-4">
-              <span class="font-semibold text-white">{item.name}</span>
-              <span class="font-bold text-primary sm:text-right">{item.metered ? 'From ' : ''}{item.credits} {item.credits === 1 ? 'credit' : 'credits'}</span>
+        <div class="min-w-0">
+          <div class="overflow-hidden rounded-xl border border-white/10 bg-bg-card">
+            <div class="hidden grid-cols-[1fr_auto_auto] gap-4 border-b border-white/10 px-5 py-3 text-sm font-bold text-white/55 sm:grid">
+              <span>Paid route</span><span class="text-right">Credits</span><span class="text-right">Dollars</span>
             </div>
-          ))}
+            {gatewayEndpointPrices.map((item) => (
+              <div class="grid min-w-0 grid-cols-1 gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_auto_auto] sm:gap-4">
+                <span class="font-semibold text-white">{item.name}</span>
+                <span class="font-bold text-primary sm:text-right">{item.metered ? 'From ' : ''}{item.credits} {item.credits === 1 ? 'credit' : 'credits'}</span>
+                <span class="text-sm text-white/70 sm:min-w-28 sm:text-right">
+                  {usdPerCall.format(item.credits * creditUsd)} {item.metered ? 'minimum' : '/ call'}
+                </span>
+              </div>
+            ))}
+          </div>
+          <p class="mt-4 text-sm leading-relaxed text-white/60">
+            Direct or high-volume provider plans may have lower unit prices. Gateway.pink is designed for low-commitment access across providers: one key, one balance, and no mandatory monthly subscription.
+          </p>
         </div>
       </div>
 

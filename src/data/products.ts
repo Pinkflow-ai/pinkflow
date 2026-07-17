@@ -36,7 +36,7 @@ export const pricingSources = {
     endpoints: 'gateway-pink/packages/shared/src/pricing.ts',
     packs: 'gateway-pink/packages/shared/src/creditPacks.ts',
     catalog: 'gateway-pink/packages/shared/src/catalog.ts',
-    checkedAt: '2026-07-17',
+    checkedAt: '2026-07-18',
   },
 } as const;
 
@@ -73,9 +73,9 @@ export const gatewayCreditPacks: GatewayCreditPack[] = [
 ];
 
 export const gatewayEndpointPrices: GatewayEndpointPrice[] = [
-  { name: 'Email validation', credits: 6 },
-  { name: 'Phone line-type lookup', credits: 12 },
-  { name: 'Website screenshot', credits: 6 },
+  { name: 'Email validation', credits: 17 },
+  { name: 'Phone line-type lookup', credits: 40 },
+  { name: 'Website screenshot', credits: 20 },
   { name: 'AI summarization', credits: 1, metered: true },
 ];
 

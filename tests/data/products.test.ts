@@ -49,9 +49,9 @@ test('Gateway credit packs preserve the fixed denomination', () => {
 test('Gateway fixed endpoint prices match the runtime pricing contract', () => {
   const prices = (productData as Record<string, unknown>).gatewayEndpointPrices;
   expect(prices).toEqual([
-    { name: 'Email validation', credits: 6 },
-    { name: 'Phone line-type lookup', credits: 12 },
-    { name: 'Website screenshot', credits: 6 },
+    { name: 'Email validation', credits: 17 },
+    { name: 'Phone line-type lookup', credits: 40 },
+    { name: 'Website screenshot', credits: 20 },
     { name: 'AI summarization', credits: 1, metered: true },
   ]);
 });
@@ -87,6 +87,7 @@ test('pricing snapshots identify every authoritative source file', () => {
       endpoints: 'gateway-pink/packages/shared/src/pricing.ts',
       packs: 'gateway-pink/packages/shared/src/creditPacks.ts',
       catalog: 'gateway-pink/packages/shared/src/catalog.ts',
+      checkedAt: '2026-07-18',
     },
   });
 });

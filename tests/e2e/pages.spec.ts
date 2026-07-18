@@ -182,6 +182,18 @@ test('pricing explains current Namescape usage prices', async ({ page }) => {
     await expect(table.getByRole('columnheader', { name: column, exact: true })).toBeVisible();
   }
 
+  const firstRowLayout = await table.locator('[data-namescape-price-row]').first().evaluate((row) => ({
+    display: getComputedStyle(row).display,
+    gridColumns: getComputedStyle(row).gridTemplateColumns.trim().split(/\s+/).filter(Boolean),
+    cellDisplays: [...row.children].map((cell) => getComputedStyle(cell).display),
+  }));
+  if ((page.viewportSize()?.width ?? 0) >= 640) {
+    expect(firstRowLayout.display).toBe('table-row');
+    expect(firstRowLayout.cellDisplays).toEqual(['table-cell', 'table-cell', 'table-cell', 'table-cell']);
+  } else {
+    expect(firstRowLayout.gridColumns).toHaveLength(1);
+  }
+
   for (const item of namescapeUsagePrices) {
     const row = table.locator('[data-namescape-price-row]').filter({
       has: page.getByText(item.name, { exact: true }),
@@ -205,6 +217,86 @@ test('pricing explains current Namescape usage prices', async ({ page }) => {
   expect(visibleNamescapeText).not.toMatch(
     /40 requested domains|40-domain|60-second|rate-limited|anonymous allowance|\b(?:AI|LLM|provider|provenance|metadata|RDAP|model)\b|exact verification|prompt pipeline|backend source/i,
   );
+});
+
+test('pricing table keeps every semantic cell contained in narrow and 200% text layouts', async ({ page }) => {
+  const scenarios = [
+    { label: '320px normal text', width: 320, rootFontSize: '100%' },
+    { label: '375px at 200% text', width: 375, rootFontSize: '200%' },
+  ];
+
+  for (const scenario of scenarios) {
+    await page.setViewportSize({ width: scenario.width, height: 700 });
+    await page.goto('/pricing');
+    await page.evaluate((fontSize) => { document.documentElement.style.fontSize = fontSize; }, scenario.rootFontSize);
+
+    const table = page.locator('#namescape').getByRole('table', { name: 'Namescape action pricing' });
+    await expect(table).toBeVisible();
+    await expect(table.getByRole('caption')).toHaveText('Namescape action pricing');
+    for (const column of ['Group', 'Action', 'Price', 'Note']) {
+      await expect(table.getByRole('columnheader', { name: column, exact: true })).toBeVisible();
+    }
+
+    const rows = table.locator('[data-namescape-price-row]');
+    await expect(rows).toHaveCount(namescapeUsagePrices.length);
+    const batchRow = rows.filter({ has: page.getByRole('rowheader', { name: 'Final check — Batch', exact: true }) });
+    await expect(batchRow).toHaveCount(1);
+    await expect(batchRow.getByRole('rowheader', { name: 'Final check — Batch', exact: true })).toBeVisible();
+    await expect(batchRow.getByText('1 search per 5 definitive results', { exact: true })).toBeVisible();
+    await expect(batchRow.getByText('Rounded up', { exact: true })).toBeVisible();
+
+    for (let rowIndex = 0; rowIndex < namescapeUsagePrices.length; rowIndex += 1) {
+      const metrics = await rows.nth(rowIndex).evaluate((row) => {
+        const rowRect = row.getBoundingClientRect();
+        return {
+          row: { left: rowRect.left, right: rowRect.right, top: rowRect.top },
+          gridColumns: getComputedStyle(row).gridTemplateColumns.trim().split(/\s+/).filter(Boolean),
+          cells: [...row.children].map((cell) => {
+            const element = cell as HTMLElement;
+            const rect = element.getBoundingClientRect();
+            return {
+              text: element.textContent?.trim() ?? '',
+              left: rect.left,
+              right: rect.right,
+              top: rect.top,
+              bottom: rect.bottom,
+              width: rect.width,
+              clientWidth: element.clientWidth,
+              scrollWidth: element.scrollWidth,
+            };
+          }),
+        };
+      });
+
+      expect(metrics.gridColumns, `${scenario.label}, row ${rowIndex}: one mobile column`).toHaveLength(1);
+      expect(metrics.cells, `${scenario.label}, row ${rowIndex}: group, action, price, note`).toHaveLength(4);
+      let previousBottom = metrics.row.top;
+      for (const [cellIndex, cell] of metrics.cells.entries()) {
+        if (cell.text) expect(cell.width, `${scenario.label}, row ${rowIndex}, cell ${cellIndex}: width`).toBeGreaterThan(0);
+        expect(cell.left, `${scenario.label}, row ${rowIndex}, cell ${cellIndex}: viewport left`).toBeGreaterThanOrEqual(0);
+        expect(cell.right, `${scenario.label}, row ${rowIndex}, cell ${cellIndex}: viewport right`).toBeLessThanOrEqual(scenario.width + 1);
+        expect(cell.left, `${scenario.label}, row ${rowIndex}, cell ${cellIndex}: row left`).toBeGreaterThanOrEqual(metrics.row.left - 1);
+        expect(cell.right, `${scenario.label}, row ${rowIndex}, cell ${cellIndex}: row right`).toBeLessThanOrEqual(metrics.row.right + 1);
+        expect(cell.scrollWidth, `${scenario.label}, row ${rowIndex}, cell ${cellIndex}: no internal overflow`).toBeLessThanOrEqual(cell.clientWidth);
+        expect(cell.top, `${scenario.label}, row ${rowIndex}, cell ${cellIndex}: DOM order`).toBeGreaterThanOrEqual(previousBottom - 1);
+        previousBottom = cell.bottom;
+      }
+    }
+  }
+
+  await page.setViewportSize({ width: 640, height: 700 });
+  await page.goto('/pricing');
+  const smTable = page.locator('#namescape').getByRole('table', { name: 'Namescape action pricing' });
+  await expect(smTable.getByRole('caption')).toHaveText('Namescape action pricing');
+  for (const column of ['Group', 'Action', 'Price', 'Note']) {
+    await expect(smTable.getByRole('columnheader', { name: column, exact: true })).toBeVisible();
+  }
+  const smLayout = await smTable.locator('[data-namescape-price-row]').first().evaluate((row) => ({
+    display: getComputedStyle(row).display,
+    cellDisplays: [...row.children].map((cell) => getComputedStyle(cell).display),
+  }));
+  expect(smLayout.display).toBe('table-row');
+  expect(smLayout.cellDisplays).toEqual(['table-cell', 'table-cell', 'table-cell', 'table-cell']);
 });
 
 test('pricing metadata describes informational and preview prices without implying open access', async ({ page }) => {

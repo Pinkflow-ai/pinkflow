@@ -86,11 +86,11 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
             </thead>
             <tbody class="block sm:table-row-group">
               {namescapeUsagePrices.map((item) => (
-                <tr data-namescape-price-row="" class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 border-b border-white/10 px-5 py-4 align-top last:border-b-0 sm:table-row sm:p-0">
-                  <td class="col-start-1 row-start-1 block p-0 text-xs font-extrabold uppercase tracking-wide text-white/55 sm:table-cell sm:px-5 sm:py-4">{item.group}</td>
-                  <th scope="row" class="col-start-1 row-start-2 block p-0 text-left font-semibold text-white sm:table-cell sm:px-5 sm:py-4">{item.name}</th>
-                  <td class="col-start-2 row-span-2 row-start-1 block p-0 text-right font-bold text-primary sm:table-cell sm:px-5 sm:py-4">{item.price}</td>
-                  <td class="col-span-2 row-start-3 block p-0 text-xs font-medium text-white/55 sm:table-cell sm:px-5 sm:py-4">
+                <tr data-namescape-price-row="" class="grid grid-cols-1 gap-y-1 border-b border-white/10 px-5 py-4 align-top last:border-b-0 sm:table-row sm:p-0">
+                  <td class="block min-w-0 break-words p-0 text-xs font-extrabold uppercase tracking-wide text-white/55 sm:table-cell sm:px-5 sm:py-4">{item.group}</td>
+                  <th scope="row" class="block min-w-0 break-words p-0 text-left font-semibold text-white sm:table-cell sm:px-5 sm:py-4">{item.name}</th>
+                  <td class="block min-w-0 break-words p-0 text-left font-bold text-primary sm:table-cell sm:px-5 sm:py-4 sm:text-right">{item.price}</td>
+                  <td class="block min-w-0 break-words p-0 text-xs font-medium text-white/55 sm:table-cell sm:px-5 sm:py-4">
                     {item.note ?? <span class="sr-only">No additional note</span>}
                   </td>
                 </tr>

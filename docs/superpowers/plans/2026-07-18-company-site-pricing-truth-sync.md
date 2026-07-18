@@ -322,7 +322,7 @@ Fix every Critical or Important finding. Stage review corrections explicitly
 from `git diff --name-only`; never use `git add .`. Commit corrections before
 the final suite.
 
-- [ ] **Step 8: Run the complete fresh post-review verification suite**
+- [x] **Step 8: Run the complete fresh post-review verification suite**
 
 ```bash
 npm run test:unit
@@ -341,7 +341,7 @@ audit reports zero vulnerabilities; diff check is silent; the feature worktree
 is clean. `package-lock.json` was restored after setup and must remain unchanged
 unless an intentional dependency change is separately justified and committed.
 
-- [ ] **Step 9: Recheck product DNS and HTTP immediately before integration**
+- [x] **Step 9: Recheck product DNS and HTTP immediately before integration**
 
 Query public resolvers for A/AAAA/CNAME and make bounded HTTPS probes. A DNS or
 HTTP change alone does not authorize checkout/docs CTAs. If external state

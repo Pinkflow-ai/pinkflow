@@ -13,7 +13,8 @@
     "check": "astro check",
     "test": "playwright test",
     "test:unit": "vitest run tests/data",
-    "test:install": "playwright install --with-deps chromium"
+    "test:install": "playwright install --with-deps chromium",
+    "deploy:cloudflare": "npm run build && wrangler pages deploy dist --project-name=pinkflow-ai"
   },
   "dependencies": {
     "@astrojs/sitemap": "3.7.3",
@@ -27,6 +28,7 @@
     "@axe-core/playwright": "4.12.1",
     "@playwright/test": "1.61.1",
     "typescript": "5.7.2",
-    "vitest": "4.1.10"
+    "vitest": "4.1.10",
+    "wrangler": "^4.26.0"
   }
 }

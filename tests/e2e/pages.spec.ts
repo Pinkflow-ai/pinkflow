@@ -723,6 +723,19 @@ test('404 page renders for unknown route', async ({ page }) => {
   await expect(page.getByText('404')).toBeVisible();
 });
 
+test('security.txt publishes a monitored vulnerability-reporting channel', async ({ request }) => {
+  const response = await request.get('/.well-known/security.txt');
+
+  expect(response.status()).toBe(200);
+  expect(await response.text()).toBe([
+    'Contact: mailto:hello@pinkflow.ai',
+    'Policy: https://pinkflow.ai/contact/',
+    'Preferred-Languages: en',
+    'Expires: 2027-07-17T00:00:00.000Z',
+    '',
+  ].join('\n'));
+});
+
 test('every public surface excludes unavailable product destinations', async ({ page }) => {
   for (const path of publicSurfaces) {
     await page.goto(path);

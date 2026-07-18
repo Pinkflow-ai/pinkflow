@@ -299,7 +299,7 @@ git add tests/data/products.test.ts README.md PRODUCT.md DESIGN.md docs/superpow
 git commit -m "docs: reconcile Pinkflow launch status"
 ```
 
-- [ ] **Step 6: Perform controlled visual QA**
+- [x] **Step 6: Perform controlled visual QA**
 
 Ensure no process is already listening on port 4323, then run:
 
@@ -311,9 +311,10 @@ npm run preview -- --port 4323 --host 127.0.0.1
 In a separate shell, use `$HOME/.codex/skills/playwright/scripts/playwright_cli.sh`
 to open `http://127.0.0.1:4323`, snapshot before each interaction, and inspect
 homepage, pricing, Terms, Privacy, Refunds, Contact, and an unknown route at
-desktop and mobile widths. Store any screenshots only under ignored
-`test-results/manual/`, then stop the exact preview PID. Verify the browser
-console is clean and no stale server was reused.
+desktop and mobile widths. Store temporary screenshots under
+`output/playwright/pinkflow-site/`, remove them after inspection, then stop the
+exact preview PID. Verify the browser console is clean and no stale server was
+reused.
 
 - [ ] **Step 7: Request independent spec-compliance and code-quality reviews**
 

@@ -452,6 +452,21 @@ test('pricing structured data does not publish unavailable offers or product URL
   await expectLaunchSafeJsonLd(page);
 });
 
+test('terms publishes launch-safe product status and Namescape output language', async ({ page }) => {
+  await page.goto('/terms');
+  await expect(page.getByText(
+    'Namescape is in launch preparation. The implemented Gateway.pink catalog is a developer preview, but public API and documentation access are not currently open. Neither product is a currently open public purchase offer.',
+    { exact: true },
+  )).toBeVisible();
+  await expect(page.getByText(
+    /price guidance, likely-availability clues, and final checks\./i,
+  )).toBeVisible();
+  await expect(page.getByText(/checkout paths?/i)).toHaveCount(0);
+  await expect(page.getByText(
+    /Namescape is available|documentation and published pricing are available/i,
+  )).toHaveCount(0);
+});
+
 test('policies distinguish Namescape searches from Gateway credits', async ({ page }) => {
   await page.goto('/terms');
   await expect(page.getByRole('heading', { name: /Namescape searches and Gateway credits/ })).toBeVisible();

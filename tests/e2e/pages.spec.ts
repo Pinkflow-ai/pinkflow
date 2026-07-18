@@ -148,8 +148,12 @@ test('homepage presents both products with honest lifecycle status', async ({ pa
   await expect(page.getByText('Launch preparation', { exact: true })).toBeVisible();
   await expect(page.getByText('Developer preview', { exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: /open namescape|explore gateway/i })).toHaveCount(0);
+  await expect(namescape.getByText(
+    'Find shortlist-ready domains with price guidance and final checks.',
+    { exact: true },
+  )).toBeVisible();
   await expect(namescapeFlow.getByText('Price + final check', { exact: true })).toBeVisible();
-  await expect(namescapeFlow.getByText(/checkout path/i)).toHaveCount(0);
+  await expect(page.getByText(/checkout paths?/i)).toHaveCount(0);
 
   await expect(namescape.getByRole('link', { name: 'See search packs', exact: true }))
     .toHaveAttribute('href', '/pricing#namescape');

@@ -48,7 +48,7 @@ export const site = {
       checkoutAvailable: false,
       documentationAvailable: false,
       name: 'Namescape',
-      tagline: 'Find shortlist-ready domains with price guidance and checkout paths.',
+      tagline: 'Find shortlist-ready domains with price guidance and final checks.',
       url: null,
     },
     {

@@ -46,8 +46,9 @@ components:
 
 **Creative North Star: "The Working Company Board"**
 
-Pinkflow should feel like walking up to a small, well-run workshop where the
-current products, their price tags, and the person to contact are all visible.
+Pinkflow should feel like walking up to a small, well-run workshop that is
+building and preparing practical products, with their lifecycle states, launch
+or preview price tags, and the person to contact all visible.
 The existing near-black and flow-pink identity is retained, while larger type,
 product-shaped artifacts, and clearer page rhythms replace generic card grids.
 
@@ -109,15 +110,15 @@ the footer. The mobile menu exposes the same labels and closes after navigation.
 
 ### Product Status
 
-Status labels always include text such as “Available” or “Developer preview.”
-Color reinforces the state but never carries it alone.
+Status labels always include text such as “Launch preparation” or “Developer
+preview.” Color reinforces the state but never carries it alone.
 
 ## Do's and Don'ts
 
 ### Do:
 
-- **Do** show the product name, status, price unit, and destination together.
-- **Do** use real product flows and API prices as the site imagery.
+- **Do** show the product name, status, price unit, and any allowed action together.
+- **Do** use representative product flows and reviewed API prices as site imagery.
 - **Do** keep company facts and support routes easy to scan.
 - **Do** retain the `#120d1a` / `#ff4da6` identity and reduced-motion behavior.
 

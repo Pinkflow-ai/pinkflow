@@ -8,23 +8,26 @@ brand
 
 Independent builders, small product teams, prospective customers, payment and
 platform reviewers, and partners evaluating Pinkflow and its products. They
-need to understand what the company makes, which products are available, how
-each product charges, who operates the services, and where to get help.
+need to understand what the company is building, each product's lifecycle
+state and planned pricing, who is responsible for the work, and where to get
+help.
 
 ## Product Purpose
 
 Pinkflow.ai is the public company and trust surface for a small portfolio of
-practical software. It introduces Namescape and Gateway.pink, publishes their
-real pricing models, and provides one stable home for company, support, privacy,
-terms, and refund information. Success means a visitor can identify the right
-product and understand its commercial contract without chasing several sites.
+practical software Pinkflow is building and preparing for public use. It
+introduces Namescape and Gateway.pink, publishes their reviewed launch or
+preview pricing, and provides one stable home for company, support, privacy,
+terms, and refund information. Success means a visitor can identify each
+product's real lifecycle state and understand its proposed commercial contract
+without mistaking the company site for a product deployment.
 
 ## Brand Personality
 
 Direct, resourceful, and transparent. Pinkflow should feel like a small company
-that builds and operates real products: specific about what ships, plainspoken
-about cost and limitations, and confident without pretending to be larger than
-it is.
+building and preparing useful products: specific about what is implemented,
+plainspoken about cost and limitations, and confident without pretending to be
+larger or further along than it is.
 
 ## Anti-references
 
@@ -39,7 +42,7 @@ it is.
 
 ## Design Principles
 
-1. Lead with shipped products and concrete customer outcomes.
+1. Lead with products being built, their lifecycle state, and intended outcomes.
 2. Put price units, dollar translations, and lifecycle status beside the offer.
 3. Separate company-wide facts from product-specific contracts.
 4. Show operational honesty: small team, named support path, explicit limits.

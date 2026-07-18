@@ -1,6 +1,6 @@
 # Pinkflow.ai Company Site Refresh Implementation Plan
 
-> **Superseded Gateway pricing notice (2026-07-18):** Historical Gateway examples below use the original preview prices. Current published prices are 17 credits for email validation, 40 for phone lookup, 20 for screenshots, and AI summarization from 1 credit at an 80% target gross margin.
+> **Superseded (2026-07-18):** This historical plan is superseded by the [Company Site Pricing Truth Sync Design](../specs/2026-07-18-company-site-pricing-truth-sync-design.md). The body below is preserved as implementation history and is not a current product contract.
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 

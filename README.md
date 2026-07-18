@@ -4,33 +4,62 @@ Static company, pricing, support, and policy site for
 [pinkflow.ai](https://pinkflow.ai). It is the shared public trust surface for
 Pinkflow products and is deployed through GitHub Pages.
 
-## Current products
+## Product status
 
-### Namescape — available
+Both product domains are currently closed at public DNS, and neither product
+currently exposes a public destination, checkout, or documentation site.
+Publishing this company site does not deploy either product. The lifecycle and
+prices below describe the reviewed source contracts, not open purchase offers.
 
-[Namescape](https://namescape.pink) turns a product brief into domain-name
-shortlists with price and availability signals.
+### Namescape — launch preparation
 
-- One-time packs: 50 searches / $5, 200 / $15, 500 / $30.
-- Current signed-in usage: standard generation 1, bulk generation 5, bulk
-  availability 3, exact availability 1.
-- Signed-out visitors receive one rate-limited generation attempt. This is not
-  a paid balance.
-- Checkout is available through Paddle; no subscription or auto-renewal.
+Namescape is being prepared to turn a product brief into domain-name shortlists
+with price guidance and final checks. Its one-time launch packs are 50 searches
+for $5, 200 for $15, and 500 for $30. Checkout remains closed.
 
-Authoritative pricing and IDs:
+The complete action matrix is:
 
-- `../namescape/backend/Services/PaddleService.cs`
-- `../namescape/backend/appsettings.json`
-- Snapshot for this site: `src/data/products.ts`
+| Group | Action | Price | Note |
+| --- | --- | --- | --- |
+| Included free | Standard name ideas | Free | — |
+| Included free | Brief Helper | Free | — |
+| Included free | Domain details | Free | Single, batch, and bulk |
+| Included free | Public API domain details | Free | — |
+| Search-priced | Premium name ideas — Standard | 1 search | Per successful request |
+| Search-priced | Premium name ideas — Max | 2 searches | Per successful request |
+| Search-priced | Bulk name ideas — Standard | 3 searches | Per successful request |
+| Search-priced | Bulk name ideas — Max | 6 searches | Per successful request |
+| Search-priced | Final check — Single | 1 search | Per definitive result |
+| Search-priced | Final check — Batch | 1 search per 5 definitive results | Rounded up |
+| Search-priced | Public API name ideas | 1 search | Per successful request |
+| Search-priced | Public API final check | 1 search | Per definitive result |
+
+Included-free actions use no searches. Search-priced name-idea actions charge
+only for successful requests, while final checks charge only for definitive
+results. Failed, empty, or indeterminate work does not use a search.
+
+Authoritative Namescape sources:
+
+- Action policy: `namescape/backend/Services/UsagePolicyService.cs`
+- Action configuration: `namescape/backend/appsettings.json`
+- Usage economics: `namescape/docs/usage-economics.md`
+- Pack mapping: `namescape/backend/Services/PaddleService.cs`
+- Paddle price IDs: `namescape/backend/appsettings.json`
+- Paddle catalog: `docs/paddle-catalog.md`
+- Company-site snapshot: `src/data/products.ts`
+
+The usage contract was verified at commit `5051995` on the unmerged
+`codex/usage-metering` snapshot. That snapshot is not deployed or launch-ready;
+re-verify it before enabling any public product action.
 
 ### Gateway.pink — developer preview
 
-[Gateway.pink](https://gateway.pink) places a growing API catalog behind one
-key with explicit storage and per-call pricing policies.
+Gateway.pink is an implemented developer-preview catalog intended to place a
+growing collection of small APIs behind one key. Public API, documentation, and
+credit checkout access remain closed.
 
-- 23 currently available free routes and seven paid routes, plus seven planned
-  routes in the public roadmap.
+- The source catalog contains 23 implemented free routes, seven implemented
+  paid routes, and seven planned routes.
 - One credit is always $0.001.
 - Paid preview prices: email validation 17 credits, phone lookup 40, screenshot
   45, AI summarization metered from 1 credit with caller-controlled
@@ -39,14 +68,13 @@ key with explicit storage and per-call pricing policies.
 - Paid requests require an idempotency key. Provider failures, timeouts, and
   invalid provider responses charge zero credits.
 - Published packs: 10,000/$10, 50,000/$50, 100,000/$100, 500,000/$500.
-- Production credit checkout is not currently available. The prices are
-  published for preview budgeting, not as purchasable offers today.
+- The prices are published for preview budgeting, not as purchasable offers.
 
 Authoritative pricing/catalog sources:
 
-- `../gateway-pink/packages/shared/src/pricing.ts`
-- `../gateway-pink/packages/shared/src/creditPacks.ts`
-- `../gateway-pink/packages/shared/src/catalog.ts`
+- `gateway-pink/packages/shared/src/pricing.ts`
+- `gateway-pink/packages/shared/src/creditPacks.ts`
+- `gateway-pink/packages/shared/src/catalog.ts`
 - Snapshot for this site: `src/data/products.ts`
 
 Update the snapshot and `checkedAt` values whenever one of those product
@@ -137,6 +165,6 @@ remain `pinkflow.ai`.
 
 ## Paddle catalog
 
-Namescape Paddle identifiers are recorded in `docs/paddle-catalog.md`. Gateway
-does not have a live checkout/catalog yet and must not be added there as if it
-were purchasable.
+Namescape Paddle identifiers are recorded in `docs/paddle-catalog.md`. Neither
+product has an open checkout. Gateway must not be added to the Paddle catalog
+as if it were purchasable.

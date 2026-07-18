@@ -115,8 +115,10 @@ git commit -m "fix: align Pinkflow product contracts"
 Test the six navigable routes plus an unknown path that renders `404.html`.
 Normalize every anchor with `new URL(href, page.url())`; reject hostnames
 `namescape.pink` and `gateway.pink`. Parse every JSON-LD block with
-`JSON.parse`, recursively visit every object/array/string, reject both
-unavailable hostnames in string values, and fail if any block is invalid JSON.
+`JSON.parse` and recursively visit every object, array, and string. Allow the
+exact `Gateway.pink` string only as a product name in JSON-LD. Reject either
+product domain in URL-shaped fields, URL values, and free-text availability
+claims. Fail if any block is invalid JSON.
 
 ```ts
 const publicSurfaces = ['/', '/pricing', '/terms', '/privacy', '/refunds', '/contact', '/this-does-not-exist'];

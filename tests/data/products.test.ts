@@ -1,8 +1,10 @@
+import { readFileSync } from 'node:fs';
 import { expect, test } from 'vitest';
 import * as productData from '../../src/data/products';
 import { productActionHref, site } from '../../src/data/site';
 
 const { namescapePacks } = productData;
+const compactWhitespace = (value: string) => value.replace(/\s+/g, ' ');
 
 test('three packs are defined', () => {
   expect(namescapePacks).toHaveLength(3);
@@ -89,7 +91,7 @@ test('Namescape anonymous access is a rate-limited attempt, not a paid search ba
 });
 
 test('pricing snapshots identify every authoritative source file', () => {
-  expect(productData.pricingSources.namescape).toMatchObject({
+  expect(productData.pricingSources.namescape).toEqual({
     actionPolicy: 'namescape/backend/Services/UsagePolicyService.cs',
     actionConfig: 'namescape/backend/appsettings.json',
     economics: 'namescape/docs/usage-economics.md',
@@ -106,6 +108,83 @@ test('pricing snapshots identify every authoritative source file', () => {
       checkedAt: '2026-07-18',
     },
   });
+});
+
+test('repository documentation publishes the complete Namescape launch-price contract', () => {
+  const readme = readFileSync('README.md', 'utf8');
+  const compactReadme = compactWhitespace(readme);
+
+  for (const item of productData.namescapeUsagePrices) {
+    expect(readme).toContain(
+      `| ${item.group} | ${item.name} | ${item.price} | ${item.note ?? '—'} |`,
+    );
+  }
+
+  expect(readme).toContain('- Action policy: `namescape/backend/Services/UsagePolicyService.cs`');
+  expect(readme).toContain('- Action configuration: `namescape/backend/appsettings.json`');
+  expect(readme).toContain('- Usage economics: `namescape/docs/usage-economics.md`');
+  expect(readme).toContain('- Pack mapping: `namescape/backend/Services/PaddleService.cs`');
+  expect(readme).toContain('- Paddle price IDs: `namescape/backend/appsettings.json`');
+  expect(readme).toContain('- Paddle catalog: `docs/paddle-catalog.md`');
+  expect(readme).toContain('`5051995`');
+  expect(readme).toContain('`codex/usage-metering`');
+  expect(compactReadme).toMatch(/unmerged `codex\/usage-metering` snapshot/i);
+  expect(compactReadme).toMatch(/not deployed or launch-ready/i);
+});
+
+test('repository documentation keeps both products in honest closed lifecycle states', () => {
+  const readme = readFileSync('README.md', 'utf8');
+  const product = readFileSync('PRODUCT.md', 'utf8');
+  const design = readFileSync('DESIGN.md', 'utf8');
+  const currentDocs = [readme, product, design].join('\n');
+  const compactReadme = compactWhitespace(readme);
+  const compactCurrentDocs = compactWhitespace(currentDocs);
+
+  expect(readme).toContain('Namescape — launch preparation');
+  expect(readme).toContain('Gateway.pink — developer preview');
+  expect(compactReadme).toMatch(/Both product domains are currently closed at public DNS/i);
+  expect(compactReadme).toMatch(/neither product currently exposes a public destination, checkout, or documentation site/i);
+  expect(compactReadme).toMatch(/Publishing this company site does not deploy either product/i);
+  expect(readme).not.toMatch(/\]\(https:\/\/(?:www\.)?(?:namescape\.pink|gateway\.pink)(?:[/?#)]|$)/i);
+
+  expect(product).toMatch(/building and preparing/i);
+  expect(design).toMatch(/building and preparing/i);
+  expect(compactCurrentDocs).not.toMatch(/Namescape\s+—\s+available/i);
+  expect(compactCurrentDocs).not.toMatch(/checkout is available/i);
+  expect(compactCurrentDocs).not.toMatch(/documentation (?:is |remains )?available|documentation enabled/i);
+  expect(compactCurrentDocs).not.toMatch(/standard generation 1|bulk generation 5|bulk availability 3|exact availability 1/i);
+  expect(product).not.toContain('Lead with shipped products');
+  expect(product).not.toContain('builds and operates real products');
+  expect(design).not.toContain('“Available”');
+});
+
+test('historical refresh documents point readers to the current truth contract', () => {
+  const historicalDesign = readFileSync(
+    'docs/superpowers/specs/2026-07-17-company-site-refresh-design.md',
+    'utf8',
+  );
+  const historicalPlan = readFileSync(
+    'docs/superpowers/plans/2026-07-17-company-site-refresh.md',
+    'utf8',
+  );
+  const currentPlan = readFileSync(
+    'docs/superpowers/plans/2026-07-18-company-site-pricing-truth-sync.md',
+    'utf8',
+  );
+  const compactCurrentPlan = compactWhitespace(currentPlan);
+
+  expect(historicalDesign).toMatch(
+    /^# Pinkflow\.ai Company Site Refresh Design\n\n> \*\*Superseded \(2026-07-18\):\*\* .*\[Company Site Pricing Truth Sync Design\]\(\.\/2026-07-18-company-site-pricing-truth-sync-design\.md\)/,
+  );
+  expect(historicalPlan).toMatch(
+    /^# Pinkflow\.ai Company Site Refresh Implementation Plan\n\n> \*\*Superseded \(2026-07-18\):\*\* .*\[Company Site Pricing Truth Sync Design\]\(\.\.\/specs\/2026-07-18-company-site-pricing-truth-sync-design\.md\)/,
+  );
+  expect(compactCurrentPlan).toContain(
+    'Allow the exact `Gateway.pink` string only as a product name in JSON-LD.',
+  );
+  expect(compactCurrentPlan).toContain(
+    'Reject either product domain in URL-shaped fields, URL values, and free-text availability claims.',
+  );
 });
 
 test('Namescape Paddle identifiers match the production configuration', () => {

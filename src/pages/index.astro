@@ -1,53 +1,30 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
-import PinkflowMark from '../components/PinkflowMark.astro';
 import { site } from '../data/site';
-import { gatewayCatalogCounts, gatewayDeveloperSurfaces } from '../data/products';
+import { gatewayCatalogCounts, gatewayCreditUsdMicros, gatewayEndpointPrices } from '../data/products';
 
 const namescape = site.products.find((product) => product.slug === 'namescape')!;
 const gateway = site.products.find((product) => product.slug === 'gateway')!;
+const emailValidation = gatewayEndpointPrices.find((endpoint) => endpoint.name === 'Email validation')!;
+const emailValidationUsd = (emailValidation.credits * gatewayCreditUsdMicros / 1_000_000).toFixed(3);
 const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publishing clear launch pricing, product limits, company policies, and direct contact details.';
 ---
 <SiteLayout title="Pinkflow" description={description}>
-  <section class="site-container grid min-h-[76vh] items-center gap-12 py-16 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">
-    <div>
-      <PinkflowMark compact={false} showWordmark class="mb-8" />
+  <section class="site-container flex min-h-[68vh] max-w-5xl items-center py-16 lg:py-24">
+    <div class="max-w-4xl">
       <h1 class="max-w-4xl text-[clamp(1.75rem,8vw,6rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-white">
-        Practical software, being built by <span class="text-primary">Pinkflow.</span>
+        Focused software for <span class="text-primary">stubborn work.</span>
       </h1>
       <p class="muted-copy mt-8 max-w-2xl text-lg leading-relaxed sm:text-xl">
-        We are turning stubborn, everyday problems into focused products. Here we publish
-        clear launch pricing, honest limits, and a direct line to the people building them.
+        Pinkflow makes small, useful products around problems that are harder than they should be.
+        This is where we keep the important details plain: what is being built, what it costs, and
+        how to get in touch.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#products" class="btn-primary">See our products</a>
         <a href="/pricing" class="btn-secondary">Compare pricing</a>
       </div>
     </div>
-
-    <aside class="relative mx-auto w-full max-w-lg" aria-label="How Pinkflow works">
-      <div class="absolute inset-0 rounded-[24px] bg-primary/5 blur-2xl"></div>
-      <div class="relative overflow-hidden rounded-xl border border-primary/20 bg-bg-card">
-        <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
-          <span class="font-bold text-white">Pinkflow building model</span>
-          <span class="h-2.5 w-2.5 rounded-full bg-primary"></span>
-        </div>
-        <ol class="divide-y divide-white/10">
-          <li class="grid grid-cols-[2.5rem_1fr] gap-3 px-5 py-5">
-            <span class="font-extrabold text-primary">01</span>
-            <div><strong class="text-white">Find the recurring problem.</strong><p class="muted-copy mt-1 text-sm">Start with work people already struggle through.</p></div>
-          </li>
-          <li class="grid grid-cols-[2.5rem_1fr] gap-3 px-5 py-5">
-            <span class="font-extrabold text-primary">02</span>
-            <div><strong class="text-white">Ship the smallest useful product.</strong><p class="muted-copy mt-1 text-sm">Keep the workflow focused and the contract readable.</p></div>
-          </li>
-          <li class="grid grid-cols-[2.5rem_1fr] gap-3 px-5 py-5">
-            <span class="font-extrabold text-primary">03</span>
-            <div><strong class="text-white">Publish the contract early.</strong><p class="muted-copy mt-1 text-sm">Share launch pricing, policies, limitations, and support ownership.</p></div>
-          </li>
-        </ol>
-      </div>
-    </aside>
   </section>
 
   <section id="products" class="scroll-mt-24 border-y border-white/10 py-20 sm:py-24">
@@ -55,10 +32,10 @@ const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publ
       <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p class="mb-3 font-bold text-primary">Current products</p>
-          <h2 class="section-title">Two products. Two specific jobs.</h2>
+          <h2 class="section-title">Products with a clear job.</h2>
         </div>
         <p class="muted-copy max-w-md text-sm leading-relaxed sm:text-right">
-          Product lifecycle and purchase availability are stated explicitly. Preview means preview.
+          Each product is still in preparation. Prices are published for reference; checkout is not open yet.
         </p>
       </div>
 
@@ -67,20 +44,15 @@ const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publ
           <div class="flex flex-wrap items-start justify-between gap-4 p-6 sm:p-8">
             <div class="min-w-0">
               <span class="status-chip">{namescape.statusLabel}</span>
-              <h3 class="mt-4 text-[clamp(1.125rem,6vw,1.875rem)] font-extrabold text-white">{namescape.name}</h3>
-              <p class="muted-copy mt-3 max-w-md leading-relaxed">{namescape.tagline}</p>
+              <h3 class="mt-4 text-[clamp(1.125rem,6vw,1.875rem)] font-extrabold text-white">Namescape.pink</h3>
+              <p class="muted-copy mt-3 max-w-md leading-relaxed">Name ideas, domain research, and final checks for a shortlist you can act on.</p>
             </div>
-            <span class="rounded-lg bg-white/5 px-3 py-2 text-sm font-bold text-white">From $5</span>
+            <span class="rounded-lg bg-white/5 px-3 py-2 text-right text-sm font-bold text-white">Free ideas at launch<br /><span class="text-xs font-medium text-white/55">Paid searches when checkout opens</span></span>
           </div>
 
           <div class="mx-6 rounded-lg bg-[#120d1a] p-5 sm:mx-8" aria-label="Namescape product flow">
-            <div class="flex flex-wrap items-center gap-2 text-sm">
-              <span class="rounded-md bg-white/5 px-3 py-2 text-white/75">Your idea</span>
-              <span aria-hidden="true" class="text-primary">→</span>
-              <span class="rounded-md bg-primary/15 px-3 py-2 font-bold text-[#ff9dcc]">Name shortlist</span>
-              <span aria-hidden="true" class="text-primary">→</span>
-              <span class="rounded-md bg-white/5 px-3 py-2 text-white/75">Price + final check</span>
-            </div>
+            <p class="text-sm font-bold text-white">Free at launch: name ideas, brief help, and domain details.</p>
+            <p class="mt-2 text-sm leading-relaxed text-white/60">Search packs cover the deeper generation and final-check work once checkout opens.</p>
           </div>
 
           <div class="mt-auto flex flex-wrap gap-3 p-6 sm:p-8">
@@ -99,16 +71,12 @@ const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publ
             <span class="rounded-lg bg-white/5 px-3 py-2 text-right text-sm font-bold text-white">{gatewayCatalogCounts.freeAvailable} free APIs<br /><span class="text-xs font-medium text-white/55">{gatewayCatalogCounts.paidAvailable} paid in preview</span></span>
           </div>
 
-          <div class="mx-6 overflow-hidden rounded-lg bg-[#120d1a] font-mono text-xs sm:mx-8" aria-label="Gateway API request flow">
-            <div class="border-b border-white/10 px-4 py-3 text-white/50">POST /v1/ai/summarize</div>
-            <div class="grid gap-2 p-4 sm:grid-cols-[auto_1fr]">
-              <span class="text-primary">Authorization</span><span class="break-all text-white/75">Bearer gp_••••••••</span>
-              <span class="text-primary">Price</span><span class="text-white/75">from 1 credit · caller budget enforced</span>
+          <div class="mx-6 overflow-hidden rounded-lg bg-[#120d1a] font-mono text-xs sm:mx-8" aria-label="Gateway example">
+            <div class="p-5 font-sans">
+              <p class="text-sm font-bold text-white">A real example</p>
+              <p class="mt-2 text-sm leading-relaxed text-white/65">Validate an email address — {emailValidation.credits} credits (${emailValidationUsd}).</p>
             </div>
           </div>
-          <p class="mx-6 mt-4 text-sm leading-relaxed text-white/55 sm:mx-8">
-            Implemented in source: {gatewayDeveloperSurfaces.join(' · ')}. Public API and documentation access remain closed.
-          </p>
 
           <div class="mt-auto flex flex-wrap gap-3 p-6 sm:p-8">
             <a href="/pricing#gateway" class="btn-secondary">See preview pricing</a>
@@ -123,17 +91,15 @@ const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publ
     <div class="grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
       <div class="min-w-0">
         <p class="mb-3 font-bold text-primary">The company</p>
-        <h2 class="section-title">Small enough to be accountable.</h2>
+        <h2 class="section-title">Tools with a job to do.</h2>
       </div>
       <div class="muted-copy min-w-0 max-w-2xl space-y-5 text-lg leading-relaxed">
         <p>
-          Pinkflow.ai designs and builds focused products, and publishes their pricing,
-          policies, and launch state clearly.
+          Pinkflow builds focused products for work that is often more complicated than it needs to be.
         </p>
         <p>
-          This site is the stable home for product pricing, company policies, and support.
-          If something is unclear, email <a href={`mailto:${site.email}`} class="inline-link breakable-token">{site.email}</a> —
-          we respond within {site.responseWindow}.
+          The details matter. We keep product status, pricing, policies, and a real support address in one place.
+          For questions, feedback, or a security report, email <a href={`mailto:${site.email}`} class="inline-link breakable-token">{site.email}</a> — we respond within {site.responseWindow}.
         </p>
         <div class="flex flex-wrap gap-x-6 gap-y-3 pt-2 text-sm font-bold">
           <a href="/terms">Terms</a>

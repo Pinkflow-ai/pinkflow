@@ -3,7 +3,7 @@ import AxeBuilder from '@axe-core/playwright';
 import { namescapeUsagePrices } from '../../src/data/products';
 
 const pages = [
-  { path: '/', titleContains: 'Pinkflow', expectText: 'Practical software, being built by Pinkflow' },
+  { path: '/', titleContains: 'Pinkflow', expectText: 'Focused software for stubborn work' },
   { path: '/pricing', titleContains: 'Pricing', expectText: 'Two products, two honest units' },
   { path: '/terms', titleContains: 'Terms of Service', expectText: 'Neither product is a currently open public purchase offer' },
   { path: '/privacy', titleContains: 'Privacy Policy', expectText: 'supervisory authority' },
@@ -182,10 +182,10 @@ test('pricing shows three search packs', async ({ page }) => {
   await expect(page.getByText('500 searches')).toBeVisible();
 });
 
-test('homepage presents both products with honest lifecycle status', async ({ page }) => {
+test('homepage presents products with plain, launch-safe facts', async ({ page }) => {
   await page.goto('/');
   const namescape = page.getByRole('article').filter({
-    has: page.getByRole('heading', { name: 'Namescape', exact: true }),
+    has: page.getByRole('heading', { name: 'Namescape.pink', exact: true }),
   });
   const gateway = page.getByRole('article').filter({
     has: page.getByRole('heading', { name: 'Gateway.pink', exact: true }),
@@ -198,10 +198,16 @@ test('homepage presents both products with honest lifecycle status', async ({ pa
   await expect(page.getByText('Developer preview', { exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: /open namescape|explore gateway/i })).toHaveCount(0);
   await expect(namescape.getByText(
-    'Find shortlist-ready domains with price guidance and final checks.',
+    'Name ideas, domain research, and final checks for a shortlist you can act on.',
     { exact: true },
   )).toBeVisible();
-  await expect(namescapeFlow.getByText('Price + final check', { exact: true })).toBeVisible();
+  await expect(namescape.getByText('Free ideas at launch')).toBeVisible();
+  await expect(namescapeFlow.getByText('Free at launch: name ideas, brief help, and domain details.', { exact: true })).toBeVisible();
+  await expect(gateway.getByLabel('Gateway example')).toContainText('Validate an email address — 17 credits ($0.017).');
+  await expect(page.getByText('Pinkflow building model', { exact: true })).toHaveCount(0);
+  await expect(page.getByText('Two products. Two specific jobs.', { exact: true })).toHaveCount(0);
+  await expect(page.getByText('Product lifecycle and purchase availability are stated explicitly. Preview means preview.', { exact: true })).toHaveCount(0);
+  await expect(page.getByText(/Implemented in source:/)).toHaveCount(0);
   await expect(page.getByText(/checkout paths?/i)).toHaveCount(0);
 
   await expect(namescape.getByRole('link', { name: 'See search packs', exact: true }))
@@ -676,23 +682,24 @@ test('policies distinguish Namescape searches from Gateway credits', async ({ pa
   )).toBeVisible();
 });
 
-test('homepage company copy does not disclose a location', async ({ page }) => {
+test('homepage company copy is direct and does not disclose a location', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByText(
-    'Pinkflow.ai designs and builds focused products, and publishes their pricing, policies, and launch state clearly.',
+    'Pinkflow builds focused products for work that is often more complicated than it needs to be.',
     { exact: true },
   )).toBeVisible();
   await expect(page.getByText(/Pinkflow\.ai is based in/)).not.toBeVisible();
 });
 
-test('footer shows operator line on every page', async ({ page }) => {
+test('footer keeps location and personal operator details out of every page', async ({ page }) => {
   for (const p of pages) {
     await page.goto(p.path);
-    await expect(page.getByText(
-      'Practical software being built in Tel Aviv, Israel, with launch facts published here.',
+    const footer = page.locator('footer');
+    await expect(footer.getByText(
+      'Products in progress, with plain facts and a direct way to reach us.',
       { exact: true },
     )).toBeVisible();
-    await expect(page.getByText(/Pinkflow is operated by Miro Mal, an individual based in Tel Aviv, Israel/).first()).toBeVisible();
+    await expect(footer.getByText(/Miro Mal|Tel Aviv|Israel/)).toHaveCount(0);
   }
 });
 

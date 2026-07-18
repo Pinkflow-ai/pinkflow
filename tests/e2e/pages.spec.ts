@@ -13,6 +13,7 @@ const pages = [
 
 const publicSurfaces = [...pages.map(({ path }) => path), '/this-does-not-exist'];
 const unavailableProductHostnames = new Set(['namescape.pink', 'gateway.pink']);
+const unavailableProductNames = new Set(['Namescape', 'Gateway.pink']);
 
 const canonicalUrls: Record<string, string> = {
   '/': 'https://pinkflow.ai/',
@@ -43,6 +44,9 @@ function findLaunchUnsafeJsonLd(value: unknown, path = '$'): string[] {
   const declaresOffer = schemaTypes.some((type) => type === 'Offer'
     || (typeof type === 'string' && /^https?:\/\/schema\.org\/Offer\/?$/i.test(type)));
   const violations = declaresOffer ? [`${path} declares schema.org Offer`] : [];
+  if (Object.prototype.hasOwnProperty.call(object, 'offers')) {
+    violations.push(`${path} declares an offers property`);
+  }
 
   return violations.concat(
     Object.entries(object).flatMap(([key, item]) => findLaunchUnsafeJsonLd(item, `${path}.${key}`)),
@@ -69,13 +73,24 @@ async function expectLaunchSafeJsonLd(page: Page) {
 }
 
 async function findUnavailableProductAnchors(page: Page): Promise<string[]> {
-  const hrefs = await page.locator('a[href]').evaluateAll((anchors) => anchors.map(
-    (anchor) => anchor.getAttribute('href') ?? '',
+  const anchors = await page.locator('a').evaluateAll((elements) => elements.map(
+    (element) => ({
+      href: element.getAttribute('href'),
+      text: element.textContent?.trim() ?? '',
+    }),
   ));
 
-  return hrefs.flatMap((href) => {
+  return anchors.flatMap(({ href, text }) => {
+    if (href === null) {
+      return unavailableProductNames.has(text) ? [`${text} anchor has no destination`] : [];
+    }
+
     const url = new URL(href, page.url());
-    return unavailableProductHostnames.has(url.hostname.toLowerCase()) ? [url.href] : [];
+    const hostname = url.hostname.toLowerCase();
+    const unavailable = [...unavailableProductHostnames].some(
+      (base) => hostname === base || hostname.endsWith(`.${base}`),
+    );
+    return unavailable ? [url.href] : [];
   });
 }
 
@@ -115,6 +130,40 @@ test('JSON-LD schema guard rejects scalar and array Offer types including schema
     '$[1] declares schema.org Offer',
     '$[2] declares schema.org Offer',
     '$[3] declares schema.org Offer',
+  ]);
+});
+
+test('JSON-LD schema guard rejects offers properties without Offer types', () => {
+  expect(findLaunchUnsafeJsonLd({
+    name: 'Launch prices',
+    offers: { price: '5.00' },
+    nested: [{ offers: null }],
+  })).toEqual([
+    '$ declares an offers property',
+    '$.nested[0] declares an offers property',
+  ]);
+});
+
+test('anchor guard rejects product hosts, subdomains, and exact product names without destinations', async ({ page }) => {
+  await page.goto('/');
+  await page.setContent(`
+    <a href="https://namescape.pink/">Namescape launch</a>
+    <a href="https://docs.namescape.pink/start">Namescape docs</a>
+    <a href="https://gateway.pink/">Gateway launch</a>
+    <a href="https://api.gateway.pink/v1">Gateway API</a>
+    <a>Namescape</a>
+    <a>Gateway.pink</a>
+    <a>Namescape pricing</a>
+    <a href="/pricing">Gateway.pink</a>
+  `);
+
+  expect(await findUnavailableProductAnchors(page)).toEqual([
+    'https://namescape.pink/',
+    'https://docs.namescape.pink/start',
+    'https://gateway.pink/',
+    'https://api.gateway.pink/v1',
+    'Namescape anchor has no destination',
+    'Gateway.pink anchor has no destination',
   ]);
 });
 
@@ -193,6 +242,7 @@ test('homepage Organization schema names both products without external URLs', a
   )) as Record<string, unknown> | undefined;
 
   expect(organization).toBeDefined();
+  expect(organization).not.toHaveProperty('offers');
   expect(organization?.owns).toEqual([
     {
       '@type': 'SoftwareApplication',

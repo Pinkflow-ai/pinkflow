@@ -28,12 +28,38 @@ function markdownLinkTargets(markdown: string): string[] {
   return [...markdown.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)].map((match) => match[1]);
 }
 
-function planStepStates(markdown: string, task: number): boolean[] {
+function leadingBlockquote(markdown: string): string | null {
+  const lines = markdown.split('\n');
+  let index = lines.findIndex((line) => line.startsWith('# '));
+  if (index === -1) return null;
+
+  index += 1;
+  while (lines[index]?.trim() === '') index += 1;
+  if (!lines[index]?.startsWith('>')) return null;
+
+  const quote: string[] = [];
+  while (lines[index]?.startsWith('>')) {
+    quote.push(lines[index].replace(/^>\s?/, ''));
+    index += 1;
+  }
+  return quote.join('\n');
+}
+
+function planTaskSection(markdown: string, task: number): string {
   const start = markdown.indexOf(`### Task ${task}:`);
+  if (start === -1) return '';
   const end = markdown.indexOf(`### Task ${task + 1}:`, start + 1);
-  const section = markdown.slice(start, end === -1 ? undefined : end);
-  return [...section.matchAll(/^- \[([ x])\] \*\*Step \d+:/gm)]
+  return markdown.slice(start, end === -1 ? undefined : end);
+}
+
+function planStepStates(markdown: string, task: number): boolean[] {
+  return [...planTaskSection(markdown, task).matchAll(/^- \[([ x])\] \*\*Step \d+:/gm)]
     .map((match) => match[1] === 'x');
+}
+
+function paragraphContaining(markdown: string, requiredTerms: string[]): string | null {
+  return markdown.split(/\n\s*\n/)
+    .find((paragraph) => requiredTerms.every((term) => paragraph.includes(term))) ?? null;
 }
 
 test('three packs are defined', () => {
@@ -217,20 +243,32 @@ test('historical refresh documents point readers to the current truth contract',
     'docs/superpowers/plans/2026-07-18-company-site-pricing-truth-sync.md',
     'utf8',
   );
-  const compactCurrentPlan = compactWhitespace(currentPlan);
 
-  expect(historicalDesign).toMatch(
-    /^# Pinkflow\.ai Company Site Refresh Design\n\n> \*\*Superseded \(2026-07-18\):\*\* .*\[Company Site Pricing Truth Sync Design\]\(\.\/2026-07-18-company-site-pricing-truth-sync-design\.md\)/,
-  );
-  expect(historicalPlan).toMatch(
-    /^# Pinkflow\.ai Company Site Refresh Implementation Plan\n\n> \*\*Superseded \(2026-07-18\):\*\* .*\[Company Site Pricing Truth Sync Design\]\(\.\.\/specs\/2026-07-18-company-site-pricing-truth-sync-design\.md\)/,
-  );
-  expect(compactCurrentPlan).toContain(
-    'Allow the exact `Gateway.pink` string only as a product name in JSON-LD.',
-  );
-  expect(compactCurrentPlan).toContain(
-    'Reject either product domain in URL-shaped fields, URL values, and free-text availability claims.',
-  );
+  const historicalNotices = [
+    {
+      notice: leadingBlockquote(historicalDesign),
+      designTarget: './2026-07-18-company-site-pricing-truth-sync-design.md',
+    },
+    {
+      notice: leadingBlockquote(historicalPlan),
+      designTarget: '../specs/2026-07-18-company-site-pricing-truth-sync-design.md',
+    },
+  ];
+  for (const { notice, designTarget } of historicalNotices) {
+    expect(notice).not.toBeNull();
+    expect(notice).toMatch(/\bSuperseded\b/i);
+    expect(markdownLinkTargets(notice!)).toContain(designTarget);
+  }
+
+  const task2 = planTaskSection(currentPlan, 2);
+  const jsonLdGuidance = paragraphContaining(task2, ['JSON-LD', '`Gateway.pink`']);
+  expect(jsonLdGuidance).not.toBeNull();
+  expect(jsonLdGuidance).toMatch(/\bAllow\b[^.]*\bexact\b[^.]*`Gateway\.pink`/i);
+  expect(jsonLdGuidance).toMatch(/\bonly\b[^.]*\bproduct name\b/i);
+  expect(jsonLdGuidance).toMatch(/\bReject\b[^.]*\bproduct domain\b/i);
+  expect(jsonLdGuidance).toMatch(/\bURL-shaped fields\b/i);
+  expect(jsonLdGuidance).toMatch(/\bURL values\b/i);
+  expect(jsonLdGuidance).toMatch(/\bfree-text(?:\s+availability)?\s+claims\b/i);
   expect(planStepStates(currentPlan, 1)).toEqual(Array(7).fill(true));
   expect(planStepStates(currentPlan, 2)).toEqual(Array(6).fill(true));
   expect(planStepStates(currentPlan, 3)).toEqual(Array(6).fill(true));

@@ -58,24 +58,31 @@ Gateway.pink is an implemented developer-preview catalog intended to place a
 growing collection of small APIs behind one key. Public API, documentation, and
 credit checkout access remain closed.
 
-- The source catalog contains 23 implemented free routes, seven implemented
-  paid routes, and seven planned routes.
+- The source catalog contains 25 implemented free routes, nine implemented
+  paid routes, and five planned routes.
 - One credit is always $0.001.
 - Paid preview prices: email validation 17 credits, phone lookup 40, screenshot
-  45, AI summarization metered from 1 credit with caller-controlled
-  `max_credits` from 1 to 100, browser screenshot/PDF 1–6 credits, and browser
-  Markdown 1–3 credits.
+  45, document OCR 8, invoice/receipt extraction 50, AI summarization metered
+  from 1 credit with caller-controlled `max_credits` from 1 to 100, browser
+  screenshot/PDF 1–6 credits, and browser Markdown 1–3 credits.
 - Paid requests require an idempotency key. Provider failures, timeouts, and
   invalid provider responses charge zero credits.
-- Published packs: 10,000/$10, 50,000/$50, 100,000/$100, 500,000/$500.
+- Published fee-inclusive preview subtotals before tax: 10,000/$11.06,
+  50,000/$53.16, 100,000/$105.79, and 500,000/$526.85. Those packs load
+  $10, $50, $100, and $500 of API usage value respectively.
+- OpenAPI 3.1, dependency-light TypeScript and Python SDKs, and an
+  entitlement-gated MCP stdio adapter are implemented in source. This does not
+  mean public API or documentation access is open.
 - The prices are published for preview budgeting, not as purchasable offers.
 
 Authoritative pricing/catalog sources, pinned to the verified Gateway snapshot:
 
-- Endpoint pricing: [packages/shared/src/pricing.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/6f12540f455d1bedb8e2b5c037a6cabf7e732d13/packages/shared/src/pricing.ts)
-- Credit packs: [packages/shared/src/creditPacks.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/6f12540f455d1bedb8e2b5c037a6cabf7e732d13/packages/shared/src/creditPacks.ts)
-- Catalog: [packages/shared/src/catalog.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/6f12540f455d1bedb8e2b5c037a6cabf7e732d13/packages/shared/src/catalog.ts)
-- Verified snapshot: [commit `6f12540`](https://github.com/Pinkflow-ai/gateway-pink/commit/6f12540f455d1bedb8e2b5c037a6cabf7e732d13)
+- Endpoint pricing: [packages/shared/src/pricing.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/b478b3f8e03ae48b96131aacb26a9abd85c96ae2/packages/shared/src/pricing.ts)
+- Credit packs: [packages/shared/src/creditPacks.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/b478b3f8e03ae48b96131aacb26a9abd85c96ae2/packages/shared/src/creditPacks.ts)
+- Catalog: [packages/shared/src/catalog.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/b478b3f8e03ae48b96131aacb26a9abd85c96ae2/packages/shared/src/catalog.ts)
+- Verified commercial snapshot: [commit `b478b3f`](https://github.com/Pinkflow-ai/gateway-pink/commit/b478b3f8e03ae48b96131aacb26a9abd85c96ae2)
+- Public runtime contract: [OpenAPI 3.1 artifact](https://github.com/Pinkflow-ai/gateway-pink-public/blob/ffaddfcf6bee5d3823465befd56cdb99faa1806d/openapi/gateway.openapi.json)
+- Verified runtime snapshot: [commit `ffaddfc`](https://github.com/Pinkflow-ai/gateway-pink-public/commit/ffaddfcf6bee5d3823465befd56cdb99faa1806d)
 - Company-site snapshot: [src/data/products.ts](src/data/products.ts)
 
 Update the snapshot and `checkedAt` values whenever one of those product

@@ -11,8 +11,8 @@ export interface GatewayCreditPack {
   id: string;
   name: string;
   credits: number;
-  priceUsd: number;
-  mcpAccess?: boolean;
+  usageValueUsd: number;
+  checkoutSubtotalUsd: number;
 }
 
 export interface GatewayEndpointPrice {
@@ -49,10 +49,19 @@ export const pricingSources = {
 } as const;
 
 export const gatewayCatalogCounts = {
-  freeAvailable: 23,
-  paidAvailable: 7,
-  planned: 7,
+  freeAvailable: 25,
+  paidAvailable: 9,
+  planned: 5,
 } as const;
+
+export const gatewayDeveloperSurfaces = [
+  'OpenAPI 3.1 contract',
+  'TypeScript SDK',
+  'Python SDK',
+  'MCP stdio adapter',
+] as const;
+
+export const gatewayMcpUnlockThreshold = 100_000;
 
 export const gatewayAiBudgetPolicy = {
   field: 'max_credits',
@@ -82,16 +91,18 @@ export const namescapeUsagePrices: NamescapeUsagePrice[] = [
 export const gatewayCreditUsdMicros = 1_000;
 
 export const gatewayCreditPacks: GatewayCreditPack[] = [
-  { id: 'starter', name: 'Starter', credits: 10_000, priceUsd: 10 },
-  { id: 'standard', name: 'Standard', credits: 50_000, priceUsd: 50 },
-  { id: 'bulk', name: 'Growth', credits: 100_000, priceUsd: 100, mcpAccess: true },
-  { id: 'volume', name: 'Scale', credits: 500_000, priceUsd: 500, mcpAccess: true },
+  { id: 'starter', name: 'Starter', credits: 10_000, usageValueUsd: 10, checkoutSubtotalUsd: 11.06 },
+  { id: 'standard', name: 'Standard', credits: 50_000, usageValueUsd: 50, checkoutSubtotalUsd: 53.16 },
+  { id: 'bulk', name: 'Growth', credits: 100_000, usageValueUsd: 100, checkoutSubtotalUsd: 105.79 },
+  { id: 'volume', name: 'Scale', credits: 500_000, usageValueUsd: 500, checkoutSubtotalUsd: 526.85 },
 ];
 
 export const gatewayEndpointPrices: GatewayEndpointPrice[] = [
   { name: 'Email validation', credits: 17 },
   { name: 'Phone line-type lookup', credits: 40 },
   { name: 'Website screenshot', credits: 45 },
+  { name: 'Document OCR', credits: 8 },
+  { name: 'Invoice & receipt extraction', credits: 50 },
   { name: 'AI summarization', credits: 1, metered: true },
   { name: 'Browser screenshot', credits: 1, maximumCredits: 6, metered: true, preview: true },
   { name: 'Browser PDF', credits: 1, maximumCredits: 6, metered: true, preview: true },

@@ -2,7 +2,7 @@
 import SiteLayout from '../layouts/SiteLayout.astro';
 import PinkflowMark from '../components/PinkflowMark.astro';
 import { site } from '../data/site';
-import { gatewayCatalogCounts } from '../data/products';
+import { gatewayCatalogCounts, gatewayDeveloperSurfaces } from '../data/products';
 
 const namescape = site.products.find((product) => product.slug === 'namescape')!;
 const gateway = site.products.find((product) => product.slug === 'gateway')!;
@@ -106,6 +106,9 @@ const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publ
               <span class="text-primary">Price</span><span class="text-white/75">from 1 credit · caller budget enforced</span>
             </div>
           </div>
+          <p class="mx-6 mt-4 text-sm leading-relaxed text-white/55 sm:mx-8">
+            Implemented in source: {gatewayDeveloperSurfaces.join(' · ')}. Public API and documentation access remain closed.
+          </p>
 
           <div class="mt-auto flex flex-wrap gap-3 p-6 sm:p-8">
             <a href="/pricing#gateway" class="btn-secondary">See preview pricing</a>

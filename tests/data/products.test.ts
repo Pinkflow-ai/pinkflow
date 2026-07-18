@@ -93,14 +93,14 @@ test('Gateway uses a fixed one-tenth-cent credit denomination', () => {
 
 test('Gateway credit packs preserve the fixed denomination', () => {
   const packs = (productData as Record<string, unknown>).gatewayCreditPacks as
-    | Array<{ credits: number; priceUsd: number; mcpAccess?: boolean }>
+    | Array<{ credits: number; usageValueUsd: number; checkoutSubtotalUsd: number }>
     | undefined;
 
   expect(packs).toEqual([
-    { id: 'starter', name: 'Starter', credits: 10_000, priceUsd: 10 },
-    { id: 'standard', name: 'Standard', credits: 50_000, priceUsd: 50 },
-    { id: 'bulk', name: 'Growth', credits: 100_000, priceUsd: 100, mcpAccess: true },
-    { id: 'volume', name: 'Scale', credits: 500_000, priceUsd: 500, mcpAccess: true },
+    { id: 'starter', name: 'Starter', credits: 10_000, usageValueUsd: 10, checkoutSubtotalUsd: 11.06 },
+    { id: 'standard', name: 'Standard', credits: 50_000, usageValueUsd: 50, checkoutSubtotalUsd: 53.16 },
+    { id: 'bulk', name: 'Growth', credits: 100_000, usageValueUsd: 100, checkoutSubtotalUsd: 105.79 },
+    { id: 'volume', name: 'Scale', credits: 500_000, usageValueUsd: 500, checkoutSubtotalUsd: 526.85 },
   ]);
 });
 
@@ -110,6 +110,8 @@ test('Gateway fixed endpoint prices match the runtime pricing contract', () => {
     { name: 'Email validation', credits: 17 },
     { name: 'Phone line-type lookup', credits: 40 },
     { name: 'Website screenshot', credits: 45 },
+    { name: 'Document OCR', credits: 8 },
+    { name: 'Invoice & receipt extraction', credits: 50 },
     { name: 'AI summarization', credits: 1, metered: true },
     { name: 'Browser screenshot', credits: 1, maximumCredits: 6, metered: true, preview: true },
     { name: 'Browser PDF', credits: 1, maximumCredits: 6, metered: true, preview: true },
@@ -171,7 +173,8 @@ test('repository documentation publishes the complete Namescape launch-price con
   const compactReadme = compactWhitespace(readme);
   const linkTargets = markdownLinkTargets(readme);
   const namescapeSha = '505199535b90d32087637f3235aabf9d2e828fc3';
-  const gatewaySha = '6f12540f455d1bedb8e2b5c037a6cabf7e732d13';
+  const gatewaySha = 'b478b3f8e03ae48b96131aacb26a9abd85c96ae2';
+  const gatewayRuntimeSha = 'ffaddfcf6bee5d3823465befd56cdb99faa1806d';
 
   expect(markdownTableRows(readme, ['Group', 'Action', 'Price', 'Note'])).toEqual(
     productData.namescapeUsagePrices.map((item) => [
@@ -192,6 +195,8 @@ test('repository documentation publishes the complete Namescape launch-price con
     `https://github.com/Pinkflow-ai/gateway-pink/blob/${gatewaySha}/packages/shared/src/creditPacks.ts`,
     `https://github.com/Pinkflow-ai/gateway-pink/blob/${gatewaySha}/packages/shared/src/catalog.ts`,
     `https://github.com/Pinkflow-ai/gateway-pink/commit/${gatewaySha}`,
+    `https://github.com/Pinkflow-ai/gateway-pink-public/blob/${gatewayRuntimeSha}/openapi/gateway.openapi.json`,
+    `https://github.com/Pinkflow-ai/gateway-pink-public/commit/${gatewayRuntimeSha}`,
     'docs/paddle-catalog.md',
   ]));
   expect(readme).not.toMatch(/^- .*`(?:namescape|gateway-pink)\//gm);
@@ -288,10 +293,20 @@ test('Namescape Paddle identifiers match the production configuration', () => {
 
 test('Gateway counts only currently available routes', () => {
   expect((productData as Record<string, unknown>).gatewayCatalogCounts).toEqual({
-    freeAvailable: 23,
-    paidAvailable: 7,
-    planned: 7,
+    freeAvailable: 25,
+    paidAvailable: 9,
+    planned: 5,
   });
+});
+
+test('Gateway publishes implemented developer surfaces without claiming public access', () => {
+  expect((productData as Record<string, unknown>).gatewayDeveloperSurfaces).toEqual([
+    'OpenAPI 3.1 contract',
+    'TypeScript SDK',
+    'Python SDK',
+    'MCP stdio adapter',
+  ]);
+  expect((productData as Record<string, unknown>).gatewayMcpUnlockThreshold).toBe(100_000);
 });
 
 test('Gateway AI exposes a hard caller-owned credit ceiling', () => {

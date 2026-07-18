@@ -101,6 +101,7 @@ import { site } from '../data/site';
       <li><strong>Public registry and domain-data sources</strong> for Namescape availability and price signals.</li>
       <li><strong>Abstract, Twilio, and ScreenshotOne</strong> for the corresponding Gateway validation, lookup, and screenshot routes when configured.</li>
       <li><strong>Cloudflare Browser Rendering</strong> for preview screenshot, PDF, and Markdown routes. Gateway sends the public target URL and fixed rendering options; it does not accept or forward caller cookies, credentials, or raw HTML for these routes.</li>
+      <li><strong>Amazon Textract</strong> for single-page OCR and invoice/receipt extraction. Gateway sends one PNG or JPEG image page directly to Textract in US West (Oregon), does not place it in S3, and does not persist the image or OCR response. The adapter remains disabled until Pinkflow confirms the AWS AI-services data-use opt-out; AWS processing terms still apply.</li>
       <li><strong>Have I Been Pwned (HIBP)</strong> for password-exposure checks. Gateway sends only the first five characters of a caller-supplied SHA-1 digest with response padding enabled; plaintext passwords and full hashes are not accepted or transmitted.</li>
       <li><strong>Hosting and email providers</strong> needed to run services and deliver essential messages.</li>
     </ul>

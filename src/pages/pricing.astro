@@ -7,6 +7,8 @@ import {
   gatewayCatalogCounts,
   gatewayCreditUsdMicros,
   gatewayEndpointPrices,
+  gatewayDeveloperSurfaces,
+  gatewayMcpUnlockThreshold,
   namescapePacks,
   namescapeUsagePrices,
 } from '../data/products';
@@ -16,7 +18,9 @@ const description = 'Informational Namescape launch pricing and Gateway.pink dev
 const namescape = site.products.find((product) => product.slug === 'namescape')!;
 const gateway = site.products.find((product) => product.slug === 'gateway')!;
 const namescapeCheckoutUrl = productActionHref(namescape, 'checkout');
-const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+const usd = new Intl.NumberFormat('en-US', {
+  style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2,
+});
 const usdPerCall = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
@@ -122,17 +126,21 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
 
         <div class="min-w-0">
           <div class="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-bg-card">
-            <div class="hidden grid-cols-[1fr_auto_auto] gap-4 border-b border-white/10 px-5 py-3 text-sm font-bold text-white/55 sm:grid">
-              <span>Pack</span><span class="text-right">Credits</span><span class="text-right">Price</span>
+            <div class="hidden grid-cols-[1fr_auto_auto_auto] gap-4 border-b border-white/10 px-5 py-3 text-sm font-bold text-white/55 sm:grid">
+              <span>Pack</span><span class="text-right">Credits</span><span class="text-right">API usage</span><span class="text-right">Preview subtotal</span>
             </div>
             {gatewayCreditPacks.map((pack) => (
-              <div class="grid min-w-0 grid-cols-1 items-center gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_auto_auto] sm:gap-4">
-                <span class="font-semibold text-white">{pack.name}{pack.mcpAccess && <span class="ml-2 hidden text-xs font-bold text-primary sm:inline">MCP access</span>}</span>
+              <div class="grid min-w-0 grid-cols-1 items-center gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_auto_auto_auto] sm:gap-4">
+                <span class="font-semibold text-white">{pack.name}</span>
                 <span class="text-sm text-white/70 sm:text-right">{integer.format(pack.credits)} credits</span>
-                <span class="font-extrabold text-white sm:min-w-14 sm:text-right">{usd.format(pack.priceUsd)}</span>
+                <span class="text-sm text-white/70 sm:min-w-24 sm:text-right">{usd.format(pack.usageValueUsd)} API usage</span>
+                <span class="font-extrabold text-white sm:min-w-24 sm:text-right">{usd.format(pack.checkoutSubtotalUsd)}</span>
               </div>
             ))}
           </div>
+          <p class="mt-3 text-sm leading-relaxed text-white/60">
+            Preview subtotals are before applicable tax and include the standard Paddle fee so the full API usage value reaches the account. Acquiring {integer.format(gatewayMcpUnlockThreshold)} credits cumulatively meets the permanent MCP unlock threshold; it is not limited to one particular pack.
+          </p>
           <p class="mt-4 rounded-lg border border-primary/20 bg-primary/[0.06] px-4 py-3 text-sm leading-relaxed text-[#d8cfdf]">
             <strong class="text-white">Gateway.pink credit checkout is not currently available.</strong>{' '}
             These are published preview prices for budgeting during the developer preview, not an invitation to purchase today.
@@ -145,6 +153,9 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
           <h3 class="text-2xl font-extrabold text-white">What paid calls cost</h3>
           <p class="muted-copy mt-3 leading-relaxed">
             Free routes consume zero credits. Fixed-price routes settle only after a successful provider response. AI settles from actual provider-reported cost; browser preview routes settle from reported browser milliseconds. <code>{gatewayAiBudgetPolicy.field}</code> is the AI caller's hard credit ceiling ({gatewayAiBudgetPolicy.minimum}–{gatewayAiBudgetPolicy.maximum} credits).
+          </p>
+          <p class="mt-3 text-sm leading-relaxed text-white/60">
+            Implemented in source: {gatewayDeveloperSurfaces.join(' · ')}. These artifacts do not mean public API or documentation access is open.
           </p>
         </div>
         <div class="min-w-0">

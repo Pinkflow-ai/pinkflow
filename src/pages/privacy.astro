@@ -5,7 +5,7 @@ import { site } from '../data/site';
 ---
 <LegalLayout
   title="Privacy Policy"
-  description="How Pinkflow handles data across pinkflow.ai, Namescape, and Gateway.pink."
+  description="How Pinkflow plans to handle data for Namescape launch features, Gateway.pink invitation previews, and pinkflow.ai."
   lastUpdated={site.lastUpdated.privacy}
 >
   <Prose>
@@ -30,11 +30,15 @@ import { site } from '../data/site';
     <ul>
       <li><strong>Account data:</strong> email address, authentication-provider identifiers, profile settings, and account role. Pinkflow does not receive your Google or Microsoft password.</li>
       <li><strong>Service data:</strong> prompts, generated domain suggestions, saved names, search history, balances, and usage-ledger entries needed to provide the signed-in workflow.</li>
-      <li><strong>Anonymous generation:</strong> a privacy-preserving network/browser fingerprint and usage counter used to enforce the one-attempt allowance.</li>
+      <li><strong>Planned signed-out attempt:</strong> at launch, a privacy-preserving network/browser fingerprint and usage counter will be used to enforce the one-attempt allowance.</li>
       <li><strong>Domain checks:</strong> candidate domain names sent to public registry, RDAP, registrar, or verification sources. Your account identity is not included in those lookups.</li>
     </ul>
 
     <h2>4. Data collected by Gateway.pink</h2>
+    <p>
+      Public Gateway API and documentation access is closed. The following data contract applies
+      if Pinkflow grants a participant invitation-preview access.
+    </p>
     <p>
       <strong>Gateway does not log or persistently store request or response bodies.</strong>
       It records billing and operations metadata such as organization or API-key identifier,
@@ -49,7 +53,7 @@ import { site } from '../data/site';
     </p>
     <p>
       <strong>Provider-backed Gateway routes</strong> transmit the input required to perform the
-      requested operation to the provider named on that route's documentation page. Local compute
+      requested operation to the provider named in the route contract shared for that preview. Local compute
       routes do not send input to an upstream provider. AI requests ask OpenRouter to deny provider
       data collection, but OpenRouter's own processing terms still apply.
     </p>
@@ -63,7 +67,7 @@ import { site } from '../data/site';
 
     <h2>6. Why we use data</h2>
     <ul>
-      <li>Provide accounts, saved work, API access, usage balances, and support &mdash; performance of a contract.</li>
+      <li>Prepare for and, once enabled, provide accounts, saved work, API access, usage balances, and support &mdash; performance of a contract.</li>
       <li>Process eligible purchases and maintain required transaction records &mdash; performance of a contract and legal obligations.</li>
       <li>Prevent abuse, secure services, and diagnose reliability &mdash; our legitimate interests in operating safe services.</li>
       <li>Send essential account, policy, security, and billing messages &mdash; contract, legal obligation, or legitimate interests.</li>
@@ -71,9 +75,14 @@ import { site } from '../data/site';
 
     <h2>7. When an account is required</h2>
     <p>
-      Namescape offers a limited signed-out generation attempt. An account is required to buy
-      packs, hold a balance, save names, view account history, or use authenticated features.
-      Gateway documentation is public; production API requests require a key once that access is enabled.
+      At launch, Namescape is planned to offer one limited signed-out generation attempt. An account
+      will be required to buy packs, hold a balance, save names, view account history, or use
+      authenticated features once purchase access opens.
+    </p>
+    <p>
+      Gateway public API and documentation access is not currently open. If Pinkflow invites you
+      to a private preview, the Gateway data handling described in this Policy applies to that
+      invitation-preview access.
     </p>
 
     <h2>8. Service providers and recipients</h2>
@@ -101,7 +110,8 @@ import { site } from '../data/site';
     <h2>10. Cookies and local storage</h2>
     <p>
       The company site uses no advertising or analytics cookies. Product applications use the
-      session cookie or local-storage value needed to keep you signed in and secure the session.
+      session cookie or local-storage value needed to keep you signed in and secure the session
+      when account access is enabled.
       We do not use third-party advertising tags or a marketing tag manager.
     </p>
 

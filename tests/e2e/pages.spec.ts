@@ -474,6 +474,91 @@ test('terms publishes launch-safe product status and Namescape output language',
   await expect(page.getByText(/Namescape sells/i)).toHaveCount(0);
 });
 
+test.describe('prelaunch policies', () => {
+  test('terms treats both products as closed offers without product-domain links', async ({ page }) => {
+    await page.goto('/terms');
+
+    await expect(page.getByText('These Terms were last updated on 2026-07-18.', { exact: true })).toBeVisible();
+    await expect(page.getByText(
+      'Namescape is in launch preparation. The implemented Gateway.pink catalog is a developer preview, but public API and documentation access are not currently open. Neither product is a currently open public purchase offer.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(
+      'The implemented Gateway.pink developer-preview catalog defines utility, public-data, validation, rendering, lookup, and model-backed APIs intended to work behind one key. Public API and documentation access are not currently open. If invitation-preview access is offered, each shared route contract will identify its price, data source, and storage policy.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.locator('main a[href*="namescape.pink" i], main a[href*="gateway.pink" i]')).toHaveCount(0);
+    await expect(page.getByText(/documents and exposes utility/i)).toHaveCount(0);
+  });
+
+  test('privacy presents signed-out, purchase, and Gateway access as conditional launch behavior', async ({ page }) => {
+    await page.goto('/privacy');
+
+    await expect(page.getByText('This Policy was last updated on 2026-07-18.', { exact: true })).toBeVisible();
+    await expect(page.getByText(
+      'At launch, Namescape is planned to offer one limited signed-out generation attempt. An account will be required to buy packs, hold a balance, save names, view account history, or use authenticated features once purchase access opens.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(
+      'Gateway public API and documentation access is not currently open. If Pinkflow invites you to a private preview, the Gateway data handling described in this Policy applies to that invitation-preview access.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(/Gateway documentation is public/i)).toHaveCount(0);
+  });
+
+  test('refund policy keeps future digital-consumable rules while both checkouts are closed', async ({ page }) => {
+    await page.goto('/refunds');
+
+    await expect(page.getByText('This Policy was last updated on 2026-07-18.', { exact: true })).toBeVisible();
+    await expect(page.getByText(
+      'Neither Namescape checkout nor Gateway.pink checkout is currently available. The prices published on pinkflow.ai are launch or preview information, not open purchase offers. Before eligible digital purchases open, this Policy and the checkout terms will be reviewed for any product-specific treatment.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(
+      /If purchase access opens, Namescape search packs are intended to be digital consumables\./,
+    )).toBeVisible();
+    await expect(page.getByText(/Nothing in this Policy waives a non-waivable consumer right/)).toBeVisible();
+    await expect(page.getByText(/currently the purchasable Pinkflow digital product/i)).toHaveCount(0);
+  });
+
+  test('contact invites launch questions and invitation-preview reports without production support claims', async ({ page }) => {
+    await page.goto('/contact');
+
+    await expect(page.getByText(
+      'Use this inbox for launch and pricing questions, policy requests, security reports, and issues from an invitation preview. Public product access and checkout are currently closed.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(/Namescape launch or pricing question:/)).toBeVisible();
+    await expect(page.getByText(/Gateway\.pink invitation-preview report:/)).toBeVisible();
+    await expect(page.getByText(/Namescape support:/)).toHaveCount(0);
+    await expect(page.getByText(/ordinary production support/i)).toHaveCount(0);
+  });
+
+  test('policy metadata describes launch and preview conditions without availability claims', async ({ page }) => {
+    const descriptions = {
+      '/terms': 'Terms for Pinkflow, Namescape launch preparation, and the Gateway.pink developer preview.',
+      '/privacy': 'How Pinkflow plans to handle data for Namescape launch features, Gateway.pink invitation previews, and pinkflow.ai.',
+      '/refunds': 'Refund and billing-issue rules for future eligible Pinkflow purchases; both checkouts are closed.',
+      '/contact': 'Contact Pinkflow about launch pricing, policies, security, or an invitation preview.',
+    } as const;
+
+    for (const [path, description] of Object.entries(descriptions)) {
+      await page.goto(path);
+      for (const selector of [
+        'meta[name="description"]',
+        'meta[property="og:description"]',
+        'meta[name="twitter:description"]',
+      ]) {
+        const metadata = page.locator(selector);
+        await expect(metadata).toHaveAttribute('content', description);
+        expect(await metadata.getAttribute('content')).not.toMatch(
+          /\b(?:available|purchasable|live|open now|buy now|production support)\b/i,
+        );
+      }
+    }
+  });
+});
+
 test('policies distinguish Namescape searches from Gateway credits', async ({ page }) => {
   await page.goto('/terms');
   await expect(page.getByRole('heading', { name: /Namescape searches and Gateway credits/ })).toBeVisible();
@@ -486,7 +571,9 @@ test('policies distinguish Namescape searches from Gateway credits', async ({ pa
   await expect(page.getByText('Have I Been Pwned (HIBP)')).toBeVisible();
 
   await page.goto('/refunds');
-  await expect(page.getByText('Gateway.pink credit checkout is not currently available.')).toBeVisible();
+  await expect(page.getByText(
+    /Neither Namescape checkout nor Gateway\.pink checkout is currently available\./,
+  )).toBeVisible();
 });
 
 test('footer shows operator line on every page', async ({ page }) => {

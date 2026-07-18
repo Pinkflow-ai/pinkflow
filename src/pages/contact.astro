@@ -3,21 +3,25 @@ import LegalLayout from '../layouts/LegalLayout.astro';
 import Prose from '../components/Prose.astro';
 import { site } from '../data/site';
 ---
-<LegalLayout title="Contact" description={`Reach ${site.brand} for product, billing, privacy, or security support.`}>
+<LegalLayout title="Contact" description={`Contact ${site.brand} about launch pricing, policies, security, or an invitation preview.`}>
   <Prose>
     <h2>One inbox, routed by a person</h2>
     <p>
       Email <a href={`mailto:${site.email}`} class="text-xl font-bold">{site.email}</a>.
       We respond within <strong>{site.responseWindow}</strong>, usually faster.
     </p>
+    <p>
+      Use this inbox for launch and pricing questions, policy requests, security reports, and
+      issues from an invitation preview. Public product access and checkout are currently closed.
+    </p>
 
     <h2>What to include</h2>
     <ul>
-      <li><strong>Namescape support:</strong> your account email, the action you ran, and what you expected compared with what happened.</li>
-      <li><strong>Gateway.pink preview:</strong> the route, request identifier, status code, and timestamp. Do not email secrets, API keys, or sensitive payloads.</li>
-      <li><strong>Billing:</strong> your account email, transaction identifier, charge date, and a description of the issue. See the <a href="/refunds">Refund Policy</a>.</li>
+      <li><strong>Namescape launch or pricing question:</strong> the feature, search-pack price, or launch detail you want clarified.</li>
+      <li><strong>Gateway.pink invitation-preview report:</strong> if Pinkflow invited you to a preview, include the route, request identifier, status code, and timestamp. Do not email secrets, API keys, or sensitive payloads.</li>
+      <li><strong>Future purchase or billing question:</strong> the product, published price, and what you want clarified. If Pinkflow later opens checkout and you report a charge, include the transaction identifier and charge date. See the <a href="/refunds">Refund Policy</a>.</li>
       <li><strong>Privacy request:</strong> your account email, product, and the right you want to exercise. See the <a href="/privacy">Privacy Policy</a>.</li>
-      <li><strong>Security report:</strong> the affected product, impact, reproduction steps, and a minimal proof of concept. Do not access data that is not yours.</li>
+      <li><strong>Security report:</strong> the affected company page or invitation preview, impact, reproduction steps, and a minimal proof of concept. Do not access data that is not yours.</li>
     </ul>
 
     <h2>Where we are</h2>
@@ -25,9 +29,10 @@ import { site } from '../data/site';
 
     <h2>Resolution target</h2>
     <p>
-      We aim to resolve billing and delivery issues within <strong>{site.resolutionWindow}</strong>
-      of the first message. Complex security, provider, or privacy investigations may take longer;
-      if so, we will explain what is still being checked.
+      We aim to resolve launch-pricing and policy questions within
+      <strong> {site.resolutionWindow}</strong> of the first message. Invitation-preview, security,
+      payment, or privacy investigations may take longer; if so, we will explain what is still
+      being checked.
     </p>
   </Prose>
 </LegalLayout>

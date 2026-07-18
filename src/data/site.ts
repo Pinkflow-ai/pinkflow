@@ -33,7 +33,7 @@ export const site = {
   lastUpdated: {
     terms: '2026-07-18',
     privacy: '2026-07-18',
-    refunds: '2026-07-17',
+    refunds: '2026-07-18',
   },
   paddle: {
     role: 'Merchant of Record / authorized reseller',

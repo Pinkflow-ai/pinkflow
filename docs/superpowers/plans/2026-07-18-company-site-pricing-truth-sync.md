@@ -350,9 +350,12 @@ repeat review, and rerun the full suite.
 set -euo pipefail
 
 for domain in namescape.pink gateway.pink; do
-  test -z "$(dig @1.1.1.1 +short A "$domain")"
-  test -z "$(dig @1.1.1.1 +short AAAA "$domain")"
-  test -z "$(dig @1.1.1.1 +short CNAME "$domain")"
+  answer=$(dig @1.1.1.1 +short A "$domain")
+  test -z "$answer"
+  answer=$(dig @1.1.1.1 +short AAAA "$domain")
+  test -z "$answer"
+  answer=$(dig @1.1.1.1 +short CNAME "$domain")
+  test -z "$answer"
   if curl --fail --silent --show-error --head --location --max-time 15 "https://$domain/"; then
     exit 1
   fi

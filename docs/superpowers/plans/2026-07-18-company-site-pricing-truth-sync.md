@@ -370,7 +370,7 @@ and both bounded HTTPS probes fail. Any nonempty answer or successful probe is
 an external-state change that triggers reassessment rather than automatic CTA
 enablement.
 
-- [ ] **Step 10: Integrate with exact fast-forward gates**
+- [x] **Step 10: Integrate with exact fast-forward gates**
 
 ```bash
 MAIN=/Users/miromal/Desktop/Source.nosync/GitHub/Pinkflow-ai/pinkflow
@@ -388,7 +388,7 @@ git -C "$MAIN" push origin main
 
 If either base check fails, stop; reconcile/review/reverify instead of forcing.
 
-- [ ] **Step 11: Monitor Pages and verify the deployed result**
+- [x] **Step 11: Monitor Pages and verify the deployed result**
 
 Capture the pushed feature SHA. Find the newest `deploy.yml` main-branch push
 run whose `headSha` equals it, then execute `gh run watch <run-id> --exit-status`.

@@ -347,6 +347,8 @@ readiness, and release status separately; update affected contracts/surfaces,
 repeat review, and rerun the full suite.
 
 ```bash
+set -euo pipefail
+
 for domain in namescape.pink gateway.pink; do
   test -z "$(dig @1.1.1.1 +short A "$domain")"
   test -z "$(dig @1.1.1.1 +short AAAA "$domain")"

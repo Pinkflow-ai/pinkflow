@@ -33,7 +33,7 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
       Two products, two honest units.
     </h1>
     <p class="muted-copy mt-6 max-w-2xl text-lg leading-relaxed sm:text-xl">
-      Namescape charges for completed search workflows. Gateway.pink uses fixed-value credits for APIs with real upstream cost. Neither product uses a subscription or auto-renewal.
+      Namescape has included-free actions and uses searches only for completed search-priced actions. Gateway.pink uses fixed-value credits for APIs with real upstream cost. Neither product uses a subscription or auto-renewal.
     </p>
   </section>
 
@@ -44,7 +44,7 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
           <span class="status-chip">{namescape.statusLabel}</span>
           <h2 class="mt-4 text-[clamp(1.125rem,6vw,2.25rem)] font-extrabold text-white">Namescape search packs</h2>
           <p class="muted-copy mt-4 max-w-lg leading-relaxed">
-            One-time balances for name ideas, domain details, and final checks. Searches do not expire or auto-renew.
+            One-time balances for search-priced name ideas and final checks. Searches do not expire or auto-renew.
           </p>
         </div>
         <div class="min-w-0">
@@ -52,7 +52,7 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
             {namescapePacks.map((pack) => <PackCard pack={pack} ctaHref={namescapeCheckoutUrl} />)}
           </div>
           <p class="mt-4 rounded-lg border border-primary/20 bg-primary/[0.06] px-4 py-3 text-sm leading-relaxed text-[#d8cfdf]">
-            <strong class="text-white">Namescape checkout is not currently available.</strong>
+            <strong class="text-white">Namescape checkout is not currently available.</strong>{' '}
             These amounts are informational launch pricing, not an invitation to purchase today. Final tax and currency total shown at checkout will apply when purchasing opens.
           </p>
         </div>
@@ -62,26 +62,41 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
         <div class="min-w-0">
           <h3 class="text-2xl font-extrabold text-white">How search usage works</h3>
           <p class="muted-copy mt-3 leading-relaxed">
-            A search is the complete customer usage unit for one completed action listed here. Failed, empty, or indeterminate work does not use a search.
+            A search is the usage unit for one completed search-priced action. Included-free actions use no searches.
           </p>
           <p class="mt-3 text-sm text-white/55">
-            Saving, revisiting, and copying an existing result are free.
+            Failed, empty, or indeterminate work does not use a search. Saving, revisiting, and copying an existing result are free.
           </p>
         </div>
-        <div class="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-bg-card">
-          <div class="hidden grid-cols-[auto_minmax(0,1fr)_minmax(8rem,auto)] gap-4 border-b border-white/10 px-5 py-3 text-sm font-bold text-white/55 sm:grid">
-            <span>Group</span><span>Action</span><span class="text-right">Price</span>
-          </div>
-          {namescapeUsagePrices.map((item) => (
-            <div data-namescape-price-row="" class="grid min-w-0 grid-cols-1 gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[auto_minmax(0,1fr)_minmax(8rem,auto)] sm:gap-4">
-              <span class="text-xs font-extrabold uppercase tracking-wide text-white/55">{item.group}</span>
-              <span class="min-w-0 font-semibold text-white">
-                <span class="block">{item.name}</span>
-                {item.note && <span class="mt-1 block text-xs font-medium text-white/55">{item.note}</span>}
-              </span>
-              <span class="min-w-0 font-bold text-primary sm:text-right">{item.price}</span>
-            </div>
-          ))}
+        <div
+          data-namescape-price-table-region=""
+          class="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-bg-card"
+        >
+          <table class="block w-full border-collapse text-left sm:table sm:table-fixed">
+            <caption id="namescape-price-table-caption" class="block border-b border-white/10 px-5 py-4 text-left text-sm font-extrabold text-white sm:table-caption">
+              Namescape action pricing
+            </caption>
+            <thead class="sr-only sm:not-sr-only sm:table-header-group">
+              <tr class="border-b border-white/10 text-sm font-bold text-white/55">
+                <th scope="col" class="px-5 py-3 sm:w-[18%]">Group</th>
+                <th scope="col" class="px-5 py-3 sm:w-[30%]">Action</th>
+                <th scope="col" class="px-5 py-3 text-right sm:w-[28%]">Price</th>
+                <th scope="col" class="px-5 py-3 sm:w-[24%]">Note</th>
+              </tr>
+            </thead>
+            <tbody class="block sm:table-row-group">
+              {namescapeUsagePrices.map((item) => (
+                <tr data-namescape-price-row="" class="grid grid-cols-[minmax(0,1fr)_auto] gap-x-4 gap-y-1 border-b border-white/10 px-5 py-4 align-top last:border-b-0 sm:table-row sm:p-0">
+                  <td class="col-start-1 row-start-1 block p-0 text-xs font-extrabold uppercase tracking-wide text-white/55 sm:table-cell sm:px-5 sm:py-4">{item.group}</td>
+                  <th scope="row" class="col-start-1 row-start-2 block p-0 text-left font-semibold text-white sm:table-cell sm:px-5 sm:py-4">{item.name}</th>
+                  <td class="col-start-2 row-span-2 row-start-1 block p-0 text-right font-bold text-primary sm:table-cell sm:px-5 sm:py-4">{item.price}</td>
+                  <td class="col-span-2 row-start-3 block p-0 text-xs font-medium text-white/55 sm:table-cell sm:px-5 sm:py-4">
+                    {item.note ?? <span class="sr-only">No additional note</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
 
@@ -119,7 +134,7 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
             ))}
           </div>
           <p class="mt-4 rounded-lg border border-primary/20 bg-primary/[0.06] px-4 py-3 text-sm leading-relaxed text-[#d8cfdf]">
-            <strong class="text-white">Gateway.pink credit checkout is not currently available.</strong>
+            <strong class="text-white">Gateway.pink credit checkout is not currently available.</strong>{' '}
             These are published preview prices for budgeting during the developer preview, not an invitation to purchase today.
           </p>
         </div>

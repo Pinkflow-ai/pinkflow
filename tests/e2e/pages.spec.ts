@@ -36,7 +36,9 @@ function findLaunchUnsafeJsonLd(value: unknown, path = '$'): string[] {
   const object = value as Record<string, unknown>;
   const schemaType = object['@type'];
   const schemaTypes = Array.isArray(schemaType) ? schemaType : [schemaType];
-  const violations = schemaTypes.includes('Offer') ? [`${path} declares schema.org Offer`] : [];
+  const declaresOffer = schemaTypes.some((type) => type === 'Offer'
+    || (typeof type === 'string' && /^https?:\/\/schema\.org\/Offer\/?$/i.test(type)));
+  const violations = declaresOffer ? [`${path} declares schema.org Offer`] : [];
 
   return violations.concat(
     Object.entries(object).flatMap(([key, item]) => findLaunchUnsafeJsonLd(item, `${path}.${key}`)),
@@ -72,6 +74,20 @@ test('JSON-LD hostname guard rejects unavailable product domains in every string
   ]);
 });
 
+test('JSON-LD schema guard rejects scalar and array Offer types including schema.org IRIs', () => {
+  expect(findLaunchUnsafeJsonLd([
+    { '@type': 'Offer' },
+    { '@type': ['Product', 'Offer'] },
+    { '@type': 'https://schema.org/Offer' },
+    { '@type': ['Product', 'http://schema.org/Offer'] },
+  ])).toEqual([
+    '$[0] declares schema.org Offer',
+    '$[1] declares schema.org Offer',
+    '$[2] declares schema.org Offer',
+    '$[3] declares schema.org Offer',
+  ]);
+});
+
 for (const p of pages) {
   test(`${p.path} renders with expected content`, async ({ page }) => {
     await page.goto(p.path);
@@ -99,6 +115,8 @@ test('homepage presents both products with honest lifecycle status', async ({ pa
 
 test('pricing publishes the Gateway credit contract without implying checkout is live', async ({ page }) => {
   await page.goto('/pricing');
+  const gateway = page.locator('#gateway');
+
   await expect(page.getByRole('heading', { name: 'Gateway.pink credits' })).toBeVisible();
   await expect(page.getByText('1 credit = $0.001', { exact: true })).toBeVisible();
   await expect(page.getByText('10,000 credits')).toBeVisible();
@@ -120,9 +138,16 @@ test('pricing publishes the Gateway credit contract without implying checkout is
   await expect(page.getByText('Paid requests require a unique')).toBeVisible();
   await expect(page.getByText("is the AI caller's hard credit ceiling")).toBeVisible();
   await expect(page.getByText('Gateway.pink credit checkout is not currently available.')).toBeVisible();
+  await expect(gateway.getByText(/Gateway\.pink credit checkout is not currently available\. These are published preview prices/)).toBeVisible();
   await expect(page.getByText('Public API and documentation access is not currently open.')).toBeVisible();
   await expect(page.getByRole('link', { name: /buy gateway credits/i })).toHaveCount(0);
-  await expect(page.getByRole('link', { name: /Gateway\.pink docs/i })).toHaveCount(0);
+  await expect(gateway.getByRole('link', { name: /docs|documentation/i })).toHaveCount(0);
+  await expect(gateway.locator('a[href*="docs" i], a[href*="documentation" i]')).toHaveCount(0);
+  const unavailableProductLinks = await gateway.locator('a[href]').evaluateAll((links) => links.flatMap((link) => {
+    const url = new URL(link.getAttribute('href') ?? '', document.baseURI);
+    return url.hostname === 'namescape.pink' || url.hostname === 'gateway.pink' ? [url.href] : [];
+  }));
+  expect(unavailableProductLinks).toEqual([]);
 });
 
 test('pricing 200-pack is marked Best value', async ({ page }) => {
@@ -142,18 +167,38 @@ test('pricing explains current Namescape usage prices', async ({ page }) => {
   const namescape = page.locator('#namescape');
 
   await expect(page.getByRole('heading', { name: 'How search usage works' })).toBeVisible();
+  await expect(namescape.getByText('One-time balances for search-priced name ideas and final checks. Searches do not expire or auto-renew.', { exact: true })).toBeVisible();
   await expect(namescape.getByText('Namescape checkout is not currently available.')).toBeVisible();
+  await expect(namescape.getByText(/Namescape checkout is not currently available\. These amounts are informational launch pricing/)).toBeVisible();
+  await expect(namescape.getByText('A search is the usage unit for one completed search-priced action. Included-free actions use no searches.', { exact: true })).toBeVisible();
   await expect(namescape.getByText('Failed, empty, or indeterminate work does not use a search.')).toBeVisible();
   await expect(namescape.getByText('Saving, revisiting, and copying an existing result are free.')).toBeVisible();
 
+  const table = namescape.getByRole('table', { name: 'Namescape action pricing' });
+  const tableRegion = namescape.locator('[data-namescape-price-table-region]');
+  await expect(table).toBeVisible();
+  await expect(table.getByRole('caption')).toHaveText('Namescape action pricing');
+  for (const column of ['Group', 'Action', 'Price', 'Note']) {
+    await expect(table.getByRole('columnheader', { name: column, exact: true })).toBeVisible();
+  }
+
   for (const item of namescapeUsagePrices) {
-    const row = namescape.locator('[data-namescape-price-row]').filter({
+    const row = table.locator('[data-namescape-price-row]').filter({
       has: page.getByText(item.name, { exact: true }),
     });
     await expect(row, `${item.name} should have exactly one price row`).toHaveCount(1);
+    await expect(row.getByRole('rowheader', { name: item.name, exact: true })).toBeVisible();
     await expect(row.getByText(item.group, { exact: true })).toBeVisible();
-    await expect(row.getByText(item.price, { exact: true })).toBeVisible();
-    if (item.note) await expect(row.getByText(item.note, { exact: true })).toBeVisible();
+    const price = row.getByText(item.price, { exact: true });
+    await expect(price).toBeVisible();
+    const values = item.note ? [price, row.getByText(item.note, { exact: true })] : [price];
+    for (const value of values) {
+      await expect(value).toBeVisible();
+      const [regionBox, valueBox] = await Promise.all([tableRegion.boundingBox(), value.boundingBox()]);
+      expect(valueBox!.x, `${item.name} should not be clipped to the left`).toBeGreaterThanOrEqual(regionBox!.x);
+      expect(valueBox!.x + valueBox!.width, `${item.name} should not be clipped to the right`)
+        .toBeLessThanOrEqual(regionBox!.x + regionBox!.width + 1);
+    }
   }
 
   const visibleNamescapeText = await namescape.innerText();

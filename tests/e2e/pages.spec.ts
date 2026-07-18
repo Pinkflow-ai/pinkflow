@@ -198,12 +198,17 @@ test('homepage presents products with plain, launch-safe facts', async ({ page }
   await expect(page.getByText('Developer preview', { exact: true })).toBeVisible();
   await expect(page.getByRole('link', { name: /open namescape|explore gateway/i })).toHaveCount(0);
   await expect(namescape.getByText(
-    'Name ideas, domain research, and final checks for a shortlist you can act on.',
+    'A name-finding workspace for turning a rough idea into a real shortlist.',
     { exact: true },
   )).toBeVisible();
-  await expect(namescape.getByText('Free ideas at launch')).toBeVisible();
-  await expect(namescapeFlow.getByText('Free at launch: name ideas, brief help, and domain details.', { exact: true })).toBeVisible();
-  await expect(gateway.getByLabel('Gateway example')).toContainText('Validate an email address — 17 credits ($0.017).');
+  await expect(namescape.getByText('Free tools at launch')).toBeVisible();
+  await expect(namescapeFlow.getByText('Brief helper · Name ideas · Domain details', { exact: true })).toBeVisible();
+  await expect(namescapeFlow.getByText('Search packs cover deeper generation and final checks.', { exact: true })).toBeVisible();
+  const gatewayRequest = gateway.getByLabel('Gateway example request');
+  await expect(gatewayRequest).toContainText(/POST\s*\/v1\/email\/validate/);
+  await expect(gatewayRequest).toContainText(/Authorization\s*Bearer gp_••••••••/);
+  await expect(gatewayRequest).toContainText('"email": "person@example.com"');
+  await expect(gatewayRequest).toContainText(/17 credits\s*\$0\.017 per request/);
   await expect(page.getByText('Pinkflow building model', { exact: true })).toHaveCount(0);
   await expect(page.getByText('Two products. Two specific jobs.', { exact: true })).toHaveCount(0);
   await expect(page.getByText('Product lifecycle and purchase availability are stated explicitly. Preview means preview.', { exact: true })).toHaveCount(0);

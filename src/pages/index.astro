@@ -45,14 +45,14 @@ const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publ
             <div class="min-w-0">
               <span class="status-chip">{namescape.statusLabel}</span>
               <h3 class="mt-4 text-[clamp(1.125rem,6vw,1.875rem)] font-extrabold text-white">Namescape.pink</h3>
-              <p class="muted-copy mt-3 max-w-md leading-relaxed">Name ideas, domain research, and final checks for a shortlist you can act on.</p>
+              <p class="muted-copy mt-3 max-w-md leading-relaxed">A name-finding workspace for turning a rough idea into a real shortlist.</p>
             </div>
-            <span class="rounded-lg bg-white/5 px-3 py-2 text-right text-sm font-bold text-white">Free ideas at launch<br /><span class="text-xs font-medium text-white/55">Paid searches when checkout opens</span></span>
+            <span class="rounded-lg bg-white/5 px-3 py-2 text-sm font-bold text-white">Free tools at launch</span>
           </div>
 
-          <div class="mx-6 rounded-lg bg-[#120d1a] p-5 sm:mx-8" aria-label="Namescape product flow">
-            <p class="text-sm font-bold text-white">Free at launch: name ideas, brief help, and domain details.</p>
-            <p class="mt-2 text-sm leading-relaxed text-white/60">Search packs cover the deeper generation and final-check work once checkout opens.</p>
+          <div class="mx-6 border-t border-white/10 py-5 sm:mx-8" aria-label="Namescape product flow">
+            <p class="text-sm font-bold text-white">Brief helper · Name ideas · Domain details</p>
+            <p class="mt-2 text-sm leading-relaxed text-white/60">Search packs cover deeper generation and final checks.</p>
           </div>
 
           <div class="mt-auto flex flex-wrap gap-3 p-6 sm:p-8">
@@ -71,10 +71,27 @@ const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publ
             <span class="rounded-lg bg-white/5 px-3 py-2 text-right text-sm font-bold text-white">{gatewayCatalogCounts.freeAvailable} free APIs<br /><span class="text-xs font-medium text-white/55">{gatewayCatalogCounts.paidAvailable} paid in preview</span></span>
           </div>
 
-          <div class="mx-6 overflow-hidden rounded-lg bg-[#120d1a] font-mono text-xs sm:mx-8" aria-label="Gateway example">
-            <div class="p-5 font-sans">
-              <p class="text-sm font-bold text-white">A real example</p>
-              <p class="mt-2 text-sm leading-relaxed text-white/65">Validate an email address — {emailValidation.credits} credits (${emailValidationUsd}).</p>
+          <div class="mx-6 overflow-hidden rounded-lg bg-[#120d1a] font-mono text-xs sm:mx-8" aria-label="Gateway example request">
+            <div class="flex items-center gap-3 border-b border-white/10 px-5 py-3 text-white/75">
+              <span class="font-bold text-primary">POST</span>
+              <span>/v1/email/validate</span>
+            </div>
+            <div class="grid gap-2 px-5 py-4 text-white/70">
+              <div class="grid gap-1 sm:grid-cols-[7rem_1fr] sm:gap-3">
+                <span class="text-primary">Authorization</span>
+                <span>Bearer gp_••••••••</span>
+              </div>
+              <div class="grid gap-1 sm:grid-cols-[7rem_1fr] sm:gap-3">
+                <span class="text-primary">Content-Type</span>
+                <span>application/json</span>
+              </div>
+              <pre class="mt-2 overflow-x-auto rounded-md bg-white/5 p-3 text-white/75">{`{
+  "email": "person@example.com"
+}`}</pre>
+            </div>
+            <div class="flex items-center justify-between gap-3 border-t border-white/10 px-5 py-3 text-white/60">
+              <span>{emailValidation.credits} credits</span>
+              <span>${emailValidationUsd} per request</span>
             </div>
           </div>
 

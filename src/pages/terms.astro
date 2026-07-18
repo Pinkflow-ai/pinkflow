@@ -58,14 +58,15 @@ const gateway = site.products.find((product) => product.slug === 'gateway')!;
     <h2>6. Namescape searches and Gateway credits</h2>
     <ul>
       <li>Namescape launch pricing uses one-time search packs in USD. See <a href="/pricing#namescape">Namescape pricing</a>.</li>
-      <li>A paid Namescape action deducts its published search amount only after the paid work returns a usable result.</li>
+      <li>If Namescape checkout opens, a paid action will deduct its published search amount only after the paid work returns a usable result.</li>
       <li>At launch, signed-out trial attempts will be rate-limited and will not be a paid balance.</li>
-      <li>Gateway.pink defines one credit as $0.001. Fixed routes have a published per-call price; metered AI calls settle from provider-reported cost subject to the caller's budget, and browser preview routes settle from provider-reported browser time.</li>
-      <li>Paid Gateway requests require a valid, unique <code>Idempotency-Key</code>. Reusing a key does not repeat the provider call or debit.</li>
+      <li>Gateway.pink preview pricing defines one credit as $0.001. Fixed routes have a published per-call price.</li>
+      <li>If Gateway.pink paid access is enabled through a future checkout or an invitation preview, fixed routes will use their published per-call price; metered calls will settle from provider-reported cost subject to the caller's budget; and browser preview routes will settle from provider-reported browser time.</li>
+      <li>Under that paid access, each paid Gateway request will require a valid, unique <code>Idempotency-Key</code>. Reusing a key will not repeat the provider call or debit.</li>
       <li>Gateway.pink credit checkout is not currently available. Published packs are preview prices, not purchasable offers today.</li>
-      <li>Balances are non-transferable, have no cash value, and cannot be resold.</li>
-      <li>Neither product has a subscription or auto-renewal.</li>
-      <li>Purchases are generally final once delivered or used. See the <a href="/refunds">Refund Policy</a>.</li>
+      <li>If purchases open, resulting balances will be non-transferable, will have no cash value, and cannot be resold.</li>
+      <li>The published launch and preview pricing does not include a subscription or auto-renewal.</li>
+      <li>Any future purchase will <strong>generally be final once delivered or used</strong>. See the <a href="/refunds">Refund Policy</a>.</li>
     </ul>
 
     <h2>7. Payments</h2>
@@ -127,11 +128,11 @@ const gateway = site.products.find((product) => product.slug === 'gateway')!;
 
     <h2>14. Limitation of liability</h2>
     <p>
-      To the maximum extent permitted by law, Pinkflow and its operator are not liable for
-      indirect, incidental, special, or consequential damages arising from a service. Our total
-      aggregate liability for a claim is limited to the amount you paid Pinkflow in the 12 months
-      before the claim. This does not limit non-waivable consumer rights or liability that cannot
-      legally be excluded.
+      To the maximum extent permitted by law, {site.legalName}, operating as Pinkflow, is not liable
+      for indirect, incidental, special, or consequential damages arising from a service. The total
+      aggregate liability for a claim is limited to the amount you paid for the applicable Pinkflow
+      product during the 12 months before the claim. This does not limit non-waivable consumer
+      rights or liability that cannot legally be excluded.
     </p>
 
     <h2>15. Suspension and termination</h2>

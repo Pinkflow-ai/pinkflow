@@ -5,7 +5,7 @@ import { namescapeUsagePrices } from '../../src/data/products';
 const pages = [
   { path: '/', titleContains: 'Pinkflow', expectText: 'Practical software, being built by Pinkflow' },
   { path: '/pricing', titleContains: 'Pricing', expectText: 'Two products, two honest units' },
-  { path: '/terms', titleContains: 'Terms of Service', expectText: 'Generally final once delivered or used' },
+  { path: '/terms', titleContains: 'Terms of Service', expectText: 'Neither product is a currently open public purchase offer' },
   { path: '/privacy', titleContains: 'Privacy Policy', expectText: 'supervisory authority' },
   { path: '/refunds', titleContains: 'Refund Policy', expectText: 'Generally final once delivered or used' },
   { path: '/contact', titleContains: 'Contact', expectText: 'hello@pinkflow.ai' },
@@ -492,6 +492,39 @@ test.describe('prelaunch policies', () => {
       { exact: true },
     )).toBeVisible();
     await expect(page.getByText(/Signed-out trial attempts are rate-limited/i)).toHaveCount(0);
+    await expect(page.getByText(
+      'If Namescape checkout opens, a paid action will deduct its published search amount only after the paid work returns a usable result.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(
+      /If Gateway\.pink paid access is enabled through a future checkout or an invitation preview, fixed routes will use their published per-call price/,
+    )).toBeVisible();
+    await expect(page.getByText(
+      /Under that paid access, each paid Gateway request will require a valid, unique Idempotency-Key/,
+    )).toBeVisible();
+    await expect(page.getByText(
+      'If purchases open, resulting balances will be non-transferable, will have no cash value, and cannot be resold.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(
+      /Any future purchase will generally be final once delivered or used/,
+    )).toBeVisible();
+    for (const residual of [
+      /A paid Namescape action deducts/i,
+      /metered AI calls settle/i,
+      /Paid Gateway requests require/i,
+      /Reusing a key does not repeat/i,
+      /Balances are non-transferable/i,
+      /Purchases are generally final/i,
+    ]) {
+      await expect(page.getByText(residual)).toHaveCount(0);
+    }
+    await expect(page.getByText(/Miro Mal, operating as Pinkflow, is not liable/)).toBeVisible();
+    await expect(page.getByText(
+      /amount you paid for the applicable Pinkflow product during the 12 months before the claim/,
+    )).toBeVisible();
+    await expect(page.getByText(/Pinkflow and its operator/i)).toHaveCount(0);
+    await expect(page.getByText(/amount you paid Pinkflow/i)).toHaveCount(0);
     await expect(page.locator('main a[href*="namescape.pink" i], main a[href*="gateway.pink" i]')).toHaveCount(0);
     await expect(page.getByText(/documents and exposes utility/i)).toHaveCount(0);
   });
@@ -508,6 +541,15 @@ test.describe('prelaunch policies', () => {
       'Gateway public API and documentation access is not currently open. If Pinkflow invites you to a private preview, the Gateway data handling described in this Policy applies to that invitation-preview access.',
       { exact: true },
     )).toBeVisible();
+    await expect(page.getByText(
+      'Gateway.pink public API and documentation access is closed. The following data contract applies if Pinkflow grants invitation-preview access to a participant.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(
+      /The route contract shared with an invited participant is the source of truth for whether short-lived public-result caching applies\./,
+    )).toBeVisible();
+    await expect(page.getByText(/grants a participant invitation-preview access/i)).toHaveCount(0);
+    await expect(page.getByText(/published storage policy/i)).toHaveCount(0);
     await expect(page.getByText(/Gateway documentation is public/i)).toHaveCount(0);
   });
 

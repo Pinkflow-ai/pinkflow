@@ -36,8 +36,8 @@ import { site } from '../data/site';
 
     <h2>4. Data collected by Gateway.pink</h2>
     <p>
-      Public Gateway API and documentation access is closed. The following data contract applies
-      if Pinkflow grants a participant invitation-preview access.
+      Gateway.pink public API and documentation access is closed. The following data contract
+      applies if Pinkflow grants invitation-preview access to a participant.
     </p>
     <p>
       <strong>Gateway does not log or persistently store request or response bodies.</strong>
@@ -48,14 +48,15 @@ import { site } from '../data/site';
     <p>
       Routes marked <code>cached-ttl</code> may briefly cache a public upstream result to respect
       source limits and improve reliability. That result can include the public lookup key or
-      coordinates returned by the source; it remains bounded, short-lived, and is not retained as account history. The route's published storage policy is the
-      source of truth for whether short-lived public-result caching applies.
+      coordinates returned by the source; it remains bounded, short-lived, and is not retained as
+      account history. The route contract shared with an invited participant is the source of truth
+      for whether short-lived public-result caching applies.
     </p>
     <p>
       <strong>Provider-backed Gateway routes</strong> transmit the input required to perform the
-      requested operation to the provider named in the route contract shared for that preview. Local compute
-      routes do not send input to an upstream provider. AI requests ask OpenRouter to deny provider
-      data collection, but OpenRouter's own processing terms still apply.
+      requested operation to the provider named in the route contract shared for that preview.
+      Local compute routes do not send input to an upstream provider. AI requests ask OpenRouter to
+      deny provider data collection, but OpenRouter's own processing terms still apply.
     </p>
 
     <h2>5. Payments and support</h2>

@@ -31,8 +31,8 @@ export const site = {
   resolutionWindow: '10 business days',
   founded: '2025',
   lastUpdated: {
-    terms: '2026-07-17',
-    privacy: '2026-07-17',
+    terms: '2026-07-18',
+    privacy: '2026-07-18',
     refunds: '2026-07-17',
   },
   paddle: {

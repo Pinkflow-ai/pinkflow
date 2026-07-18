@@ -29,11 +29,15 @@ Authoritative pricing and IDs:
 [Gateway.pink](https://gateway.pink) places a growing API catalog behind one
 key with explicit storage and per-call pricing policies.
 
-- 17 currently available free routes and four paid routes.
+- 23 currently available free routes and seven paid routes, plus seven planned
+  routes in the public roadmap.
 - One credit is always $0.001.
 - Paid preview prices: email validation 17 credits, phone lookup 40, screenshot
-  20, AI summarization metered from 1 credit with caller-controlled
-  `max_credits` from 1 to 100.
+  45, AI summarization metered from 1 credit with caller-controlled
+  `max_credits` from 1 to 100, browser screenshot/PDF 1–6 credits, and browser
+  Markdown 1–3 credits.
+- Paid requests require an idempotency key. Provider failures, timeouts, and
+  invalid provider responses charge zero credits.
 - Published packs: 10,000/$10, 50,000/$50, 100,000/$100, 500,000/$500.
 - Production credit checkout is not currently available. The prices are
   published for preview budgeting, not as purchasable offers today.

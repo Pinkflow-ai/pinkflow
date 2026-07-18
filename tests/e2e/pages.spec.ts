@@ -56,12 +56,16 @@ test('pricing publishes the Gateway credit contract without implying checkout is
   await expect(page.getByText('Phone line-type lookup')).toBeVisible();
   await expect(page.getByText('40 credits', { exact: true })).toBeVisible();
   await expect(page.getByText('$0.040 / call', { exact: true })).toBeVisible();
-  await expect(page.getByText('20 credits', { exact: true })).toBeVisible();
-  await expect(page.getByText('$0.020 / call', { exact: true })).toBeVisible();
+  await expect(page.getByText('45 credits', { exact: true })).toBeVisible();
+  await expect(page.getByText('$0.045 / call', { exact: true })).toBeVisible();
   await expect(page.getByText('Direct or high-volume provider plans may have lower unit prices.')).toBeVisible();
-  await expect(page.getByText('17 currently available free routes')).toBeVisible();
-  await expect(page.getByText('4 paid routes')).toBeVisible();
-  await expect(page.getByText("is the caller's hard credit ceiling")).toBeVisible();
+  await expect(page.getByText('23 currently available free routes')).toBeVisible();
+  await expect(page.getByText('7 paid routes')).toBeVisible();
+  await expect(page.getByText('Browser screenshot')).toBeVisible();
+  await expect(page.getByText('1–6 credits', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('$0.001–$0.006 / call', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Paid requests require a unique')).toBeVisible();
+  await expect(page.getByText("is the AI caller's hard credit ceiling")).toBeVisible();
   await expect(page.getByText('Gateway.pink credit checkout is not currently available.')).toBeVisible();
   await expect(page.getByRole('link', { name: /buy gateway credits/i })).toHaveCount(0);
   await expect(page.getByRole('link', { name: 'Explore Gateway.pink docs' })).toBeVisible();
@@ -99,6 +103,8 @@ test('policies distinguish Namescape searches from Gateway credits', async ({ pa
   await expect(page.getByText('Gateway does not log or persistently store request or response bodies')).toBeVisible();
   await expect(page.getByText('cached-ttl')).toBeVisible();
   await expect(page.getByText('Provider-backed Gateway routes')).toBeVisible();
+  await expect(page.getByText('Cloudflare Browser Rendering')).toBeVisible();
+  await expect(page.getByText('Have I Been Pwned (HIBP)')).toBeVisible();
 
   await page.goto('/refunds');
   await expect(page.getByText('Gateway.pink credit checkout is not currently available.')).toBeVisible();

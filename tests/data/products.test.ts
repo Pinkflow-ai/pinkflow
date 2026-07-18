@@ -51,8 +51,11 @@ test('Gateway fixed endpoint prices match the runtime pricing contract', () => {
   expect(prices).toEqual([
     { name: 'Email validation', credits: 17 },
     { name: 'Phone line-type lookup', credits: 40 },
-    { name: 'Website screenshot', credits: 20 },
+    { name: 'Website screenshot', credits: 45 },
     { name: 'AI summarization', credits: 1, metered: true },
+    { name: 'Browser screenshot', credits: 1, maximumCredits: 6, metered: true, preview: true },
+    { name: 'Browser PDF', credits: 1, maximumCredits: 6, metered: true, preview: true },
+    { name: 'Browser Markdown', credits: 1, maximumCredits: 3, metered: true, preview: true },
   ]);
 });
 
@@ -102,8 +105,8 @@ test('Namescape Paddle identifiers match the production configuration', () => {
 
 test('Gateway counts only currently available routes', () => {
   expect((productData as Record<string, unknown>).gatewayCatalogCounts).toEqual({
-    freeAvailable: 17,
-    paidAvailable: 4,
+    freeAvailable: 23,
+    paidAvailable: 7,
     planned: 7,
   });
 });

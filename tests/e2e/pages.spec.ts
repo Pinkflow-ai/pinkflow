@@ -22,16 +22,9 @@ const canonicalUrls: Record<string, string> = {
 
 function findLaunchUnsafeJsonLd(value: unknown, path = '$'): string[] {
   if (typeof value === 'string') {
-    try {
-      const url = new URL(value);
-      if (url.hostname === 'namescape.pink' || url.hostname === 'gateway.pink') {
-        return [`${path} links to unavailable product URL ${value}`];
-      }
-    } catch {
-      // JSON-LD contains ordinary strings as well as URLs.
-    }
-
-    return [];
+    const hostname = ['namescape.pink', 'gateway.pink']
+      .find((candidate) => value.toLowerCase().includes(candidate));
+    return hostname ? [`${path} contains unavailable product hostname ${hostname}`] : [];
   }
 
   if (Array.isArray(value)) {
@@ -64,6 +57,20 @@ async function expectLaunchSafeJsonLd(page: Page) {
     expect(findLaunchUnsafeJsonLd(parsed), `JSON-LD block ${index} must be launch-safe`).toEqual([]);
   }
 }
+
+test('JSON-LD hostname guard rejects unavailable product domains in every string form', () => {
+  expect(findLaunchUnsafeJsonLd({
+    bare: 'namescape.pink',
+    nested: [
+      'Read gateway.pink/docs before launch',
+      { protocolRelative: '//namescape.pink/path' },
+    ],
+  })).toEqual([
+    '$.bare contains unavailable product hostname namescape.pink',
+    '$.nested[0] contains unavailable product hostname gateway.pink',
+    '$.nested[1].protocolRelative contains unavailable product hostname namescape.pink',
+  ]);
+});
 
 for (const p of pages) {
   test(`${p.path} renders with expected content`, async ({ page }) => {

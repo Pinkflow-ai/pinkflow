@@ -68,11 +68,19 @@ test('Gateway is a developer preview rather than a purchasable production servic
 });
 
 test('Namescape usage prices match the configured runtime actions', () => {
-  expect((productData as Record<string, unknown>).namescapeUsagePrices).toEqual([
-    { name: 'Standard generation', searches: 1 },
-    { name: 'Bulk generation', searches: 5 },
-    { name: 'Bulk availability', searches: 3 },
-    { name: 'Exact availability', searches: 1 },
+  expect(productData.namescapeUsagePrices).toEqual([
+    { group: 'Included free', name: 'Standard name ideas', price: 'Free' },
+    { group: 'Included free', name: 'Brief Helper', price: 'Free' },
+    { group: 'Included free', name: 'Domain details', price: 'Free', note: 'Single, batch, and bulk' },
+    { group: 'Included free', name: 'Public API domain details', price: 'Free' },
+    { group: 'Search-priced', name: 'Premium name ideas — Standard', price: '1 search', note: 'Per successful request' },
+    { group: 'Search-priced', name: 'Premium name ideas — Max', price: '2 searches', note: 'Per successful request' },
+    { group: 'Search-priced', name: 'Bulk name ideas — Standard', price: '3 searches', note: 'Per successful request' },
+    { group: 'Search-priced', name: 'Bulk name ideas — Max', price: '6 searches', note: 'Per successful request' },
+    { group: 'Search-priced', name: 'Final check — Single', price: '1 search', note: 'Per definitive result' },
+    { group: 'Search-priced', name: 'Final check — Batch', price: '1 search per 5 definitive results', note: 'Rounded up' },
+    { group: 'Search-priced', name: 'Public API name ideas', price: '1 search', note: 'Per successful request' },
+    { group: 'Search-priced', name: 'Public API final check', price: '1 search', note: 'Per definitive result' },
   ]);
 });
 
@@ -81,11 +89,16 @@ test('Namescape anonymous access is a rate-limited attempt, not a paid search ba
 });
 
 test('pricing snapshots identify every authoritative source file', () => {
+  expect(productData.pricingSources.namescape).toMatchObject({
+    actionPolicy: 'namescape/backend/Services/UsagePolicyService.cs',
+    actionConfig: 'namescape/backend/appsettings.json',
+    economics: 'namescape/docs/usage-economics.md',
+    packMapping: 'namescape/backend/Services/PaddleService.cs',
+    priceIds: 'namescape/backend/appsettings.json',
+    paddleCatalog: 'docs/paddle-catalog.md',
+    checkedAt: '2026-07-18',
+  });
   expect((productData as Record<string, any>).pricingSources).toMatchObject({
-    namescape: {
-      pricing: 'namescape/backend/Services/PaddleService.cs',
-      priceIds: 'namescape/backend/appsettings.json',
-    },
     gateway: {
       endpoints: 'gateway-pink/packages/shared/src/pricing.ts',
       packs: 'gateway-pink/packages/shared/src/creditPacks.ts',
@@ -122,22 +135,28 @@ test('Gateway AI exposes a hard caller-owned credit ceiling', () => {
 
 test('product lifecycle controls checkout and documentation actions', () => {
   expect(site.products.find((product) => product.slug === 'namescape')).toMatchObject({
-    statusLabel: 'Available',
-    checkoutAvailable: true,
-    documentationAvailable: true,
+    live: false,
+    status: 'launch-preparation',
+    statusLabel: 'Launch preparation',
+    checkoutAvailable: false,
+    documentationAvailable: false,
+    url: null,
   });
   expect(site.products.find((product) => product.slug === 'gateway')).toMatchObject({
+    live: false,
+    status: 'developer-preview',
     statusLabel: 'Developer preview',
     checkoutAvailable: false,
-    documentationAvailable: true,
+    documentationAvailable: false,
+    url: null,
   });
 
   const namescape = site.products.find((product) => product.slug === 'namescape')!;
   const gateway = site.products.find((product) => product.slug === 'gateway')!;
-  expect(productActionHref(namescape, 'checkout')).toBe(namescape.url);
+  expect(productActionHref(namescape, 'checkout')).toBeNull();
+  expect(productActionHref(namescape, 'documentation')).toBeNull();
   expect(productActionHref(gateway, 'checkout')).toBeNull();
-  expect(productActionHref(gateway, 'documentation')).toBe(gateway.url);
-  expect(productActionHref({ ...gateway, documentationAvailable: false }, 'documentation')).toBeNull();
+  expect(productActionHref(gateway, 'documentation')).toBeNull();
 });
 
 test('the public operator identity is a person, not the Pinkflow brand string', () => {

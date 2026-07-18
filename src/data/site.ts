@@ -1,7 +1,7 @@
 export interface ProductEntry {
   slug: string;
   live: boolean;
-  status: 'available' | 'developer-preview';
+  status: 'available' | 'launch-preparation' | 'developer-preview';
   statusLabel: string;
   checkoutAvailable: boolean;
   documentationAvailable: boolean;
@@ -42,25 +42,25 @@ export const site = {
   products: [
     {
       slug: 'namescape',
-      live: true,
-      status: 'available',
-      statusLabel: 'Available',
-      checkoutAvailable: true,
-      documentationAvailable: true,
+      live: false,
+      status: 'launch-preparation',
+      statusLabel: 'Launch preparation',
+      checkoutAvailable: false,
+      documentationAvailable: false,
       name: 'Namescape',
       tagline: 'Find shortlist-ready domains with price guidance and checkout paths.',
-      url: 'https://namescape.pink',
+      url: null,
     },
     {
       slug: 'gateway',
-      live: true,
+      live: false,
       status: 'developer-preview',
       statusLabel: 'Developer preview',
       checkoutAvailable: false,
-      documentationAvailable: true,
+      documentationAvailable: false,
       name: 'Gateway.pink',
       tagline: 'One key for a growing collection of small, useful APIs.',
-      url: 'https://gateway.pink',
+      url: null,
     },
   ] satisfies ProductEntry[],
 };

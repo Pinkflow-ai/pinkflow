@@ -24,15 +24,21 @@ export interface GatewayEndpointPrice {
 }
 
 export interface NamescapeUsagePrice {
+  group: string;
   name: string;
-  searches: number;
+  price: string;
+  note?: string;
 }
 
 export const pricingSources = {
   namescape: {
-    pricing: 'namescape/backend/Services/PaddleService.cs',
+    actionPolicy: 'namescape/backend/Services/UsagePolicyService.cs',
+    actionConfig: 'namescape/backend/appsettings.json',
+    economics: 'namescape/docs/usage-economics.md',
+    packMapping: 'namescape/backend/Services/PaddleService.cs',
     priceIds: 'namescape/backend/appsettings.json',
-    checkedAt: '2026-07-17',
+    paddleCatalog: 'docs/paddle-catalog.md',
+    checkedAt: '2026-07-18',
   },
   gateway: {
     endpoints: 'gateway-pink/packages/shared/src/pricing.ts',
@@ -58,10 +64,18 @@ export const gatewayAiBudgetPolicy = {
 export const namescapeAnonymousAttempts = 1;
 
 export const namescapeUsagePrices: NamescapeUsagePrice[] = [
-  { name: 'Standard generation', searches: 1 },
-  { name: 'Bulk generation', searches: 5 },
-  { name: 'Bulk availability', searches: 3 },
-  { name: 'Exact availability', searches: 1 },
+  { group: 'Included free', name: 'Standard name ideas', price: 'Free' },
+  { group: 'Included free', name: 'Brief Helper', price: 'Free' },
+  { group: 'Included free', name: 'Domain details', price: 'Free', note: 'Single, batch, and bulk' },
+  { group: 'Included free', name: 'Public API domain details', price: 'Free' },
+  { group: 'Search-priced', name: 'Premium name ideas — Standard', price: '1 search', note: 'Per successful request' },
+  { group: 'Search-priced', name: 'Premium name ideas — Max', price: '2 searches', note: 'Per successful request' },
+  { group: 'Search-priced', name: 'Bulk name ideas — Standard', price: '3 searches', note: 'Per successful request' },
+  { group: 'Search-priced', name: 'Bulk name ideas — Max', price: '6 searches', note: 'Per successful request' },
+  { group: 'Search-priced', name: 'Final check — Single', price: '1 search', note: 'Per definitive result' },
+  { group: 'Search-priced', name: 'Final check — Batch', price: '1 search per 5 definitive results', note: 'Rounded up' },
+  { group: 'Search-priced', name: 'Public API name ideas', price: '1 search', note: 'Per successful request' },
+  { group: 'Search-priced', name: 'Public API final check', price: '1 search', note: 'Per definitive result' },
 ];
 
 /** One Gateway.pink credit is always one tenth of one US cent ($0.001). */

@@ -6,8 +6,8 @@ Pinkflow products and is deployed through GitHub Pages.
 
 ## Product status
 
-Both product domains are currently closed at public DNS, and neither product
-currently exposes a public destination, checkout, or documentation site.
+As checked on 2026-07-18, both product domains are closed at public DNS, and
+neither product exposes a public destination, checkout, or documentation site.
 Publishing this company site does not deploy either product. The lifecycle and
 prices below describe the reviewed source contracts, not open purchase offers.
 
@@ -40,17 +40,17 @@ results. Failed, empty, or indeterminate work does not use a search.
 
 Authoritative Namescape sources:
 
-- Action policy: `namescape/backend/Services/UsagePolicyService.cs`
-- Action configuration: `namescape/backend/appsettings.json`
-- Usage economics: `namescape/docs/usage-economics.md`
-- Pack mapping: `namescape/backend/Services/PaddleService.cs`
-- Paddle price IDs: `namescape/backend/appsettings.json`
-- Paddle catalog: `docs/paddle-catalog.md`
-- Company-site snapshot: `src/data/products.ts`
+- Action policy: [backend/Services/UsagePolicyService.cs](https://github.com/Pinkflow-ai/namescape/blob/505199535b90d32087637f3235aabf9d2e828fc3/backend/Services/UsagePolicyService.cs)
+- Action configuration and Paddle price IDs: [backend/appsettings.json](https://github.com/Pinkflow-ai/namescape/blob/505199535b90d32087637f3235aabf9d2e828fc3/backend/appsettings.json)
+- Usage economics: [docs/usage-economics.md](https://github.com/Pinkflow-ai/namescape/blob/505199535b90d32087637f3235aabf9d2e828fc3/docs/usage-economics.md)
+- Pack mapping: [backend/Services/PaddleService.cs](https://github.com/Pinkflow-ai/namescape/blob/505199535b90d32087637f3235aabf9d2e828fc3/backend/Services/PaddleService.cs)
+- Paddle catalog: [docs/paddle-catalog.md](docs/paddle-catalog.md)
+- Company-site snapshot: [src/data/products.ts](src/data/products.ts)
 
-The usage contract was verified at commit `5051995` on the unmerged
-`codex/usage-metering` snapshot. That snapshot is not deployed or launch-ready;
-re-verify it before enabling any public product action.
+The usage contract was verified from the local, unmerged
+`codex/usage-metering` branch at [commit `5051995`](https://github.com/Pinkflow-ai/namescape/commit/505199535b90d32087637f3235aabf9d2e828fc3).
+That snapshot is not deployed and is not launch-ready; re-verify it before
+enabling any public product action.
 
 ### Gateway.pink — developer preview
 
@@ -70,12 +70,13 @@ credit checkout access remain closed.
 - Published packs: 10,000/$10, 50,000/$50, 100,000/$100, 500,000/$500.
 - The prices are published for preview budgeting, not as purchasable offers.
 
-Authoritative pricing/catalog sources:
+Authoritative pricing/catalog sources, pinned to the verified Gateway snapshot:
 
-- `gateway-pink/packages/shared/src/pricing.ts`
-- `gateway-pink/packages/shared/src/creditPacks.ts`
-- `gateway-pink/packages/shared/src/catalog.ts`
-- Snapshot for this site: `src/data/products.ts`
+- Endpoint pricing: [packages/shared/src/pricing.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/6f12540f455d1bedb8e2b5c037a6cabf7e732d13/packages/shared/src/pricing.ts)
+- Credit packs: [packages/shared/src/creditPacks.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/6f12540f455d1bedb8e2b5c037a6cabf7e732d13/packages/shared/src/creditPacks.ts)
+- Catalog: [packages/shared/src/catalog.ts](https://github.com/Pinkflow-ai/gateway-pink/blob/6f12540f455d1bedb8e2b5c037a6cabf7e732d13/packages/shared/src/catalog.ts)
+- Verified snapshot: [commit `6f12540`](https://github.com/Pinkflow-ai/gateway-pink/commit/6f12540f455d1bedb8e2b5c037a6cabf7e732d13)
+- Company-site snapshot: [src/data/products.ts](src/data/products.ts)
 
 Update the snapshot and `checkedAt` values whenever one of those product
 contracts changes. Contract tests lock the mapped values inside this repository.

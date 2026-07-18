@@ -19,7 +19,7 @@
 - Modify: `src/data/products.ts`
 - Modify: `src/data/site.ts`
 
-- [ ] **Step 1: Replace the old Namescape action assertion with the complete failing matrix**
+- [x] **Step 1: Replace the old Namescape action assertion with the complete failing matrix**
 
 Use a customer-facing representation that can express free actions, fixed prices,
 and the batch formula without exposing internal mechanics:
@@ -41,10 +41,10 @@ expect(productData.namescapeUsagePrices).toEqual([
 ]);
 ```
 
-- [ ] **Step 2: Add failing source-of-truth assertions**
+- [x] **Step 2: Add failing source-of-truth assertions**
 
 ```ts
-expect(productData.pricingSources.namescape).toMatchObject({
+expect(productData.pricingSources.namescape).toEqual({
   actionPolicy: 'namescape/backend/Services/UsagePolicyService.cs',
   actionConfig: 'namescape/backend/appsettings.json',
   economics: 'namescape/docs/usage-economics.md',
@@ -55,7 +55,7 @@ expect(productData.pricingSources.namescape).toMatchObject({
 });
 ```
 
-- [ ] **Step 3: Add failing lifecycle and action assertions**
+- [x] **Step 3: Add failing lifecycle and action assertions**
 
 ```ts
 expect(site.products.find(({ slug }) => slug === 'namescape')).toMatchObject({
@@ -78,12 +78,12 @@ expect(productActionHref(namescape, 'checkout')).toBeNull();
 expect(productActionHref(gateway, 'documentation')).toBeNull();
 ```
 
-- [ ] **Step 4: Run `npm run test:unit`; verify RED**
+- [x] **Step 4: Run `npm run test:unit`; verify RED**
 
 Expected failures: obsolete four-row Namescape matrix, missing action-source
 fields, and both products still marked live/reachable.
 
-- [ ] **Step 5: Implement the minimal typed data changes**
+- [x] **Step 5: Implement the minimal typed data changes**
 
 - Change `NamescapeUsagePrice` to `group`, `name`, `price`, and optional `note`.
 - Replace the four obsolete rows with the exact tested matrix.
@@ -93,9 +93,9 @@ fields, and both products still marked live/reachable.
   non-live/unreachable, and keep their names/taglines available to internal
   company pages.
 
-- [ ] **Step 6: Run `npm run test:unit`; verify GREEN**
+- [x] **Step 6: Run `npm run test:unit`; verify GREEN**
 
-- [ ] **Step 7: Commit only the data contract**
+- [x] **Step 7: Commit only the data contract**
 
 ```bash
 git add tests/data/products.test.ts src/data/products.ts src/data/site.ts
@@ -110,7 +110,7 @@ git commit -m "fix: align Pinkflow product contracts"
 - Modify: `src/components/Footer.astro`
 - Modify: `src/data/site.ts`
 
-- [ ] **Step 1: Add robust built-surface inspection helpers and failing tests**
+- [x] **Step 1: Add robust built-surface inspection helpers and failing tests**
 
 Test the six navigable routes plus an unknown path that renders `404.html`.
 Normalize every anchor with `new URL(href, page.url())`; reject hostnames
@@ -140,16 +140,16 @@ await expect(page.getByText('Developer preview', { exact: true })).toBeVisible()
 await expect(page.getByRole('link', { name: /open namescape|explore gateway/i })).toHaveCount(0);
 ```
 
-- [ ] **Step 2: Add failing metadata assertions**
+- [x] **Step 2: Add failing metadata assertions**
 
 For `/`, assert description, Open Graph description, and Twitter description
 use the new building/publishing wording and do not contain `operates`,
 `available`, `checkout`, or public-documentation claims. Keep exact canonical
 tests for every navigable route.
 
-- [ ] **Step 3: Run `npm run build && npx playwright test --project=desktop`; verify RED**
+- [x] **Step 3: Run `npm run build && npx playwright test --project=desktop`; verify RED**
 
-- [ ] **Step 4: Implement the lifecycle-safe homepage/footer/metadata**
+- [x] **Step 4: Implement the lifecycle-safe homepage/footer/metadata**
 
 - Replace “built and operated” with accurate building/publishing language.
 - Replace the Namescape artifact's “checkout path” with “final check”.
@@ -157,9 +157,9 @@ tests for every navigable route.
 - Keep product names in Organization schema without external product URLs.
 - Preserve the legal operator identity; only the marketing verb changes.
 
-- [ ] **Step 5: Run `npm run test:unit && npm run check && npm run build && npx playwright test --project=desktop`; verify GREEN**
+- [x] **Step 5: Run `npm run test:unit && npm run check && npm run build && npx playwright test --project=desktop`; verify GREEN**
 
-- [ ] **Step 6: Commit the lifecycle correction**
+- [x] **Step 6: Commit the lifecycle correction**
 
 ```bash
 git add tests/e2e/pages.spec.ts src/pages/index.astro src/components/Footer.astro src/data/site.ts
@@ -172,7 +172,7 @@ git commit -m "fix: publish honest Pinkflow lifecycle states"
 - Modify: `tests/e2e/pages.spec.ts`
 - Modify: `src/pages/pricing.astro`
 
-- [ ] **Step 1: Add failing row-scoped assertions for all twelve actions**
+- [x] **Step 1: Add failing row-scoped assertions for all twelve actions**
 
 Give each rendered action `data-namescape-price-row`. For every item in
 `namescapeUsagePrices`, locate exactly one row by its action name and assert its
@@ -189,7 +189,7 @@ Also assert:
   internal capacity details. Do not apply this guard to Gateway's legitimate
   product-specific provider disclosures.
 
-- [ ] **Step 2: Add failing Gateway and JSON-LD assertions**
+- [x] **Step 2: Add failing Gateway and JSON-LD assertions**
 
 Assert routes are “implemented in the developer-preview catalog,” public API
 and documentation access is not currently open, and no Gateway docs CTA exists.
@@ -201,9 +201,9 @@ Assert Pricing description, Open Graph description, and Twitter description
 identify Namescape amounts as informational launch pricing and Gateway amounts
 as preview pricing, and do not imply open checkout or documentation access.
 
-- [ ] **Step 3: Run `npm run build && npx playwright test --project=desktop`; verify RED**
+- [x] **Step 3: Run `npm run build && npx playwright test --project=desktop`; verify RED**
 
-- [ ] **Step 4: Implement the pricing page**
+- [x] **Step 4: Implement the pricing page**
 
 - Render group, action, price, and note for the typed Namescape matrix.
 - Explain searches as the complete customer usage unit.
@@ -211,9 +211,9 @@ as preview pricing, and do not imply open checkout or documentation access.
 - Describe Gateway entries and public access accurately; remove its docs CTA.
 - Remove Namescape Product/Offer JSON-LD while checkout is closed.
 
-- [ ] **Step 5: Run `npm run test:unit && npm run check && npm run build && npx playwright test --project=desktop`; verify GREEN**
+- [x] **Step 5: Run `npm run test:unit && npm run check && npm run build && npx playwright test --project=desktop`; verify GREEN**
 
-- [ ] **Step 6: Commit the pricing correction**
+- [x] **Step 6: Commit the pricing correction**
 
 ```bash
 git add tests/e2e/pages.spec.ts src/pages/pricing.astro
@@ -230,7 +230,7 @@ git commit -m "fix: publish current Namescape pricing"
 - Modify: `src/pages/contact.astro`
 - Modify: `src/data/site.ts`
 
-- [ ] **Step 1: Add failing policy/contact assertions**
+- [x] **Step 1: Add failing policy/contact assertions**
 
 - Terms names both products without external links and states that neither is a
   currently open public purchase offer.
@@ -243,17 +243,17 @@ git commit -m "fix: publish current Namescape pricing"
 - Terms, Privacy, and Refund revision dates are `2026-07-18`.
 - Metadata descriptions for all four routes avoid current-availability claims.
 
-- [ ] **Step 2: Run `npm run build && npx playwright test --project=desktop`; verify RED**
+- [x] **Step 2: Run `npm run build && npx playwright test --project=desktop`; verify RED**
 
-- [ ] **Step 3: Implement the complete policy/contact audit**
+- [x] **Step 3: Implement the complete policy/contact audit**
 
 Preserve product-specific data handling, provider disclosures, payment roles,
 refund mechanics, operator identity, and statutory-rights language. Change
 only availability/purchase tense, dead links, and support expectations.
 
-- [ ] **Step 4: Run `npm run check && npm run build && npx playwright test --project=desktop`; verify GREEN**
+- [x] **Step 4: Run `npm run check && npm run build && npx playwright test --project=desktop`; verify GREEN**
 
-- [ ] **Step 5: Commit the policy correction**
+- [x] **Step 5: Commit the policy correction**
 
 ```bash
 git add tests/e2e/pages.spec.ts src/pages/terms.astro src/pages/privacy.astro src/pages/refunds.astro src/pages/contact.astro src/data/site.ts
@@ -270,7 +270,7 @@ git commit -m "docs: align Pinkflow prelaunch policies"
 - Modify: `docs/superpowers/specs/2026-07-17-company-site-refresh-design.md`
 - Modify: `docs/superpowers/plans/2026-07-17-company-site-refresh.md`
 
-- [ ] **Step 1: Add a failing repository-copy contract test**
+- [x] **Step 1: Add a failing repository-copy contract test**
 
 For README/PRODUCT/DESIGN, reject current availability, live checkout/docs, and
 the obsolete Namescape action table. Assert README includes action policy,
@@ -281,18 +281,18 @@ For the historical 2026-07-17 spec/plan, test only that the opening notice says
 the document is superseded by and links to the 2026-07-18 design. Replace the
 existing Gateway-only notice; do not require historical body text to change.
 
-- [ ] **Step 2: Run `npm run test:unit`; verify RED**
+- [x] **Step 2: Run `npm run test:unit`; verify RED**
 
-- [ ] **Step 3: Update current and historical documentation**
+- [x] **Step 3: Update current and historical documentation**
 
 - README: launch-preparation lifecycle, complete current matrix, separate
   pack/action sources, no dead product links, and deployment/DNS boundary.
 - PRODUCT/DESIGN: building/preparing language and text lifecycle examples.
 - Prior spec/plan: one prominent supersession notice pointing to the new design.
 
-- [ ] **Step 4: Run `npm run test:unit`; verify GREEN**
+- [x] **Step 4: Run `npm run test:unit`; verify GREEN**
 
-- [ ] **Step 5: Commit the documentation correction**
+- [x] **Step 5: Commit the documentation correction**
 
 ```bash
 git add tests/data/products.test.ts README.md PRODUCT.md DESIGN.md docs/superpowers/specs/2026-07-17-company-site-refresh-design.md docs/superpowers/plans/2026-07-17-company-site-refresh.md

@@ -6,6 +6,36 @@ import { productActionHref, site } from '../../src/data/site';
 const { namescapePacks } = productData;
 const compactWhitespace = (value: string) => value.replace(/\s+/g, ' ');
 
+function markdownTableRows(markdown: string, headerCells: string[]): string[][] {
+  const lines = markdown.split('\n');
+  const header = `| ${headerCells.join(' | ')} |`;
+  const headerIndex = lines.findIndex((line) => line.trim() === header);
+  if (headerIndex === -1) return [];
+
+  return collectTableRows(lines, headerIndex + 2);
+}
+
+function collectTableRows(lines: string[], start: number): string[][] {
+  const rows: string[][] = [];
+  for (const line of lines.slice(start)) {
+    if (!line.trim().startsWith('|')) break;
+    rows.push(line.trim().slice(1, -1).split('|').map((cell) => cell.trim()));
+  }
+  return rows;
+}
+
+function markdownLinkTargets(markdown: string): string[] {
+  return [...markdown.matchAll(/\[[^\]]+\]\(([^)]+)\)/g)].map((match) => match[1]);
+}
+
+function planStepStates(markdown: string, task: number): boolean[] {
+  const start = markdown.indexOf(`### Task ${task}:`);
+  const end = markdown.indexOf(`### Task ${task + 1}:`, start + 1);
+  const section = markdown.slice(start, end === -1 ? undefined : end);
+  return [...section.matchAll(/^- \[([ x])\] \*\*Step \d+:/gm)]
+    .map((match) => match[1] === 'x');
+}
+
 test('three packs are defined', () => {
   expect(namescapePacks).toHaveLength(3);
 });
@@ -113,23 +143,36 @@ test('pricing snapshots identify every authoritative source file', () => {
 test('repository documentation publishes the complete Namescape launch-price contract', () => {
   const readme = readFileSync('README.md', 'utf8');
   const compactReadme = compactWhitespace(readme);
+  const linkTargets = markdownLinkTargets(readme);
+  const namescapeSha = '505199535b90d32087637f3235aabf9d2e828fc3';
+  const gatewaySha = '6f12540f455d1bedb8e2b5c037a6cabf7e732d13';
 
-  for (const item of productData.namescapeUsagePrices) {
-    expect(readme).toContain(
-      `| ${item.group} | ${item.name} | ${item.price} | ${item.note ?? '—'} |`,
-    );
-  }
+  expect(markdownTableRows(readme, ['Group', 'Action', 'Price', 'Note'])).toEqual(
+    productData.namescapeUsagePrices.map((item) => [
+      item.group,
+      item.name,
+      item.price,
+      item.note ?? '—',
+    ]),
+  );
 
-  expect(readme).toContain('- Action policy: `namescape/backend/Services/UsagePolicyService.cs`');
-  expect(readme).toContain('- Action configuration: `namescape/backend/appsettings.json`');
-  expect(readme).toContain('- Usage economics: `namescape/docs/usage-economics.md`');
-  expect(readme).toContain('- Pack mapping: `namescape/backend/Services/PaddleService.cs`');
-  expect(readme).toContain('- Paddle price IDs: `namescape/backend/appsettings.json`');
-  expect(readme).toContain('- Paddle catalog: `docs/paddle-catalog.md`');
-  expect(readme).toContain('`5051995`');
+  expect(linkTargets).toEqual(expect.arrayContaining([
+    `https://github.com/Pinkflow-ai/namescape/blob/${namescapeSha}/backend/Services/UsagePolicyService.cs`,
+    `https://github.com/Pinkflow-ai/namescape/blob/${namescapeSha}/backend/appsettings.json`,
+    `https://github.com/Pinkflow-ai/namescape/blob/${namescapeSha}/docs/usage-economics.md`,
+    `https://github.com/Pinkflow-ai/namescape/blob/${namescapeSha}/backend/Services/PaddleService.cs`,
+    `https://github.com/Pinkflow-ai/namescape/commit/${namescapeSha}`,
+    `https://github.com/Pinkflow-ai/gateway-pink/blob/${gatewaySha}/packages/shared/src/pricing.ts`,
+    `https://github.com/Pinkflow-ai/gateway-pink/blob/${gatewaySha}/packages/shared/src/creditPacks.ts`,
+    `https://github.com/Pinkflow-ai/gateway-pink/blob/${gatewaySha}/packages/shared/src/catalog.ts`,
+    `https://github.com/Pinkflow-ai/gateway-pink/commit/${gatewaySha}`,
+    'docs/paddle-catalog.md',
+  ]));
+  expect(readme).not.toMatch(/^- .*`(?:namescape|gateway-pink)\//gm);
   expect(readme).toContain('`codex/usage-metering`');
-  expect(compactReadme).toMatch(/unmerged `codex\/usage-metering` snapshot/i);
-  expect(compactReadme).toMatch(/not deployed or launch-ready/i);
+  expect(compactReadme).toMatch(/\bunmerged\b/i);
+  expect(compactReadme).toMatch(/\bnot deployed\b/i);
+  expect(compactReadme).toMatch(/\bnot launch-ready\b/i);
 });
 
 test('repository documentation keeps both products in honest closed lifecycle states', () => {
@@ -142,8 +185,11 @@ test('repository documentation keeps both products in honest closed lifecycle st
 
   expect(readme).toContain('Namescape — launch preparation');
   expect(readme).toContain('Gateway.pink — developer preview');
-  expect(compactReadme).toMatch(/Both product domains are currently closed at public DNS/i);
-  expect(compactReadme).toMatch(/neither product currently exposes a public destination, checkout, or documentation site/i);
+  expect(compactReadme).toContain('As checked on 2026-07-18');
+  expect(compactReadme).toMatch(/both product domains.+closed.+public DNS/i);
+  expect(compactReadme).toMatch(/neither product.+public destination/i);
+  expect(compactReadme).toMatch(/neither product.+checkout/i);
+  expect(compactReadme).toMatch(/neither product.+documentation site/i);
   expect(compactReadme).toMatch(/Publishing this company site does not deploy either product/i);
   expect(readme).not.toMatch(/\]\(https:\/\/(?:www\.)?(?:namescape\.pink|gateway\.pink)(?:[/?#)]|$)/i);
 
@@ -185,6 +231,14 @@ test('historical refresh documents point readers to the current truth contract',
   expect(compactCurrentPlan).toContain(
     'Reject either product domain in URL-shaped fields, URL values, and free-text availability claims.',
   );
+  expect(planStepStates(currentPlan, 1)).toEqual(Array(7).fill(true));
+  expect(planStepStates(currentPlan, 2)).toEqual(Array(6).fill(true));
+  expect(planStepStates(currentPlan, 3)).toEqual(Array(6).fill(true));
+  expect(planStepStates(currentPlan, 4)).toEqual(Array(5).fill(true));
+  expect(planStepStates(currentPlan, 5)).toEqual([
+    true, true, true, true, true,
+    false, false, false, false, false, false,
+  ]);
 });
 
 test('Namescape Paddle identifiers match the production configuration', () => {

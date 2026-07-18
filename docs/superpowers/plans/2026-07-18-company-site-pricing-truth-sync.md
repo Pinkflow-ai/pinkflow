@@ -116,8 +116,7 @@ Test the six navigable routes plus an unknown path that renders `404.html`.
 Normalize every anchor with `new URL(href, page.url())`; reject hostnames
 `namescape.pink` and `gateway.pink`. Parse every JSON-LD block with
 `JSON.parse`, recursively visit every object/array/string, reject both
-unavailable hostnames in string values, and reject any object whose `@type` is
-`Offer` or includes `Offer` in an array.
+unavailable hostnames in string values, and fail if any block is invalid JSON.
 
 ```ts
 const publicSurfaces = ['/', '/pricing', '/terms', '/privacy', '/refunds', '/contact', '/this-does-not-exist'];
@@ -183,15 +182,22 @@ Also assert:
 - “Namescape checkout is not currently available.”
 - “Failed, empty, or indeterminate work does not use a search.”
 - Saving, revisiting, and copying an existing result are free.
-- No visible text contains `40 requested domains`, `40-domain`, `60-second`,
-  provider/model terminology, or other internal capacity details.
+- Within `page.locator('#namescape')`, no visible text contains `40 requested
+  domains`, `40-domain`, `60-second`, provider/model terminology, or other
+  internal capacity details. Do not apply this guard to Gateway's legitimate
+  product-specific provider disclosures.
 
 - [ ] **Step 2: Add failing Gateway and JSON-LD assertions**
 
 Assert routes are “implemented in the developer-preview catalog,” public API
 and documentation access is not currently open, and no Gateway docs CTA exists.
-Use Task 2's parsed recursive JSON-LD guard to prove there is no `Offer` object
-and no unavailable product URL.
+Extend Task 2's parsed recursive JSON-LD guard here to reject any object whose
+`@type` is `Offer` or contains `Offer` in an array, proving there is no active
+offer and no unavailable product URL after this task removes pricing schema.
+
+Assert Pricing description, Open Graph description, and Twitter description
+identify Namescape amounts as informational launch pricing and Gateway amounts
+as preview pricing, and do not imply open checkout or documentation access.
 
 - [ ] **Step 3: Run `npm run build && npx playwright test --project=desktop`; verify RED**
 
@@ -340,13 +346,29 @@ changed, stop and reassess product reachability, documentation access, checkout
 readiness, and release status separately; update affected contracts/surfaces,
 repeat review, and rerun the full suite.
 
+```bash
+for domain in namescape.pink gateway.pink; do
+  test -z "$(dig @1.1.1.1 +short A "$domain")"
+  test -z "$(dig @1.1.1.1 +short AAAA "$domain")"
+  test -z "$(dig @1.1.1.1 +short CNAME "$domain")"
+  if curl --fail --silent --show-error --head --location --max-time 15 "https://$domain/"; then
+    exit 1
+  fi
+done
+```
+
+Expected for the approved launch-safe state: all public-DNS answers are empty
+and both bounded HTTPS probes fail. Any nonempty answer or successful probe is
+an external-state change that triggers reassessment rather than automatic CTA
+enablement.
+
 - [ ] **Step 10: Integrate with exact fast-forward gates**
 
-Let `MAIN=/Users/miromal/Desktop/Source.nosync/GitHub/Pinkflow-ai/pinkflow`,
-`FEATURE=/Users/miromal/.config/superpowers/worktrees/pinkflow/company-site-pricing-sync`,
-and `BASE=73a330697a17c21187157e4bb1443862f0fed5bc`.
-
 ```bash
+MAIN=/Users/miromal/Desktop/Source.nosync/GitHub/Pinkflow-ai/pinkflow
+FEATURE=/Users/miromal/.config/superpowers/worktrees/pinkflow/company-site-pricing-sync
+BASE=73a330697a17c21187157e4bb1443862f0fed5bc
+
 git -C "$MAIN" fetch origin main
 test -z "$(git -C "$MAIN" status --short)"
 test -z "$(git -C "$FEATURE" status --short)"
@@ -366,3 +388,11 @@ After success, verify all six navigable `pinkflow.ai` routes plus unknown-route
 404 behavior, exact canonical/description/OG/Twitter metadata, all twelve
 Namescape pricing rows, lifecycle labels, zero unavailable product-domain
 anchors/JSON-LD URLs, and zero `Offer` schema.
+
+```bash
+MAIN=/Users/miromal/Desktop/Source.nosync/GitHub/Pinkflow-ai/pinkflow
+PUSHED_SHA=$(git -C "$MAIN" rev-parse HEAD)
+RUN_ID=$(gh run list --repo Pinkflow-ai/pinkflow --workflow deploy.yml --branch main --event push --limit 20 --json databaseId,headSha,status,conclusion,url --jq ".[] | select(.headSha == \"$PUSHED_SHA\") | .databaseId" | head -n 1)
+test -n "$RUN_ID"
+gh run watch "$RUN_ID" --repo Pinkflow-ai/pinkflow --exit-status
+```

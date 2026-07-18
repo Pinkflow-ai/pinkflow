@@ -316,7 +316,7 @@ desktop and mobile widths. Store temporary screenshots under
 exact preview PID. Verify the browser console is clean and no stale server was
 reused.
 
-- [ ] **Step 7: Request independent spec-compliance and code-quality reviews**
+- [x] **Step 7: Request independent spec-compliance and code-quality reviews**
 
 Fix every Critical or Important finding. Stage review corrections explicitly
 from `git diff --name-only`; never use `git add .`. Commit corrections before

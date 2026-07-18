@@ -274,8 +274,8 @@ test('historical refresh documents point readers to the current truth contract',
   expect(planStepStates(currentPlan, 3)).toEqual(Array(6).fill(true));
   expect(planStepStates(currentPlan, 4)).toEqual(Array(5).fill(true));
   expect(planStepStates(currentPlan, 5)).toEqual([
-    true, true, true, true, true, true,
-    false, false, false, false, false,
+    true, true, true, true, true, true, true,
+    false, false, false, false,
   ]);
 });
 

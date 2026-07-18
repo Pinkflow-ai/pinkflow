@@ -7,17 +7,15 @@ import {
   gatewayCatalogCounts,
   gatewayCreditUsdMicros,
   gatewayEndpointPrices,
-  namescapeAnonymousAttempts,
   namescapePacks,
   namescapeUsagePrices,
 } from '../data/products';
 import { productActionHref, site } from '../data/site';
 
-const description = 'Current Namescape search-pack pricing and published Gateway.pink developer-preview credit pricing.';
+const description = 'Informational Namescape launch pricing and Gateway.pink developer-preview pricing. Checkout is unavailable, and Gateway.pink public API and documentation access are not currently open.';
 const namescape = site.products.find((product) => product.slug === 'namescape')!;
 const gateway = site.products.find((product) => product.slug === 'gateway')!;
 const namescapeCheckoutUrl = productActionHref(namescape, 'checkout');
-const gatewayDocsUrl = productActionHref(gateway, 'documentation');
 const usd = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
 const usdPerCall = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -46,11 +44,17 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
           <span class="status-chip">{namescape.statusLabel}</span>
           <h2 class="mt-4 text-[clamp(1.125rem,6vw,2.25rem)] font-extrabold text-white">Namescape search packs</h2>
           <p class="muted-copy mt-4 max-w-lg leading-relaxed">
-            One-time balances for domain-name generation and verification workflows. Searches do not expire or auto-renew.
+            One-time balances for name ideas, domain details, and final checks. Searches do not expire or auto-renew.
           </p>
         </div>
-        <div class="min-w-0 grid gap-4 md:grid-cols-3">
-          {namescapePacks.map((pack) => <PackCard pack={pack} ctaHref={namescapeCheckoutUrl} />)}
+        <div class="min-w-0">
+          <div class="grid gap-4 md:grid-cols-3">
+            {namescapePacks.map((pack) => <PackCard pack={pack} ctaHref={namescapeCheckoutUrl} />)}
+          </div>
+          <p class="mt-4 rounded-lg border border-primary/20 bg-primary/[0.06] px-4 py-3 text-sm leading-relaxed text-[#d8cfdf]">
+            <strong class="text-white">Namescape checkout is not currently available.</strong>
+            These amounts are informational launch pricing, not an invitation to purchase today. Final tax and currency total shown at checkout will apply when purchasing opens.
+          </p>
         </div>
       </div>
 
@@ -58,27 +62,31 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
         <div class="min-w-0">
           <h3 class="text-2xl font-extrabold text-white">How search usage works</h3>
           <p class="muted-copy mt-3 leading-relaxed">
-            Signed-out visitors receive one rate-limited generation attempt. That is not a paid search balance and does not repeat after the anonymous allowance is used.
+            A search is the complete customer usage unit for one completed action listed here. Failed, empty, or indeterminate work does not use a search.
           </p>
           <p class="mt-3 text-sm text-white/55">
-            Current anonymous allowance: {namescapeAnonymousAttempts} attempt.
+            Saving, revisiting, and copying an existing result are free.
           </p>
         </div>
         <div class="min-w-0 overflow-hidden rounded-xl border border-white/10 bg-bg-card">
-          <div class="hidden grid-cols-[1fr_auto] gap-4 border-b border-white/10 px-5 py-3 text-sm font-bold text-white/55 sm:grid">
-            <span>Action</span><span>Searches</span>
+          <div class="hidden grid-cols-[auto_minmax(0,1fr)_minmax(8rem,auto)] gap-4 border-b border-white/10 px-5 py-3 text-sm font-bold text-white/55 sm:grid">
+            <span>Group</span><span>Action</span><span class="text-right">Price</span>
           </div>
           {namescapeUsagePrices.map((item) => (
-            <div class="grid min-w-0 grid-cols-1 gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[1fr_auto] sm:gap-4">
-              <span class="font-semibold text-white">{item.name}</span>
-              <span class="font-bold text-primary">{item.searches} {item.searches === 1 ? 'search' : 'searches'}</span>
+            <div data-namescape-price-row="" class="grid min-w-0 grid-cols-1 gap-1 border-b border-white/10 px-5 py-4 last:border-b-0 sm:grid-cols-[auto_minmax(0,1fr)_minmax(8rem,auto)] sm:gap-4">
+              <span class="text-xs font-extrabold uppercase tracking-wide text-white/55">{item.group}</span>
+              <span class="min-w-0 font-semibold text-white">
+                <span class="block">{item.name}</span>
+                {item.note && <span class="mt-1 block text-xs font-medium text-white/55">{item.note}</span>}
+              </span>
+              <span class="min-w-0 font-bold text-primary sm:text-right">{item.price}</span>
             </div>
           ))}
         </div>
       </div>
 
       <p class="mt-8 max-w-4xl text-sm leading-relaxed text-white/60">
-        All prices are USD. Paddle processes Namescape purchases as merchant of record. Final tax and currency total shown at checkout. Saving, revisiting, or copying an existing result does not consume another search. Domain availability, registrar pricing, taxes, and legal clearance must be confirmed independently.
+        All prices are USD. Domain availability, registrar pricing, taxes, and legal clearance must be confirmed independently.
       </p>
     </div>
   </section>
@@ -90,7 +98,7 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
           <span class="status-chip">{gateway.statusLabel}</span>
           <h2 class="mt-4 text-[clamp(1.125rem,6vw,2.25rem)] font-extrabold text-white"><span>Gateway.</span><wbr /><span>pink credits</span></h2>
           <p class="muted-copy mt-4 max-w-lg leading-relaxed">
-            Published developer-preview pricing for {gatewayCatalogCounts.freeAvailable} currently available free routes and {gatewayCatalogCounts.paidAvailable} paid routes. The credit denomination does not change between packs.
+            Published developer-preview pricing for {gatewayCatalogCounts.freeAvailable} free routes and {gatewayCatalogCounts.paidAvailable} paid routes implemented in the developer-preview catalog. Public API and documentation access is not currently open. The credit denomination does not change between packs.
           </p>
           <div class="mt-6 max-w-full rounded-lg bg-primary/10 px-4 py-3 text-lg font-extrabold text-[#ff9dcc]">
             1 credit = $0.001
@@ -112,7 +120,7 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
           </div>
           <p class="mt-4 rounded-lg border border-primary/20 bg-primary/[0.06] px-4 py-3 text-sm leading-relaxed text-[#d8cfdf]">
             <strong class="text-white">Gateway.pink credit checkout is not currently available.</strong>
-            These are published launch prices for budgeting during the developer preview, not an invitation to purchase today.
+            These are published preview prices for budgeting during the developer preview, not an invitation to purchase today.
           </p>
         </div>
       </div>
@@ -153,7 +161,6 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
       </div>
 
       <div class="mt-8 flex flex-wrap items-center gap-3">
-        {gatewayDocsUrl && <a href={gatewayDocsUrl} class="btn-primary">Explore Gateway.pink docs</a>}
         <a href="/terms" class="btn-secondary">Read the service terms</a>
       </div>
     </div>
@@ -166,18 +173,4 @@ const creditUsd = gatewayCreditUsdMicros / 1_000_000;
     </p>
   </section>
 
-  <script type="application/ld+json" is:inline set:html={JSON.stringify({
-    '@context': 'https://schema.org',
-    '@type': 'Product',
-    name: 'Namescape Search Pack',
-    description: 'One-time search packs for Namescape.',
-    brand: { '@type': 'Brand', name: 'Pinkflow' },
-    offers: namescapePacks.map((pack) => ({
-      '@type': 'Offer',
-      price: pack.priceUsd,
-      priceCurrency: 'USD',
-      description: `${pack.searches} Namescape searches`,
-      url: namescape.url,
-    })),
-  })} />
 </SiteLayout>

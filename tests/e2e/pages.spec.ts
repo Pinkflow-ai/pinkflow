@@ -1,5 +1,6 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import { namescapeUsagePrices } from '../../src/data/products';
 
 const pages = [
   { path: '/', titleContains: 'Pinkflow', expectText: 'Practical software, built and operated by Pinkflow' },
@@ -18,6 +19,51 @@ const canonicalUrls: Record<string, string> = {
   '/refunds': 'https://pinkflow.ai/refunds/',
   '/contact': 'https://pinkflow.ai/contact/',
 };
+
+function findLaunchUnsafeJsonLd(value: unknown, path = '$'): string[] {
+  if (typeof value === 'string') {
+    try {
+      const url = new URL(value);
+      if (url.hostname === 'namescape.pink' || url.hostname === 'gateway.pink') {
+        return [`${path} links to unavailable product URL ${value}`];
+      }
+    } catch {
+      // JSON-LD contains ordinary strings as well as URLs.
+    }
+
+    return [];
+  }
+
+  if (Array.isArray(value)) {
+    return value.flatMap((item, index) => findLaunchUnsafeJsonLd(item, `${path}[${index}]`));
+  }
+
+  if (!value || typeof value !== 'object') return [];
+
+  const object = value as Record<string, unknown>;
+  const schemaType = object['@type'];
+  const schemaTypes = Array.isArray(schemaType) ? schemaType : [schemaType];
+  const violations = schemaTypes.includes('Offer') ? [`${path} declares schema.org Offer`] : [];
+
+  return violations.concat(
+    Object.entries(object).flatMap(([key, item]) => findLaunchUnsafeJsonLd(item, `${path}.${key}`)),
+  );
+}
+
+async function expectLaunchSafeJsonLd(page: Page) {
+  const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
+
+  for (const [index, block] of blocks.entries()) {
+    let parsed: unknown;
+    try {
+      parsed = JSON.parse(block);
+    } catch (error) {
+      throw new Error(`JSON-LD block ${index} is not valid JSON`, { cause: error });
+    }
+
+    expect(findLaunchUnsafeJsonLd(parsed), `JSON-LD block ${index} must be launch-safe`).toEqual([]);
+  }
+}
 
 for (const p of pages) {
   test(`${p.path} renders with expected content`, async ({ page }) => {
@@ -59,7 +105,7 @@ test('pricing publishes the Gateway credit contract without implying checkout is
   await expect(page.getByText('45 credits', { exact: true })).toBeVisible();
   await expect(page.getByText('$0.045 / call', { exact: true })).toBeVisible();
   await expect(page.getByText('Direct or high-volume provider plans may have lower unit prices.')).toBeVisible();
-  await expect(page.getByText('23 currently available free routes')).toBeVisible();
+  await expect(page.getByText(/23 free routes and 7 paid routes implemented in the developer-preview catalog/)).toBeVisible();
   await expect(page.getByText('7 paid routes')).toBeVisible();
   await expect(page.getByText('Browser screenshot')).toBeVisible();
   await expect(page.getByText('1–6 credits', { exact: true }).first()).toBeVisible();
@@ -67,8 +113,9 @@ test('pricing publishes the Gateway credit contract without implying checkout is
   await expect(page.getByText('Paid requests require a unique')).toBeVisible();
   await expect(page.getByText("is the AI caller's hard credit ceiling")).toBeVisible();
   await expect(page.getByText('Gateway.pink credit checkout is not currently available.')).toBeVisible();
+  await expect(page.getByText('Public API and documentation access is not currently open.')).toBeVisible();
   await expect(page.getByRole('link', { name: /buy gateway credits/i })).toHaveCount(0);
-  await expect(page.getByRole('link', { name: 'Explore Gateway.pink docs' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /Gateway\.pink docs/i })).toHaveCount(0);
 });
 
 test('pricing 200-pack is marked Best value', async ({ page }) => {
@@ -85,14 +132,41 @@ test('pricing mentions final tax total at checkout', async ({ page }) => {
 
 test('pricing explains current Namescape usage prices', async ({ page }) => {
   await page.goto('/pricing');
+  const namescape = page.locator('#namescape');
+
   await expect(page.getByRole('heading', { name: 'How search usage works' })).toBeVisible();
-  await expect(page.getByText('Standard generation')).toBeVisible();
-  await expect(page.getByText('Bulk generation')).toBeVisible();
-  await expect(page.getByText('5 searches', { exact: true })).toBeVisible();
-  await expect(page.getByText('Bulk availability')).toBeVisible();
-  await expect(page.getByText('3 searches', { exact: true })).toBeVisible();
-  await expect(page.getByText('Exact availability')).toBeVisible();
-  await expect(page.getByText('one rate-limited generation attempt')).toBeVisible();
+  await expect(namescape.getByText('Namescape checkout is not currently available.')).toBeVisible();
+  await expect(namescape.getByText('Failed, empty, or indeterminate work does not use a search.')).toBeVisible();
+  await expect(namescape.getByText('Saving, revisiting, and copying an existing result are free.')).toBeVisible();
+
+  for (const item of namescapeUsagePrices) {
+    const row = namescape.locator('[data-namescape-price-row]').filter({
+      has: page.getByText(item.name, { exact: true }),
+    });
+    await expect(row, `${item.name} should have exactly one price row`).toHaveCount(1);
+    await expect(row.getByText(item.group, { exact: true })).toBeVisible();
+    await expect(row.getByText(item.price, { exact: true })).toBeVisible();
+    if (item.note) await expect(row.getByText(item.note, { exact: true })).toBeVisible();
+  }
+
+  const visibleNamescapeText = await namescape.innerText();
+  expect(visibleNamescapeText).not.toMatch(
+    /40 requested domains|40-domain|60-second|rate-limited|anonymous allowance|\b(?:AI|LLM|provider|provenance|metadata|RDAP|model)\b|exact verification|prompt pipeline|backend source/i,
+  );
+});
+
+test('pricing metadata describes informational and preview prices without implying open access', async ({ page }) => {
+  await page.goto('/pricing');
+  const description = 'Informational Namescape launch pricing and Gateway.pink developer-preview pricing. Checkout is unavailable, and Gateway.pink public API and documentation access are not currently open.';
+
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', description);
+  await expect(page.locator('meta[property="og:description"]')).toHaveAttribute('content', description);
+  await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute('content', description);
+});
+
+test('pricing structured data does not publish unavailable offers or product URLs', async ({ page }) => {
+  await page.goto('/pricing');
+  await expectLaunchSafeJsonLd(page);
 });
 
 test('policies distinguish Namescape searches from Gateway credits', async ({ page }) => {

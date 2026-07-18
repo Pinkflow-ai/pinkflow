@@ -465,6 +465,13 @@ test('terms publishes launch-safe product status and Namescape output language',
   await expect(page.getByText(
     /Namescape is available|documentation and published pricing are available/i,
   )).toHaveCount(0);
+  const namescapePricing = page.getByRole('listitem').filter({
+    hasText: 'Namescape launch pricing uses one-time search packs in USD.',
+  });
+  await expect(namescapePricing).toBeVisible();
+  await expect(namescapePricing.getByRole('link', { name: 'Namescape pricing', exact: true }))
+    .toHaveAttribute('href', '/pricing#namescape');
+  await expect(page.getByText(/Namescape sells/i)).toHaveCount(0);
 });
 
 test('policies distinguish Namescape searches from Gateway credits', async ({ page }) => {

@@ -3,13 +3,16 @@ import AxeBuilder from '@axe-core/playwright';
 import { namescapeUsagePrices } from '../../src/data/products';
 
 const pages = [
-  { path: '/', titleContains: 'Pinkflow', expectText: 'Practical software, built and operated by Pinkflow' },
+  { path: '/', titleContains: 'Pinkflow', expectText: 'Practical software, being built by Pinkflow' },
   { path: '/pricing', titleContains: 'Pricing', expectText: 'Two products, two honest units' },
   { path: '/terms', titleContains: 'Terms of Service', expectText: 'Generally final once delivered or used' },
   { path: '/privacy', titleContains: 'Privacy Policy', expectText: 'supervisory authority' },
   { path: '/refunds', titleContains: 'Refund Policy', expectText: 'Generally final once delivered or used' },
   { path: '/contact', titleContains: 'Contact', expectText: 'hello@pinkflow.ai' },
 ];
+
+const publicSurfaces = [...pages.map(({ path }) => path), '/this-does-not-exist'];
+const unavailableProductHostnames = new Set(['namescape.pink', 'gateway.pink']);
 
 const canonicalUrls: Record<string, string> = {
   '/': 'https://pinkflow.ai/',
@@ -22,6 +25,7 @@ const canonicalUrls: Record<string, string> = {
 
 function findLaunchUnsafeJsonLd(value: unknown, path = '$'): string[] {
   if (typeof value === 'string') {
+    if (path.endsWith('.name') && value === 'Gateway.pink') return [];
     const hostname = ['namescape.pink', 'gateway.pink']
       .find((candidate) => value.toLowerCase().includes(candidate));
     return hostname ? [`${path} contains unavailable product hostname ${hostname}`] : [];
@@ -45,19 +49,34 @@ function findLaunchUnsafeJsonLd(value: unknown, path = '$'): string[] {
   );
 }
 
-async function expectLaunchSafeJsonLd(page: Page) {
+async function parseJsonLdBlocks(page: Page): Promise<unknown[]> {
   const blocks = await page.locator('script[type="application/ld+json"]').allTextContents();
 
-  for (const [index, block] of blocks.entries()) {
-    let parsed: unknown;
+  return blocks.map((block, index) => {
     try {
-      parsed = JSON.parse(block);
+      return JSON.parse(block) as unknown;
     } catch (error) {
       throw new Error(`JSON-LD block ${index} is not valid JSON`, { cause: error });
     }
+  });
+}
 
+async function expectLaunchSafeJsonLd(page: Page) {
+  const blocks = await parseJsonLdBlocks(page);
+  for (const [index, parsed] of blocks.entries()) {
     expect(findLaunchUnsafeJsonLd(parsed), `JSON-LD block ${index} must be launch-safe`).toEqual([]);
   }
+}
+
+async function findUnavailableProductAnchors(page: Page): Promise<string[]> {
+  const hrefs = await page.locator('a[href]').evaluateAll((anchors) => anchors.map(
+    (anchor) => anchor.getAttribute('href') ?? '',
+  ));
+
+  return hrefs.flatMap((href) => {
+    const url = new URL(href, page.url());
+    return unavailableProductHostnames.has(url.hostname.toLowerCase()) ? [url.href] : [];
+  });
 }
 
 test('JSON-LD hostname guard rejects unavailable product domains in every string form', () => {
@@ -71,6 +90,17 @@ test('JSON-LD hostname guard rejects unavailable product domains in every string
     '$.bare contains unavailable product hostname namescape.pink',
     '$.nested[0] contains unavailable product hostname gateway.pink',
     '$.nested[1].protocolRelative contains unavailable product hostname namescape.pink',
+  ]);
+});
+
+test('JSON-LD hostname guard allows only the Gateway.pink product name', () => {
+  expect(findLaunchUnsafeJsonLd({
+    name: 'Gateway.pink',
+    url: 'https://gateway.pink',
+    description: 'Gateway.pink documentation',
+  })).toEqual([
+    '$.url contains unavailable product hostname gateway.pink',
+    '$.description contains unavailable product hostname gateway.pink',
   ]);
 });
 
@@ -105,12 +135,72 @@ test('pricing shows three search packs', async ({ page }) => {
 
 test('homepage presents both products with honest lifecycle status', async ({ page }) => {
   await page.goto('/');
-  await expect(page.getByRole('heading', { name: 'Namescape' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'Gateway.pink' })).toBeVisible();
-  await expect(page.getByText('Available', { exact: true })).toBeVisible();
+  const namescape = page.getByRole('article').filter({
+    has: page.getByRole('heading', { name: 'Namescape', exact: true }),
+  });
+  const gateway = page.getByRole('article').filter({
+    has: page.getByRole('heading', { name: 'Gateway.pink', exact: true }),
+  });
+  const namescapeFlow = namescape.getByLabel('Namescape product flow');
+
+  await expect(namescape).toBeVisible();
+  await expect(gateway).toBeVisible();
+  await expect(page.getByText('Launch preparation', { exact: true })).toBeVisible();
   await expect(page.getByText('Developer preview', { exact: true })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Open Namescape' })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'Explore Gateway.pink' })).toBeVisible();
+  await expect(page.getByRole('link', { name: /open namescape|explore gateway/i })).toHaveCount(0);
+  await expect(namescapeFlow.getByText('Price + final check', { exact: true })).toBeVisible();
+  await expect(namescapeFlow.getByText(/checkout path/i)).toHaveCount(0);
+
+  await expect(namescape.getByRole('link', { name: 'See search packs', exact: true }))
+    .toHaveAttribute('href', '/pricing#namescape');
+  await expect(namescape.getByRole('link', { name: 'Contact Pinkflow', exact: true }))
+    .toHaveAttribute('href', '/contact');
+  await expect(gateway.getByRole('link', { name: 'See preview pricing', exact: true }))
+    .toHaveAttribute('href', '/pricing#gateway');
+  await expect(gateway.getByRole('link', { name: 'Contact Pinkflow', exact: true }))
+    .toHaveAttribute('href', '/contact');
+
+  expect(await namescape.locator('a[href]').evaluateAll((links) => links.map((link) => link.getAttribute('href'))))
+    .toEqual(['/pricing#namescape', '/contact']);
+  expect(await gateway.locator('a[href]').evaluateAll((links) => links.map((link) => link.getAttribute('href'))))
+    .toEqual(['/pricing#gateway', '/contact']);
+});
+
+test('homepage metadata describes products being built and contracts being published', async ({ page }) => {
+  await page.goto('/');
+  const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publishing clear launch pricing, product limits, company policies, and direct contact details.';
+  const metadata = [
+    page.locator('meta[name="description"]'),
+    page.locator('meta[property="og:description"]'),
+    page.locator('meta[name="twitter:description"]'),
+  ];
+
+  for (const element of metadata) {
+    await expect(element).toHaveAttribute('content', description);
+    expect(await element.getAttribute('content')).not.toMatch(/\b(?:operates|available|checkout|documentation)\b/i);
+  }
+});
+
+test('homepage Organization schema names both products without external URLs', async ({ page }) => {
+  await page.goto('/');
+  const blocks = await parseJsonLdBlocks(page);
+  const organization = blocks.find((block) => (
+    block && typeof block === 'object' && (block as Record<string, unknown>)['@type'] === 'Organization'
+  )) as Record<string, unknown> | undefined;
+
+  expect(organization).toBeDefined();
+  expect(organization?.owns).toEqual([
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Namescape',
+      applicationCategory: 'WebApplication',
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Gateway.pink',
+      applicationCategory: 'WebApplication',
+    },
+  ]);
 });
 
 test('pricing publishes the Gateway credit contract without implying checkout is live', async ({ page }) => {
@@ -143,11 +233,6 @@ test('pricing publishes the Gateway credit contract without implying checkout is
   await expect(page.getByRole('link', { name: /buy gateway credits/i })).toHaveCount(0);
   await expect(gateway.getByRole('link', { name: /docs|documentation/i })).toHaveCount(0);
   await expect(gateway.locator('a[href*="docs" i], a[href*="documentation" i]')).toHaveCount(0);
-  const unavailableProductLinks = await gateway.locator('a[href]').evaluateAll((links) => links.flatMap((link) => {
-    const url = new URL(link.getAttribute('href') ?? '', document.baseURI);
-    return url.hostname === 'namescape.pink' || url.hostname === 'gateway.pink' ? [url.href] : [];
-  }));
-  expect(unavailableProductLinks).toEqual([]);
 });
 
 test('pricing 200-pack is marked Best value', async ({ page }) => {
@@ -331,6 +416,10 @@ test('policies distinguish Namescape searches from Gateway credits', async ({ pa
 test('footer shows operator line on every page', async ({ page }) => {
   for (const p of pages) {
     await page.goto(p.path);
+    await expect(page.getByText(
+      'Practical software being built in Tel Aviv, Israel, with launch facts published here.',
+      { exact: true },
+    )).toBeVisible();
     await expect(page.getByText(/Pinkflow is operated by Miro Mal, an individual based in Tel Aviv, Israel/).first()).toBeVisible();
   }
 });
@@ -360,6 +449,14 @@ test('header uses the animated Pinkflow flow mark', async ({ page }) => {
 test('404 page renders for unknown route', async ({ page }) => {
   await page.goto('/this-does-not-exist');
   await expect(page.getByText('404')).toBeVisible();
+});
+
+test('every public surface excludes unavailable product destinations', async ({ page }) => {
+  for (const path of publicSurfaces) {
+    await page.goto(path);
+    expect(await findUnavailableProductAnchors(page), `${path} must not link to an unavailable product`).toEqual([]);
+    await expectLaunchSafeJsonLd(page);
+  }
 });
 
 test('public pages do not overflow horizontally', async ({ page }) => {

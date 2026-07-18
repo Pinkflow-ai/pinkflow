@@ -1,25 +1,23 @@
 ---
 import SiteLayout from '../layouts/SiteLayout.astro';
 import PinkflowMark from '../components/PinkflowMark.astro';
-import { productActionHref, site } from '../data/site';
+import { site } from '../data/site';
 import { gatewayCatalogCounts } from '../data/products';
 
 const namescape = site.products.find((product) => product.slug === 'namescape')!;
 const gateway = site.products.find((product) => product.slug === 'gateway')!;
-const namescapeCheckoutUrl = productActionHref(namescape, 'checkout');
-const gatewayDocsUrl = productActionHref(gateway, 'documentation');
-const description = 'Pinkflow.ai builds and operates Namescape and Gateway.pink: practical software with clear pricing and direct support.';
+const description = 'Pinkflow.ai is building Namescape and Gateway.pink and publishing clear launch pricing, product limits, company policies, and direct contact details.';
 ---
 <SiteLayout title="Pinkflow" description={description}>
   <section class="site-container grid min-h-[76vh] items-center gap-12 py-16 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">
     <div>
       <PinkflowMark compact={false} showWordmark class="mb-8" />
       <h1 class="max-w-4xl text-[clamp(1.75rem,8vw,6rem)] font-extrabold leading-[0.95] tracking-[-0.04em] text-white">
-        Practical software, built and operated by <span class="text-primary">Pinkflow.</span>
+        Practical software, being built by <span class="text-primary">Pinkflow.</span>
       </h1>
       <p class="muted-copy mt-8 max-w-2xl text-lg leading-relaxed sm:text-xl">
-        We turn stubborn, everyday problems into focused products with clear prices,
-        honest limits, and a direct line to the people running them.
+        We are turning stubborn, everyday problems into focused products. Here we publish
+        clear launch pricing, honest limits, and a direct line to the people building them.
       </p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#products" class="btn-primary">See our products</a>
@@ -31,7 +29,7 @@ const description = 'Pinkflow.ai builds and operates Namescape and Gateway.pink:
       <div class="absolute inset-0 rounded-[24px] bg-primary/5 blur-2xl"></div>
       <div class="relative overflow-hidden rounded-xl border border-primary/20 bg-bg-card">
         <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
-          <span class="font-bold text-white">Pinkflow operating model</span>
+          <span class="font-bold text-white">Pinkflow building model</span>
           <span class="h-2.5 w-2.5 rounded-full bg-primary"></span>
         </div>
         <ol class="divide-y divide-white/10">
@@ -45,7 +43,7 @@ const description = 'Pinkflow.ai builds and operates Namescape and Gateway.pink:
           </li>
           <li class="grid grid-cols-[2.5rem_1fr] gap-3 px-5 py-5">
             <span class="font-extrabold text-primary">03</span>
-            <div><strong class="text-white">Operate it in the open.</strong><p class="muted-copy mt-1 text-sm">Publish pricing, policies, limitations, and support ownership.</p></div>
+            <div><strong class="text-white">Publish the contract early.</strong><p class="muted-copy mt-1 text-sm">Share launch pricing, policies, limitations, and support ownership.</p></div>
           </li>
         </ol>
       </div>
@@ -81,13 +79,13 @@ const description = 'Pinkflow.ai builds and operates Namescape and Gateway.pink:
               <span aria-hidden="true" class="text-primary">→</span>
               <span class="rounded-md bg-primary/15 px-3 py-2 font-bold text-[#ff9dcc]">Name shortlist</span>
               <span aria-hidden="true" class="text-primary">→</span>
-              <span class="rounded-md bg-white/5 px-3 py-2 text-white/75">Price + checkout path</span>
+              <span class="rounded-md bg-white/5 px-3 py-2 text-white/75">Price + final check</span>
             </div>
           </div>
 
           <div class="mt-auto flex flex-wrap gap-3 p-6 sm:p-8">
-            {namescapeCheckoutUrl && <a href={namescapeCheckoutUrl} class="btn-primary">Open Namescape</a>}
             <a href="/pricing#namescape" class="btn-secondary">See search packs</a>
+            <a href="/contact" class="btn-secondary">Contact Pinkflow</a>
           </div>
         </article>
 
@@ -110,8 +108,8 @@ const description = 'Pinkflow.ai builds and operates Namescape and Gateway.pink:
           </div>
 
           <div class="mt-auto flex flex-wrap gap-3 p-6 sm:p-8">
-            {gatewayDocsUrl && <a href={gatewayDocsUrl} class="btn-primary">Explore Gateway.pink</a>}
             <a href="/pricing#gateway" class="btn-secondary">See preview pricing</a>
+            <a href="/contact" class="btn-secondary">Contact Pinkflow</a>
           </div>
         </article>
       </div>
@@ -126,8 +124,8 @@ const description = 'Pinkflow.ai builds and operates Namescape and Gateway.pink:
       </div>
       <div class="muted-copy min-w-0 max-w-2xl space-y-5 text-lg leading-relaxed">
         <p>
-          Pinkflow.ai is based in {site.city}, {site.country}. We design, build, and operate
-          focused products without hiding behind a portfolio of placeholders.
+          Pinkflow.ai is based in {site.city}, {site.country}. We design and build focused
+          products, and publish their pricing, policies, and launch state clearly.
         </p>
         <p>
           This site is the stable home for product pricing, company policies, and support.
@@ -159,7 +157,6 @@ const description = 'Pinkflow.ai builds and operates Namescape and Gateway.pink:
     owns: site.products.map((product) => ({
       '@type': 'SoftwareApplication',
       name: product.name,
-      url: product.url,
       applicationCategory: 'WebApplication',
     })),
   })} />

@@ -676,6 +676,15 @@ test('policies distinguish Namescape searches from Gateway credits', async ({ pa
   )).toBeVisible();
 });
 
+test('homepage company copy does not disclose a location', async ({ page }) => {
+  await page.goto('/');
+  await expect(page.getByText(
+    'Pinkflow.ai designs and builds focused products, and publishes their pricing, policies, and launch state clearly.',
+    { exact: true },
+  )).toBeVisible();
+  await expect(page.getByText(/Pinkflow\.ai is based in/)).not.toBeVisible();
+});
+
 test('footer shows operator line on every page', async ({ page }) => {
   for (const p of pages) {
     await page.goto(p.path);

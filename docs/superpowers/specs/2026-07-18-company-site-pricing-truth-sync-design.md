@@ -28,6 +28,12 @@ destinations that are not available.
   2026-07-18 and remain unchanged by this scope. Gateway checkout remains
   unavailable.
 
+The Namescape action matrix is sourced from the verified branch's
+`docs/usage-economics.md`, `backend/Services/UsagePolicyService.cs`, and
+`backend/appsettings.json`. `PaddleService.cs`, appsettings product IDs, and
+`docs/paddle-catalog.md` remain the separate authorities for pack sizes,
+prices, and checkout identifiers.
+
 ## Chosen approach
 
 Use a fact-first launch-safe refresh. Preserve the established Pinkflow visual
@@ -44,14 +50,20 @@ Pinkflow portfolio, but neither is described as a reachable production
 service.
 
 - Namescape: `Launch preparation`; external destination, documentation, and
-  checkout actions disabled; launch pricing remains public for transparency.
+  checkout actions disabled; `live` is false; launch pricing remains public
+  for transparency.
 - Gateway.pink: `Developer preview`; external documentation and checkout
-  actions disabled until its public destination resolves; preview pricing
-  remains public for budgeting.
+  actions disabled until its public destination resolves; `live` is false;
+  preview pricing remains public for budgeting. Public copy describes the
+  routes as implemented in the developer-preview catalog and explicitly says
+  that public API and documentation access are not currently open.
 
 The typed product model remains the single source for status labels and action
-availability. Product pages render only actions allowed by that model. Schema
-markup omits unavailable product URLs instead of publishing dead links.
+availability. Product pages render only actions allowed by that model. Built
+pages contain no `namescape.pink` or `gateway.pink` anchor or structured-data
+URL while those destinations are unavailable. Pack `Offer` schema is omitted
+entirely while checkout is closed; launch prices are informational, not active
+offers.
 
 ## Namescape pricing presentation
 
@@ -76,10 +88,11 @@ provider or token mechanics.
 - Public API name ideas: 1 search per successful request
 - Public API final check: 1 search per definitive result
 
-The page explicitly states that the customer unit is a search, not tokens or
-provider calls, and that failed, empty, or indeterminate work is not charged.
-The 40-domain/60-second final-check attempt budget remains internal capacity
-protection and is not presented as customer billing.
+The page explains searches as the complete customer usage unit and states that
+failed, empty, or indeterminate work is not charged. It does not introduce
+internal provider, model, or request-processing mechanics. The 40-domain/
+60-second final-check attempt budget remains internal capacity protection and
+is not presented as customer billing.
 
 ## Company and policy copy
 
@@ -91,7 +104,11 @@ protection and is not presented as customer billing.
   pricing, not a purchasable offer today.
 - Keep product-specific data, refund, and payment distinctions. Terms and
   Refunds must not imply that either checkout is currently live.
-- Update policy revision dates to 2026-07-18 when their public wording changes.
+- Audit Terms, Privacy, Refunds, Contact, homepage, pricing, footer, README, and
+  metadata. Present-tense service, trial, purchase, support, or documentation
+  claims must be conditional on launch or invitation access.
+- Update policy revision dates to 2026-07-18 when their public wording changes,
+  and update README pricing sources and lifecycle facts with the same contract.
 
 ## Visual treatment
 
@@ -104,16 +121,22 @@ stay mandatory.
 
 ## Testing and deployment
 
-1. Add failing contract tests for the new Namescape action matrix, source date,
-   non-live lifecycle states, and unavailable external actions.
+1. Add failing contract tests for the new Namescape action matrix, authoritative
+   action/pack source paths, source date, non-live lifecycle states, and
+   unavailable external actions.
 2. Add failing browser tests for the new pricing language, status labels,
-   absence of external product CTAs, and checkout-unavailable notices.
+   absence of external product CTAs, checkout-unavailable notices, absence of
+   schema.org `Offer`, and zero unavailable product-domain anchors or JSON-LD
+   URLs across every built public page.
 3. Implement the smallest data and page changes that satisfy those contracts.
 4. Run unit tests, Astro check/build, both Playwright projects, accessibility
    checks already included in the suite, `npm audit`, and `git diff --check`.
 5. Inspect homepage, pricing, policies, and mobile layout in a real browser.
-6. Fast-forward the clean main checkout, push `main`, monitor the Pages
-   workflow, and verify the deployed `pinkflow.ai` routes and pricing copy.
+6. Recheck public DNS and HTTP for both product domains immediately before
+   integration. If availability has not changed, fast-forward the clean main
+   checkout, push `main`, monitor the Pages workflow, and verify the deployed
+   `pinkflow.ai` routes, pricing copy, absence of dead product-domain links,
+   and absence of purchasable-offer schema.
 
 Publishing this company site does not deploy Namescape, Gateway.pink, their
 DNS, or their checkout systems. Their public lifecycle labels change only

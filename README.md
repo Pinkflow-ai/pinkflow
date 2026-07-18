@@ -2,7 +2,7 @@
 
 Static company, pricing, support, and policy site for
 [pinkflow.ai](https://pinkflow.ai). It is the shared public trust surface for
-Pinkflow products and is deployed through GitHub Pages.
+Pinkflow products and is deployed through Cloudflare Pages.
 
 ## Product status
 
@@ -108,7 +108,7 @@ the other.
 - Self-hosted Plus Jakarta Sans
 - Vitest contract/deployment tests
 - Playwright desktop/mobile, canonical, reduced-motion, scale, and WCAG checks
-- GitHub Actions and GitHub Pages
+- Cloudflare Pages
 
 Node 22.12 or newer is required.
 
@@ -149,27 +149,25 @@ The public operator identity must match the verified individual or entity that
 operates Pinkflow and the controller identity published in the Privacy Policy.
 Do not replace it with the brand name alone.
 
-## Deployment
+## Cloudflare Pages deployment
 
-Pushing `main` starts `.github/workflows/deploy.yml`:
+`pinkflow.ai` is the production custom domain for the `pinkflow-ai` Cloudflare
+Pages project. GitHub stores the source; a push to `main` does **not** deploy
+automatically. Deploy a verified build explicitly from this repository:
 
-1. Check out the repository.
-2. Install Node 22.12 and locked dependencies.
-3. Install Chromium.
-4. Run product/workflow contract tests.
-5. Run Astro diagnostics and the production build.
-6. Run desktop and mobile Playwright projects.
-7. Upload `dist` and deploy it to GitHub Pages.
+```bash
+npm ci
+npm run test:unit
+npm run check
+npm test
+npm run deploy:cloudflare
+```
 
-Repository and Pages operations:
-
-- [Repository](https://github.com/Pinkflow-ai/pinkflow)
-- [Actions](https://github.com/Pinkflow-ai/pinkflow/actions)
-- [Pages settings](https://github.com/Pinkflow-ai/pinkflow/settings/pages)
-
-The apex `pinkflow.ai` domain uses the standard GitHub Pages A/AAAA records and
-`www.pinkflow.ai` points to `pinkflow-ai.github.io`. Both `CNAME` files must
-remain `pinkflow.ai`.
+`npm run deploy:cloudflare` builds `dist/` and uploads it to the production
+Pages project. It requires an authenticated Wrangler session with Cloudflare
+Pages write access. Do not restore the old GitHub Pages workflow or CNAME
+files: the apex DNS record is managed in Cloudflare and targets
+`pinkflow-ai.pages.dev`.
 
 ## Paddle catalog
 

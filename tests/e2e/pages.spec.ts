@@ -534,6 +534,40 @@ test.describe('prelaunch policies', () => {
 
     await expect(page.getByText('This Policy was last updated on 2026-07-18.', { exact: true })).toBeVisible();
     await expect(page.getByText(
+      'This Policy covers pinkflow.ai and any future launch or invitation access Pinkflow grants for Namescape and Gateway.pink. Their data contracts are not identical: if Namescape access opens, it will be able to store work a person chooses to save to an account; Gateway is designed not to persist caller payloads.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByRole('heading', {
+      name: '3. Data Namescape will process when access opens',
+      exact: true,
+    })).toBeVisible();
+    await expect(page.getByText(
+      'Namescape access is not currently open. If launch or invitation access is granted, Namescape will process the following data categories.',
+      { exact: true },
+    )).toBeVisible();
+
+    const accountData = page.getByRole('listitem').filter({ hasText: 'Account data:' });
+    const serviceData = page.getByRole('listitem').filter({ hasText: 'Service data:' });
+    const domainChecks = page.getByRole('listitem').filter({ hasText: 'Domain checks:' });
+    await expect(accountData).toContainText(
+      'If Namescape account access opens, it will process your email address, authentication-provider identifiers, profile settings, and account role. Pinkflow will not receive your Google or Microsoft password.',
+    );
+    await expect(serviceData).toContainText(
+      'When signed-in access is granted, Namescape will process prompts, generated domain suggestions, saved names, search history, balances, and usage-ledger entries needed to provide that workflow.',
+    );
+    await expect(domainChecks).toContainText(
+      'When a domain check is requested through granted access, Namescape will send candidate domain names to public registry, RDAP, registrar, or verification sources. Your account identity will not be included in those lookups.',
+    );
+    await expect(page.getByRole('heading', { name: '3. Data collected by Namescape', exact: true })).toHaveCount(0);
+    for (const residual of [
+      /Namescape can store the work/i,
+      /Account data:\s*email address/i,
+      /Service data:\s*prompts/i,
+      /Domain checks:\s*candidate domain names/i,
+    ]) {
+      await expect(page.getByText(residual)).toHaveCount(0);
+    }
+    await expect(page.getByText(
       'At launch, Namescape is planned to offer one limited signed-out generation attempt. An account will be required to buy packs, hold a balance, save names, view account history, or use authenticated features once purchase access opens.',
       { exact: true },
     )).toBeVisible();

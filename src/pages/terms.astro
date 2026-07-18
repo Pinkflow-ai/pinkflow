@@ -58,7 +58,8 @@ const gateway = site.products.find((product) => product.slug === 'gateway')!;
     <h2>6. Namescape searches and Gateway credits</h2>
     <ul>
       <li>Namescape launch pricing uses one-time search packs in USD. See <a href="/pricing#namescape">Namescape pricing</a>.</li>
-      <li>A paid Namescape action deducts its published search amount only after the paid work returns a usable result. Signed-out trial attempts are rate-limited and are not a paid balance.</li>
+      <li>A paid Namescape action deducts its published search amount only after the paid work returns a usable result.</li>
+      <li>At launch, signed-out trial attempts will be rate-limited and will not be a paid balance.</li>
       <li>Gateway.pink defines one credit as $0.001. Fixed routes have a published per-call price; metered AI calls settle from provider-reported cost subject to the caller's budget, and browser preview routes settle from provider-reported browser time.</li>
       <li>Paid Gateway requests require a valid, unique <code>Idempotency-Key</code>. Reusing a key does not repeat the provider call or debit.</li>
       <li>Gateway.pink credit checkout is not currently available. Published packs are preview prices, not purchasable offers today.</li>

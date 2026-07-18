@@ -487,6 +487,11 @@ test.describe('prelaunch policies', () => {
       'The implemented Gateway.pink developer-preview catalog defines utility, public-data, validation, rendering, lookup, and model-backed APIs intended to work behind one key. Public API and documentation access are not currently open. If invitation-preview access is offered, each shared route contract will identify its price, data source, and storage policy.',
       { exact: true },
     )).toBeVisible();
+    await expect(page.getByText(
+      'At launch, signed-out trial attempts will be rate-limited and will not be a paid balance.',
+      { exact: true },
+    )).toBeVisible();
+    await expect(page.getByText(/Signed-out trial attempts are rate-limited/i)).toHaveCount(0);
     await expect(page.locator('main a[href*="namescape.pink" i], main a[href*="gateway.pink" i]')).toHaveCount(0);
     await expect(page.getByText(/documents and exposes utility/i)).toHaveCount(0);
   });
@@ -515,7 +520,16 @@ test.describe('prelaunch policies', () => {
       { exact: true },
     )).toBeVisible();
     await expect(page.getByText(
-      /If purchase access opens, Namescape search packs are intended to be digital consumables\./,
+      /If Namescape purchase access opens, its search packs will be digital consumables\./,
+    )).toBeVisible();
+    await expect(page.getByText(
+      /A Namescape purchase will generally be final once delivered or used/,
+    )).toBeVisible();
+    await expect(page.getByText(
+      /If Gateway\.pink checkout opens, Gateway credits will be digital consumables\./,
+    )).toBeVisible();
+    await expect(page.getByText(
+      /Credits consumed by a settled paid request will generally be final/,
     )).toBeVisible();
     await expect(page.getByText(/Nothing in this Policy waives a non-waivable consumer right/)).toBeVisible();
     await expect(page.getByText(/currently the purchasable Pinkflow digital product/i)).toHaveCount(0);
